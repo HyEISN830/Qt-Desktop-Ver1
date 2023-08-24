@@ -34,7 +34,6 @@ qt_add_qml_module(appQt-Desktop-Ver1-TCL-NT
         Main.qml
         ${MODULE_MAIN_QML_COMPONENT_FILES}
     RESOURCES
-        favicon.ico
         ${RESOURCE_FILES}
 )
 

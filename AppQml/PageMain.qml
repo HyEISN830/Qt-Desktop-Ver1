@@ -39,6 +39,18 @@ Item {
                     }
                 }
                 TabButton {
+                    text: qsTr("设备监控")
+                    width: 110
+                    icon.source: "resources/icon-camera.svg"
+                    icon.height: Consts.icon_h
+                    icon.width: Consts.icon_w
+                    onClicked: {
+                        if (stackView.currentItem == watchingPage)
+                            return
+                        stackView.replace(null, watchingPage)
+                    }
+                }
+                TabButton {
                     text: qsTr("TLogs")
                     width: 100
                     icon.source: "resources/icon-stats.svg"
@@ -98,6 +110,10 @@ Item {
                     id: homePage
                     view: stackView
                 }
+                PageWatching {
+                    id: watchingPage
+                    view: stackView
+                }
                 PageTLogs {
                     id: tlogsPage
                     view: stackView
@@ -151,6 +167,7 @@ Item {
         if (!initDb()) return false;
         stackView.replace(setsPage, null)
         stackView.replace(tlogsPage, null)
+        stackView.replace(watchingPage, null)
         stackView.replace(homePage, null)
     }
 }
