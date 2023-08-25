@@ -41,6 +41,7 @@ list(APPEND MODULE_QML_COMPONENT_FILES
     com/ComTable.qml
     com/ComList.qml
     com/ComToolTip.qml
+    com/ComDevice.qml
 )
 
 list(APPEND MODULE_APPQML_JS_FILES
@@ -78,6 +79,10 @@ list(APPEND MODULE_RESOURCES_FILES
 
     resources/home.jpg
     resources/logo.png
+    resources/plc.png
+    resources/device.png
+    resources/barcode-scan.png
+    resources/agv-robot.png
 )
 
 set_source_files_properties(Consts.qml
