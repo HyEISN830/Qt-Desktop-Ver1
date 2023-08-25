@@ -10,6 +10,9 @@ Item {
         id: mainPane
         anchors.fill: parent
         anchors.topMargin: -24
+        leftPadding: 0
+        rightPadding: 0
+        bottomPadding: 0
         background: Rectangle {
             color: "White"
         }
@@ -95,7 +98,7 @@ Item {
         Pane {
             id: contentPane
             anchors.top: headPane.bottom
-            anchors.topMargin: -5
+            anchors.topMargin: -10
             anchors.bottom: parent.bottom
             width: parent.width
             background: Rectangle {
