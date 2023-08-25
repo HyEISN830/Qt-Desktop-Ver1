@@ -10,6 +10,9 @@ Item {
         id: mainPane
         anchors.fill: parent
         anchors.topMargin: -24
+        leftPadding: 0
+        rightPadding: 0
+        bottomPadding: 0
         background: Rectangle {
             color: "White"
         }
@@ -36,6 +39,18 @@ Item {
                         if (stackView.currentItem == homePage)
                             return
                         stackView.replace(null, homePage)
+                    }
+                }
+                TabButton {
+                    text: qsTr("设备监控")
+                    width: 110
+                    icon.source: "resources/icon-camera.svg"
+                    icon.height: Consts.icon_h
+                    icon.width: Consts.icon_w
+                    onClicked: {
+                        if (stackView.currentItem == watchingPage)
+                            return
+                        stackView.replace(null, watchingPage)
                     }
                 }
                 TabButton {
@@ -83,7 +98,7 @@ Item {
         Pane {
             id: contentPane
             anchors.top: headPane.bottom
-            anchors.topMargin: -5
+            anchors.topMargin: -10
             anchors.bottom: parent.bottom
             width: parent.width
             background: Rectangle {
@@ -96,6 +111,10 @@ Item {
 
                 PageHome {
                     id: homePage
+                    view: stackView
+                }
+                PageWatching {
+                    id: watchingPage
                     view: stackView
                 }
                 PageTLogs {
@@ -151,6 +170,7 @@ Item {
         if (!initDb()) return false;
         stackView.replace(setsPage, null)
         stackView.replace(tlogsPage, null)
+        stackView.replace(watchingPage, null)
         stackView.replace(homePage, null)
     }
 }

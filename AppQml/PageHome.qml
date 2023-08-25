@@ -54,7 +54,7 @@ Item {
 
     ComTextEditBold {
         id: lblTxt1
-        text: "??"
+        text: "暖通"
         font.pixelSize: 30
         color: "#000000"
         anchors.right: lblTxt2.left

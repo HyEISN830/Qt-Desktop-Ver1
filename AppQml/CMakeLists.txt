@@ -20,6 +20,7 @@ list(APPEND MODULE_QML_FILES
     Consts.qml
     PageMain.qml
     PageHome.qml
+    PageWatching.qml
     PageTLogs.qml
     PageSets.qml
     T_PageTests.qml
@@ -73,6 +74,7 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/icon-angle-left.svg
     resources/icon-angle-right.svg
     resources/icon-location.svg
+    resources/icon-camera.svg
 
     resources/home.jpg
     resources/logo.png
