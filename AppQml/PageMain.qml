@@ -126,6 +126,7 @@ Item {
                 PageSets {
                     id: setsPage
                     view: stackView
+                    bgservice: bgservice
                 }
                 T_PageTests {
                     id: testPage

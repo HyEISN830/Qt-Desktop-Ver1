@@ -1,15 +1,46 @@
 import QtQuick
 import QtQuick.Controls
+import AppQml
+import AppQmlBackend
 
 Item {
     property StackView view
+    property QmlService bgservice: null
 
     id: page
     opacity: 0
 
-    Label {
-        text: qsTr("settings page")
-        anchors.centerIn: parent
+    ScrollView {
+        anchors.fill: parent
+        padding: 0
+
+        Column {
+            spacing: 5
+
+            Rectangle {
+                Column {
+                    ComExpand {
+                        width: 200
+                        body: Component {
+                            Rectangle {
+                                height: 50
+                                color: "blue"
+                            }
+                        }
+                    }
+
+                    ComExpand {
+                        width: 200
+                        body: Component {
+                            Rectangle {
+                                height: 50
+                                color: "red"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     OpacityAnimator {
