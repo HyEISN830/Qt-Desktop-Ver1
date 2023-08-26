@@ -17,6 +17,7 @@ target_link_libraries(appqml
 )
 
 list(APPEND MODULE_QML_FILES
+    GlobalVariable.qml
     Consts.qml
     PageMain.qml
     PageHome.qml
@@ -87,7 +88,9 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/agv-robot.png
 )
 
-set_source_files_properties(Consts.qml
+set_source_files_properties(
+    Consts.qml
+    GlobalVariable.qml
     PROPERTIES
         QT_QML_SINGLETON_TYPE true
 )

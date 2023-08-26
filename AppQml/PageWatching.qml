@@ -39,6 +39,7 @@ Item {
             opacity: 0
             content: "线体PLC1"
             iconPath: "resources/plc.png"
+            connected: GlobalVariable.deviceConnected
 
             OpacityAnimator {
                 id: plcSAni
@@ -82,6 +83,7 @@ Item {
             opacity: 0
             content: "线体PLC2"
             iconPath: "resources/plc.png"
+            connected: GlobalVariable.device1Connected
 
             OpacityAnimator {
                 id: plc1SAni
@@ -124,6 +126,7 @@ Item {
             content: "W1扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
+            connected: GlobalVariable.device2Connected
 
             OpacityAnimator {
                 id: camSAni
@@ -168,6 +171,7 @@ Item {
             content: "W2扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
+            connected: GlobalVariable.device3Connected
 
             OpacityAnimator {
                 id: cam1SAni
@@ -211,6 +215,7 @@ Item {
             content: "W3扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
+            connected: GlobalVariable.device4Connected
 
             OpacityAnimator {
                 id: cam2SAni
@@ -254,6 +259,7 @@ Item {
             content: "N1扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
+            connected: GlobalVariable.device5Connected
 
             OpacityAnimator {
                 id: cam3SAni
@@ -297,6 +303,7 @@ Item {
             content: "N2扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
+            connected: GlobalVariable.device6Connected
 
             OpacityAnimator {
                 id: cam4SAni
@@ -340,6 +347,7 @@ Item {
             content: "N3扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
+            connected: GlobalVariable.device7Connected
 
             OpacityAnimator {
                 id: cam5SAni
@@ -382,6 +390,7 @@ Item {
             content: "SJ AGV"
             iconPath: "resources/agv-robot.png"
             iconColor: "#7effd15b"
+            connected: GlobalVariable.device8Connected
 
             OpacityAnimator {
                 id: agvSAni
@@ -417,8 +426,8 @@ Item {
 
         Column {
             x: 35
-            y: 18
-            visible: false
+            y: 500
+            visible: true
 
             Row {
                 spacing: 30
@@ -440,8 +449,8 @@ Item {
                 ComButton {
                     property bool conn: false
 
-                    text:  "conn"
-                    onClicked: plc.conn(conn = !conn)
+                    text: "conn"
+                    onClicked: GlobalVariable.deviceConnected = !GlobalVariable.deviceConnected
                 }
             }
         }

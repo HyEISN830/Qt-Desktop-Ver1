@@ -7,3 +7,9 @@ function now() {
 function dateValid(dateTimeStr) {
     return new Date(dateTimeStr) == "Invalid Date"
 }
+
+function showDialog(parent, title, content, type, acceptCb, rejectCb) {
+    let com = Qt.createComponent("../com/ComDialog.qml");
+    let dialog = com.createObject(parent, { title, content, type, acceptCb, rejectCb });
+    dialog.open();
+}

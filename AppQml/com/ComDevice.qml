@@ -7,6 +7,7 @@ Item {
     property int dId: -1
     property string title: "Title"
     property string content: "Content"
+    property bool connected: false
 
     id: comDevice
     width: 300
@@ -113,13 +114,13 @@ Item {
                     y: 1.5
                     width: height
                     height: txtConn.height - 3
-                    color: "#ff4757"
+                    color: connected ? "#2ecc71" : "#ff4757"
                     radius: height
                 }
 
                 ComTextEdit {
                     id: txtConn
-                    text: "未连接"
+                    text: connected ? "已连接" : "未连接"
                 }
             }
         }
@@ -207,10 +208,5 @@ Item {
 
     function tx() {
         txLedHAni.start()
-    }
-
-    function conn(c) {
-        connLed.color = c ? "#2ecc71" : "#ff4757"
-        txtConn.text = c ? "已连接" : "未连接"
     }
 }
