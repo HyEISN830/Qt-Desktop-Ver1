@@ -86,6 +86,7 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/device.png
     resources/barcode-scan.png
     resources/agv-robot.png
+    resources/robotic-arm.png
 )
 
 set_source_files_properties(

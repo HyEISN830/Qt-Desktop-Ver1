@@ -383,7 +383,7 @@ Item {
         ComDevice {
             id: agv
             x: 35
-            y: 318
+            y: 518
             dId: 9
             title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
@@ -417,16 +417,281 @@ Item {
                 target: agv
                 property: "y"
                 duration: 200
-                from: 368
-                to: 318
+                from: 568
+                to: 518
                 easing.type: Easing.InOutQuad
                 onStarted: agvSAni.start()
             }
         }
 
+        ComDevice {
+            id: arm
+            x: 35
+            y: 318
+            dId: 10
+            title: "0.0.0.0"
+            opacity: 0
+            content: "W1机械臂"
+            iconPath: "resources/robotic-arm.png"
+            iconColor: "#80ffcd05"
+            connected: false
+
+            OpacityAnimator {
+                id: armSAni
+                target: arm
+                from: 0
+                to: 1
+                duration: 500
+                easing.type: Easing.InOutQuad
+                running: view.currentItem == page
+            }
+
+            OpacityAnimator {
+                id: armHAni
+                target: arm
+                from: 1
+                to: 0
+                duration: 10
+                running: view.currentItem != page
+                easing.type: Easing.InOutQuad
+            }
+
+            NumberAnimation {
+                id: armYAni
+                target: arm
+                property: "y"
+                duration: 200
+                from: 368
+                to: 318
+                easing.type: Easing.InOutQuad
+                running: view.currentItem == page
+                onStarted: armSAni.start()
+                onFinished: arm1YAni.start()
+            }
+        }
+
+        ComDevice {
+            id: arm1
+            x: arm.x + arm.width + 30
+            y: 318
+            dId: 11
+            title: "0.0.0.0"
+            opacity: 0
+            content: "W2机械臂"
+            iconPath: "resources/robotic-arm.png"
+            iconColor: "#80ffcd05"
+            connected: false
+
+            OpacityAnimator {
+                id: arm1SAni
+                target: arm1
+                from: 0
+                to: 1
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
+
+            OpacityAnimator {
+                id: arm1HAni
+                target: arm1
+                from: 1
+                to: 0
+                duration: 10
+                running: view.currentItem != page
+                easing.type: Easing.InOutQuad
+            }
+
+            NumberAnimation {
+                id: arm1YAni
+                target: arm1
+                property: "y"
+                duration: 200
+                from: 368
+                to: 318
+                easing.type: Easing.InOutQuad
+                onStarted: arm1SAni.start()
+                onFinished: arm2YAni.start()
+            }
+        }
+
+        ComDevice {
+            id: arm2
+            x: arm1.x + arm1.width + 30
+            y: 318
+            dId: 12
+            title: "0.0.0.0"
+            opacity: 0
+            content: "W3机械臂"
+            iconPath: "resources/robotic-arm.png"
+            iconColor: "#80ffcd05"
+            connected: false
+
+            OpacityAnimator {
+                id: arm2SAni
+                target: arm2
+                from: 0
+                to: 1
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
+
+            OpacityAnimator {
+                id: arm2HAni
+                target: arm2
+                from: 1
+                to: 0
+                duration: 10
+                running: view.currentItem != page
+                easing.type: Easing.InOutQuad
+            }
+
+            NumberAnimation {
+                id: arm2YAni
+                target: arm2
+                property: "y"
+                duration: 200
+                from: 368
+                to: 318
+                easing.type: Easing.InOutQuad
+                onStarted: arm2SAni.start()
+                onFinished: arm3YAni.start()
+            }
+        }
+
+        ComDevice {
+            id: arm3
+            x: arm2.x + arm2.width + 30
+            y: 318
+            dId: 13
+            title: "0.0.0.0"
+            opacity: 0
+            content: "N1机械臂"
+            iconPath: "resources/robotic-arm.png"
+            iconColor: "#80ffcd05"
+            connected: false
+
+            OpacityAnimator {
+                id: arm3SAni
+                target: arm3
+                from: 0
+                to: 1
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
+
+            OpacityAnimator {
+                id: arm3HAni
+                target: arm3
+                from: 1
+                to: 0
+                duration: 10
+                running: view.currentItem != page
+                easing.type: Easing.InOutQuad
+            }
+
+            NumberAnimation {
+                id: arm3YAni
+                target: arm3
+                property: "y"
+                duration: 200
+                from: 368
+                to: 318
+                easing.type: Easing.InOutQuad
+                onStarted: arm3SAni.start()
+                onFinished: arm4YAni.start()
+            }
+        }
+
+        ComDevice {
+            id: arm4
+            x: 35
+            y: 418
+            dId: 14
+            title: "0.0.0.0"
+            opacity: 0
+            content: "N2机械臂"
+            iconPath: "resources/robotic-arm.png"
+            iconColor: "#80ffcd05"
+            connected: false
+
+            OpacityAnimator {
+                id: arm4SAni
+                target: arm4
+                from: 0
+                to: 1
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
+
+            OpacityAnimator {
+                id: arm4HAni
+                target: arm4
+                from: 1
+                to: 0
+                duration: 10
+                running: view.currentItem != page
+                easing.type: Easing.InOutQuad
+            }
+
+            NumberAnimation {
+                id: arm4YAni
+                target: arm4
+                property: "y"
+                duration: 200
+                from: 468
+                to: 418
+                easing.type: Easing.InOutQuad
+                onStarted: arm4SAni.start()
+                onFinished: arm5YAni.start()
+            }
+        }
+
+        ComDevice {
+            id: arm5
+            x: arm4.x + arm4.width + 30
+            y: 418
+            dId: 15
+            title: "0.0.0.0"
+            opacity: 0
+            content: "N3机械臂"
+            iconPath: "resources/robotic-arm.png"
+            iconColor: "#80ffcd05"
+            connected: false
+
+            OpacityAnimator {
+                id: arm5SAni
+                target: arm5
+                from: 0
+                to: 1
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
+
+            OpacityAnimator {
+                id: arm5HAni
+                target: arm5
+                from: 1
+                to: 0
+                duration: 10
+                running: view.currentItem != page
+                easing.type: Easing.InOutQuad
+            }
+
+            NumberAnimation {
+                id: arm5YAni
+                target: arm5
+                property: "y"
+                duration: 200
+                from: 468
+                to: 418
+                easing.type: Easing.InOutQuad
+                onStarted: arm5SAni.start()
+            }
+        }
+
         Column {
             x: 35
-            y: 500
+            y: 700
             visible: true
 
             Row {
