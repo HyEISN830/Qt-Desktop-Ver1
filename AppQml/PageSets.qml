@@ -127,6 +127,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 1)
+                                    }
                                 }
 
                                 ComButton {
@@ -134,6 +137,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 1)
                     }
                 }
             }
@@ -208,6 +213,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 2)
+                                    }
                                 }
 
                                 ComButton {
@@ -215,6 +223,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 2)
                     }
                 }
             }
@@ -289,6 +299,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 3)
+                                    }
                                 }
 
                                 ComButton {
@@ -296,6 +309,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 3)
                     }
                 }
             }
@@ -370,6 +385,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 4)
+                                    }
                                 }
 
                                 ComButton {
@@ -377,6 +395,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 4)
                     }
                 }
             }
@@ -451,6 +471,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 5)
+                                    }
                                 }
 
                                 ComButton {
@@ -458,6 +481,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 5)
                     }
                 }
             }
@@ -532,6 +557,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 6)
+                                    }
                                 }
 
                                 ComButton {
@@ -539,6 +567,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 6)
                     }
                 }
             }
@@ -613,6 +643,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 7)
+                                    }
                                 }
 
                                 ComButton {
@@ -620,6 +653,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 7)
                     }
                 }
             }
@@ -694,6 +729,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 8)
+                                    }
                                 }
 
                                 ComButton {
@@ -701,6 +739,8 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 8)
                     }
                 }
             }
@@ -775,6 +815,9 @@ Item {
 
                                 ComButton {
                                     text: "保存"
+                                    onClicked: {
+                                        saveDSets(txtDeviceIp, txtDevicePort, 9)
+                                    }
                                 }
 
                                 ComButton {
@@ -782,10 +825,22 @@ Item {
                                 }
                             }
                         }
+
+                        Component.onCompleted: loadDSets(txtDeviceIp, txtDevicePort, 9)
                     }
                 }
             }
         }
+    }
+
+    function loadDSets(txtIp, txtPort, dId) {
+        GlobalVariable[`device${dId}Ip`] = txtIp.text = bgservice.takeSetting(`device${dId}Ip`)
+        GlobalVariable[`device${dId}Port`] = txtPort.text = bgservice.takeSetting(`device${dId}Port`)
+    }
+
+    function saveDSets(txtIp, txtPort, dId) {
+        bgservice.saveSettings(`device${dId}IP`, GlobalVariable[`device${dId}Ip`] = txtIp.text)
+        bgservice.saveSettings(`device${dId}Port`, GlobalVariable[`device${dId}Port`] = txtPort.text)
     }
 
     OpacityAnimator {

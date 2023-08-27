@@ -35,11 +35,11 @@ Item {
             y: 18
             id: plc
             dId: 1
-            title: "192.168.1.1"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "线体PLC1"
             iconPath: "resources/plc.png"
-            connected: GlobalVariable.deviceConnected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: plcSAni
@@ -79,11 +79,11 @@ Item {
             x: plc.x + plc.width + 30
             y: 18
             dId: 2
-            title: "192.168.1.2"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "线体PLC2"
             iconPath: "resources/plc.png"
-            connected: GlobalVariable.device1Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: plc1SAni
@@ -121,12 +121,12 @@ Item {
             y: 118
             id: cam
             dId: 3
-            title: "192.168.1.3"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "W1扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
-            connected: GlobalVariable.device2Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: camSAni
@@ -166,12 +166,12 @@ Item {
             x: cam.x + cam.width + 30
             y: 118
             dId: 4
-            title: "192.168.1.4"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "W2扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
-            connected: GlobalVariable.device3Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: cam1SAni
@@ -210,12 +210,12 @@ Item {
             x: cam1.x + cam1.width + 30
             y: 118
             dId: 5
-            title: "192.168.1.5"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "W3扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
-            connected: GlobalVariable.device4Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: cam2SAni
@@ -254,12 +254,12 @@ Item {
             x: cam2.x + cam2.width + 30
             y: 118
             dId: 6
-            title: "192.168.1.6"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "N1扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
-            connected: GlobalVariable.device5Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: cam3SAni
@@ -298,12 +298,12 @@ Item {
             x: 35
             y: 118
             dId: 7
-            title: "192.168.1.7"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "N2扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
-            connected: GlobalVariable.device6Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: cam4SAni
@@ -342,12 +342,12 @@ Item {
             x: cam4.x + cam4.width + 30
             y: 118
             dId: 8
-            title: "192.168.1.8"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "N3扫码枪"
             iconPath: "resources/barcode-scan.png"
             iconColor: "#815f5166"
-            connected: GlobalVariable.device7Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: cam5SAni
@@ -385,12 +385,12 @@ Item {
             x: 35
             y: 318
             dId: 9
-            title: "192.168.1.9"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "SJ AGV"
             iconPath: "resources/agv-robot.png"
             iconColor: "#7effd15b"
-            connected: GlobalVariable.device8Connected
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: agvSAni
