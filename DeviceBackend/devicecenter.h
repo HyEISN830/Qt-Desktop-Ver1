@@ -3,6 +3,7 @@
 
 #include <QQuickItem>
 #include <QThread>
+#include <QJsonArray>
 
 
 /*
@@ -16,8 +17,19 @@ public:
     DeviceCenter();
     ~DeviceCenter();
 
-    Q_INVOKABLE void start();   // 开始处理设备逻辑
-    Q_INVOKABLE void stop();    // 停止处理设备逻辑
+#pragma region "设备启动以及生命周期相关相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    // @brief 设置设备列表, 在启动后调用无效, 需要通过设备设置相关函数进行更改
+    Q_INVOKABLE void setDevices(QJsonArray deviceList);
+    // @brief 开始处理设备逻辑
+    Q_INVOKABLE void start();
+    // @brief 停止处理设备逻辑
+    Q_INVOKABLE void stop();
+#pragma endregion
+
+#pragma region "控制设备相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    // @brief 基于指定设备一个新的连接参数
+    Q_INVOKABLE void reconnect(int dId, QString ip, QString port);
+#pragma endregion
 
 private:
     bool running = false;
@@ -26,7 +38,14 @@ private:
     void loop();    // 任务主循环
 
 signals:
-
+    // @brief 当 DeviceCenter 启动时
+    void onStarted();
+    // @brief 当 DeviceCenter 停止时
+    void onStoped();
+    // @brief 当某个设备连接成功时
+    void onDeviceConnected(int dId);
+    // @brief 当某个设备断开连接时
+    void onDeviceDisconnect(int dId);
 };
 
 #endif // DEVICECENTER_H
