@@ -33,3 +33,15 @@ void QmlService::saveSettings(QString key, QString value)
     settings->setValue(key, value);
     settings->sync();
 }
+
+bool QmlService::testTcpConn(QString host, int port)
+{
+    QTcpSocket tcp;
+    bool ok = false;
+
+    tcp.connectToHost(host, port);
+    ok = tcp.waitForConnected(5000);    // timeout of 5 seconds
+    tcp.disconnectFromHost();
+
+    return ok;
+}

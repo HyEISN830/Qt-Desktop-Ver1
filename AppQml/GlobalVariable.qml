@@ -31,4 +31,8 @@ QtObject {
     property bool device7Connected: false
     property bool device8Connected: false
     property bool device9Connected: false
+
+    property int maxDeviceCtn: 0
+    property list<var> deviceList: []
+    property var deviceListChangedCb: null
 }

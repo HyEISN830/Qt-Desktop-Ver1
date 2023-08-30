@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 import AppQml
 import AppQmlBackend
 
@@ -17,6 +16,12 @@ Item {
         cam3,
         cam4,
         cam5,
+        arm,
+        arm1,
+        arm2,
+        arm3,
+        arm4,
+        arm5,
         agv
     ]
 
@@ -719,6 +724,13 @@ Item {
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+//        GlobalVariable.deviceList = deviceList
+        GlobalVariable.maxDeviceCtn = deviceList.length
+        for (let i in deviceList)
+            GlobalVariable.deviceList.push(deviceList[i])
     }
 
 //    onIsCurPageChanged: function () {

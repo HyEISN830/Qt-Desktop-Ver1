@@ -7,6 +7,8 @@
 #include <QGuiApplication>
 #include <QDesktopServices>
 #include <QSettings>
+#include <QTcpSocket>
+
 
 // qml 一般后台服务, 如append 到 剪贴板, 打开浏览器等..
 class QmlService : public QQuickItem
@@ -21,6 +23,7 @@ public:
     Q_INVOKABLE void copy2clipboard(QString);
     Q_INVOKABLE QVariant takeSetting(QString key);
     Q_INVOKABLE void saveSettings(QString key, QString value);
+    Q_INVOKABLE bool testTcpConn(QString host, int port);
 
 private:
     QSettings *settings = nullptr;
