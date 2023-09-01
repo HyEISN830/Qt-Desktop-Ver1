@@ -18,6 +18,7 @@ target_link_libraries(appqml
 
 list(APPEND MODULE_QML_FILES
     GlobalVariable.qml
+    GlobalEnums.qml
     Consts.qml
     PageMain.qml
     PageHome.qml

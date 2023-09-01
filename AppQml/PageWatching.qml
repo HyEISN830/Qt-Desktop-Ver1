@@ -727,7 +727,6 @@ Item {
     }
 
     Component.onCompleted: {
-//        GlobalVariable.deviceList = deviceList
         GlobalVariable.maxDeviceCtn = deviceList.length
         for (let i in deviceList)
             GlobalVariable.deviceList.push(deviceList[i])

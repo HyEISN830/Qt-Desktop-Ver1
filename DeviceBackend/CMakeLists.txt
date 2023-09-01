@@ -20,4 +20,8 @@ qt_add_qml_module(devicebackend
     SOURCES
         devicecenter.h
         devicecenter.cpp
+        devicebarcodescanner.h
+        devicebarcodescanner.cpp
+        deviceplc.h
+        deviceplc.cpp
 )
