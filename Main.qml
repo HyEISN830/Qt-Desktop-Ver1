@@ -18,7 +18,7 @@ ApplicationWindow {
     minimumHeight: Consts.globalresolution_h
     minimumWidth: Consts.globalresolution_w
     visible: true
-    title: qsTr("AOS")
+    title: qsTr("MFS")
     background: Rectangle {
         color: "White"
     }
