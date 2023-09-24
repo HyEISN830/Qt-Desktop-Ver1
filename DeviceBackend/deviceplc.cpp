@@ -5,3 +5,13 @@ DevicePLC::DevicePLC(QObject *parent)
 {
 
 }
+
+void DevicePLC::connect()
+{
+
+}
+
+DevicePLC::~DevicePLC()
+{
+
+}

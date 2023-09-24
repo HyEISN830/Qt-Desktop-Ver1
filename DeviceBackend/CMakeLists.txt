@@ -18,10 +18,11 @@ qt_add_qml_module(devicebackend
     URI DeviceBackend
     VERSION 1.0
     SOURCES
+        devicelineno.h
         devicecenter.h
         devicecenter.cpp
-        devicebarcodescanner.h
-        devicebarcodescanner.cpp
+        devicescanner.h
+        devicescanner.cpp
         deviceplc.h
         deviceplc.cpp
 )

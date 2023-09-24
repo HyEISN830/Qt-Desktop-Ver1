@@ -8,6 +8,11 @@
 #include <QModbusClient>
 #include <QModbusTcpClient>
 #include <QList>
+#include <QMap>
+
+#include "devicelineno.h"
+#include "devicescanner.h"
+#include "deviceplc.h"
 
 
 /*
@@ -22,11 +27,6 @@ public:
     ~DeviceCenter();
 
 #pragma region "设备启动以及生命周期相关相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
-    /*
-        @brief 设置设备列表, 在启动后调用无效, 需要通过设备设置相关函数进行更改; 在 start() 前使用
-        @param deviceList - [{int dId, QString ip, QString port, char deviceType}]
-    */
-    Q_INVOKABLE void setDevices(QJsonArray deviceList);
     // @brief 开始处理设备逻辑
     Q_INVOKABLE void start();
     // @brief 停止处理设备逻辑
@@ -35,6 +35,16 @@ public:
 
 #pragma region "控制设备相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
     /*
+        @brief 连接扫码枪
+    */
+    Q_INVOKABLE void addscanner(int dId, QString ip, int port, DeviceLineNo lineNo);
+
+    /*
+        @brief 连接PLC
+    */
+    Q_INVOKABLE void addplc(int dId, QString ip, int port);
+
+    /*
         @brief 基于指定设备一个新的连接参数
         @param deviceType - GlobalEnums.DeviceType
     */
@@ -42,17 +52,22 @@ public:
 #pragma endregion }
 
 private:
-    QJsonArray deviceList;
-    QList<QTcpSocket> scannerList;
-    QList<QModbusTcpClient> plcList;
+    QMap<int, DeviceScanner*> scannerList;
+    QMap<int, DevicePLC*> plcList;
     bool running = false;
 
     void main();    // 主函数, 用于启动各类设置
     void loop();    // 任务主循环
 
-private slots:
+public slots:
     // @brief 收到来自扫码枪的条码
-    void bscannerReceived(int dId, QString ip, int port, QString barcode);
+    void bscannerReceived(DeviceScanner scanner, QString barcode);
+    // @brief 扫码枪已连接
+    void scannerConnected(DeviceScanner scanner);
+    // @brief 扫码枪连接失败
+    void scannerConnectFailed(DeviceScanner scanner);
+    // @brief 扫码枪已断开连接
+    void scannerDisconnected(DeviceScanner scanner);
 
 signals:
     // @brief 当 DeviceCenter 启动时
