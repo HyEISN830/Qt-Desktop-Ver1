@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import AppQml
 import AppQmlBackend
+import DeviceBackend
 
 
 Item {
@@ -27,6 +28,14 @@ Item {
 
     id: page
     opacity: 0
+
+    ComDelay {
+        id: delay
+    }
+
+    DeviceCenter {
+        id: deviceCenter
+    }
 
     Pane {
         anchors.fill: parent
@@ -730,6 +739,13 @@ Item {
         GlobalVariable.maxDeviceCtn = deviceList.length
         for (let i in deviceList)
             GlobalVariable.deviceList.push(deviceList[i])
+
+        delay.delay(3000, () => {
+            deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)
+
+            // start devicecenter loop
+            deviceCenter.start()
+        })
     }
 
 //    onIsCurPageChanged: function () {

@@ -9,6 +9,9 @@
 #include <QModbusTcpClient>
 #include <QList>
 #include <QMap>
+#include <QTimer>
+#include <QRunnable>
+#include <QThreadPool>
 
 #include "devicelineno.h"
 #include "devicescanner.h"
@@ -23,6 +26,26 @@ class DeviceCenter : public QQuickItem
     Q_OBJECT
     QML_ELEMENT
 public:
+    class LoopTask : public QRunnable
+    {
+    public:
+        LoopTask(DeviceCenter *deviceCenter) : deviceCenter(deviceCenter) {}
+        ~LoopTask() { qDebug() << "DeviceCenter.LoopTask finished."; }
+
+        void run() override
+        {
+            // TODO: 修复程序退出时崩溃
+            while (deviceCenter->running)
+            {
+                QThread::msleep(1000);
+                deviceCenter->loop();
+            }
+        }
+
+    private:
+        DeviceCenter *deviceCenter = nullptr;
+    };
+
     DeviceCenter();
     ~DeviceCenter();
 
@@ -61,13 +84,13 @@ private:
 
 public slots:
     // @brief 收到来自扫码枪的条码
-    void bscannerReceived(DeviceScanner scanner, QString barcode);
+    void bscannerReceived(DeviceScanner*, QString barcode);
     // @brief 扫码枪已连接
-    void scannerConnected(DeviceScanner scanner);
+    void scannerConnected(DeviceScanner*);
     // @brief 扫码枪连接失败
-    void scannerConnectFailed(DeviceScanner scanner);
+    void scannerConnectFailed(DeviceScanner*);
     // @brief 扫码枪已断开连接
-    void scannerDisconnected(DeviceScanner scanner);
+    void scannerDisconnected(DeviceScanner*);
 
 signals:
     // @brief 当 DeviceCenter 启动时

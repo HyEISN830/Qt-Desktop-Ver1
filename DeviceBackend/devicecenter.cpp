@@ -23,17 +23,19 @@ void DeviceCenter::main()
     // set up codes here
 
 
-    while (running)
-    {
-        // infinty loop without delay
-        // if you want to delay, you should add it in loop()
-        loop();
-    }
+    // infinty loop without delay
+    // if you want to delay, you should add it in LoopTask::run()
+    LoopTask *loopTask = new LoopTask(this);
+    QThreadPool::globalInstance()->start(loopTask);
 }
 
 void DeviceCenter::loop()
 {
-    QThread::msleep(1);
+    QList<int> keys = scannerList.keys();
+
+    // scanners connection heart check
+    for (int i = 0; i < keys.size(); ++i)
+        scannerList[keys[i]]->heartcheck();
 }
 #pragma endregion }
 
@@ -46,6 +48,7 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
     scannerList[dId] = scanner;
     connect(scanner, &DeviceScanner::barcodeReceived, this, &DeviceCenter::bscannerReceived);
     connect(scanner, &DeviceScanner::connected, this, &DeviceCenter::scannerConnected);
+    connect(scanner, &DeviceScanner::connectFailed, this, &DeviceCenter::scannerConnectFailed);
     connect(scanner, &DeviceScanner::disconnected, this, &DeviceCenter::scannerDisconnected);
     scanner->connect();
 }
@@ -63,24 +66,24 @@ void DeviceCenter::reconnect(int dId, QString ip, int port, char deviceProtocol)
 
 
 #pragma region "插槽事件处理 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
-void DeviceCenter::bscannerReceived(DeviceScanner scanner, QString barcode)
+void DeviceCenter::bscannerReceived(DeviceScanner *scanner, QString barcode)
 {
-    qDebug() << "id:" << scanner.getDId() << "barcode received => " << barcode;
+    qDebug() << "id:" << scanner->getDId() << "barcode received => " << barcode;
 }
 
-void DeviceCenter::scannerConnected(DeviceScanner scanner)
+void DeviceCenter::scannerConnected(DeviceScanner *scanner)
 {
-    qDebug() << "scanner" << scanner.getIp() << "connected.";
+    qDebug() << "scanner" << scanner->getIp() << "connected.";
 }
 
-void DeviceCenter::scannerConnectFailed(DeviceScanner scanner)
+void DeviceCenter::scannerConnectFailed(DeviceScanner *scanner)
 {
-    qDebug() << "scanner" << scanner.getIp() << "connect failed.";
+    qDebug() << "scanner" << scanner->getIp() << "connect failed.";
 }
 
-void DeviceCenter::scannerDisconnected(DeviceScanner scanner)
+void DeviceCenter::scannerDisconnected(DeviceScanner *scanner)
 {
-    qDebug() << "scanner" << scanner.getIp() << "disconnected.";
+    qDebug() << "scanner" << scanner->getIp() << "disconnected.";
 }
 #pragma endregion }
 
@@ -102,5 +105,4 @@ DeviceCenter::~DeviceCenter()
         delete plcList[dIds[i]];
         plcList.remove(dIds[i]);
     }
-
 }
