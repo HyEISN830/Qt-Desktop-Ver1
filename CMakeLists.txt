@@ -58,8 +58,6 @@ list(APPEND PROJECT_MODULES
     PRIVATE appqmlbackendplugin
     PRIVATE qmlfontloader
     PRIVATE qmlfontloaderplugin
-    PRIVATE dbentity
-    PRIVATE dbentityplugin
     PRIVATE devicebackend
     PRIVATE devicebackendplugin
 )
@@ -67,7 +65,6 @@ list(APPEND PROJECT_MODULES
 add_subdirectory(AppQml)
 add_subdirectory(AppQmlBackend)
 add_subdirectory(QmlFontLoader)
-add_subdirectory(DbEntity)
 add_subdirectory(DeviceBackend)
 
 target_link_libraries(appQt-Desktop-Ver1-TCL-NT
@@ -76,7 +73,6 @@ target_link_libraries(appQt-Desktop-Ver1-TCL-NT
     PRIVATE Qt${QT_VERSION_MAJOR}::Quick
     PRIVATE Qt${QT_VERSION_MAJOR}::Qml
     PRIVATE Qt${QT_VERSION_MAJOR}::SerialBus
-    PRIVATE Qt${QT_VERSION_MAJOR}::Sql
     ${PROJECT_MODULES}
 )
 

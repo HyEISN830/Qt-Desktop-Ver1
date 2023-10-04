@@ -120,7 +120,6 @@ Item {
                 PageTLogs {
                     id: tlogsPage
                     view: stackView
-                    db: db
                     bgservice: bgservice
                 }
                 PageSets {
@@ -136,25 +135,12 @@ Item {
         }
     }
 
-    ParasDbApi {
-        id: db
-    }
-
     ProgmService {
         id: progservice
     }
 
     QmlService {
         id: bgservice
-    }
-
-    function initDb() {
-        let dbinited = db.opendb();
-        if (!dbinited) {
-            showDialog("Error", "Connect to database failed.", "Erro")
-            return false;
-        }
-        return true
     }
 
     function showDialog(title, content, type, acceptCb, rejectCb) {
