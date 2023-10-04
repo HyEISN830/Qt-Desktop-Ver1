@@ -92,18 +92,18 @@ Item {
 
                                     Rectangle {
                                         color: "transparent"
-                                        width: lblURL.width + txtURL.width
-                                        height: txtURL.height
+                                        width: lblLength.width + txtLength.width
+                                        height: txtLength.height
 
                                         ComLabel {
-                                            id: lblURL
-                                            anchors.verticalCenter: txtURL.verticalCenter
+                                            id: lblLength
+                                            anchors.verticalCenter: txtLength.verticalCenter
                                             text: "IP: "
                                         }
 
                                         ComTextField {
-                                            id: txtURL
-                                            anchors.left: lblURL.right
+                                            id: txtLength
+                                            anchors.left: lblLength.right
                                             placeholderText: "IP"
                                             width: 120
                                         }
@@ -136,7 +136,7 @@ Item {
 
                                     ComButton {
                                         text: "重置"
-                                        onClicked: loadDSets(txtURL, txtDevicePort, modelData.dId)
+                                        onClicked: loadDSets(txtLength, txtDevicePort, modelData.dId)
                                     }
 
                                     Rectangle {
@@ -148,7 +148,7 @@ Item {
                                             id: btnSave
                                             text: "保存"
                                             onClicked: {
-                                                saveDSets(txtURL, txtDevicePort, modelData.dId)
+                                                saveDSets(txtLength, txtDevicePort, modelData.dId)
                                                 btnSaveIconShowAni.start()
                                             }
                                             opacity: 1
@@ -193,8 +193,8 @@ Item {
                                         onClicked: {
                                             loading = true
                                             delay.delay(100, () => {
-                                                let ok = bgservice.testTcpConn(txtURL.text, parseInt(txtDevicePort.text))
-                                                JSLib.showDialog(page, ok ? "提示" : "错误", `${txtURL.text} : ${txtDevicePort.text} ${ok ? "连接成功." : "连接失败."}`, ok ? "Info" : "Erro")
+                                                let ok = bgservice.testTcpConn(txtLength.text, parseInt(txtDevicePort.text))
+                                                JSLib.showDialog(page, ok ? "提示" : "错误", `${txtLength.text} : ${txtDevicePort.text} ${ok ? "连接成功." : "连接失败."}`, ok ? "Info" : "Erro")
                                                 loading = false
                                             })
                                         }
@@ -202,7 +202,7 @@ Item {
                                 }
                             }
 
-                            Component.onCompleted: loadDSets(txtURL, txtDevicePort, modelData.dId)
+                            Component.onCompleted: loadDSets(txtLength, txtDevicePort, modelData.dId)
                         }
                     }
                 }
@@ -230,18 +230,18 @@ Item {
 
                                 Rectangle {
                                     color: "transparent"
-                                    width: lblURL.width + txtURL.width
-                                    height: txtURL.height
+                                    width: lblLength.width + txtLength.width
+                                    height: txtLength.height
 
                                     ComLabel {
-                                        id: lblURL
-                                        anchors.verticalCenter: txtURL.verticalCenter
+                                        id: lblLength
+                                        anchors.verticalCenter: txtLength.verticalCenter
                                         text: "URL: "
                                     }
 
                                     ComTextField {
-                                        id: txtURL
-                                        anchors.left: lblURL.right
+                                        id: txtLength
+                                        anchors.left: lblLength.right
                                         placeholderText: "URL"
                                         width: 900
                                     }
@@ -255,7 +255,7 @@ Item {
 
                                 ComButton {
                                     text: "重置"
-                                    onClicked: loadUSets(txtURL, "barcodeInfoURL")
+                                    onClicked: loadUSets(txtLength, "barcodeInfoURL")
                                 }
 
                                 Rectangle {
@@ -267,7 +267,7 @@ Item {
                                         id: btnSave
                                         text: "保存"
                                         onClicked: {
-                                            saveUSets(txtURL, "barcodeInfoURL")
+                                            saveUSets(txtLength, "barcodeInfoURL")
                                             btnSaveIconShowAni.start()
                                         }
                                         opacity: 1
@@ -308,7 +308,7 @@ Item {
                             }
                         }
 
-                        Component.onCompleted: loadUSets(txtURL, "barcodeInfoURL")
+                        Component.onCompleted: loadUSets(txtLength, "barcodeInfoURL")
                     }
                 }
             }
@@ -335,18 +335,18 @@ Item {
 
                                 Rectangle {
                                     color: "transparent"
-                                    width: lblURL.width + txtURL.width
-                                    height: txtURL.height
+                                    width: lblLength.width + txtLength.width
+                                    height: txtLength.height
 
                                     ComLabel {
-                                        id: lblURL
-                                        anchors.verticalCenter: txtURL.verticalCenter
+                                        id: lblLength
+                                        anchors.verticalCenter: txtLength.verticalCenter
                                         text: "URL: "
                                     }
 
                                     ComTextField {
-                                        id: txtURL
-                                        anchors.left: lblURL.right
+                                        id: txtLength
+                                        anchors.left: lblLength.right
                                         placeholderText: "URL"
                                         width: 900
                                     }
@@ -360,7 +360,7 @@ Item {
 
                                 ComButton {
                                     text: "重置"
-                                    onClicked: loadUSets(txtURL, "stackUploadURL")
+                                    onClicked: loadUSets(txtLength, "stackUploadURL")
                                 }
 
                                 Rectangle {
@@ -372,7 +372,7 @@ Item {
                                         id: btnSave
                                         text: "保存"
                                         onClicked: {
-                                            saveUSets(txtURL, "stackUploadURL")
+                                            saveUSets(txtLength, "stackUploadURL")
                                             btnSaveIconShowAni.start()
                                         }
                                         opacity: 1
@@ -413,7 +413,112 @@ Item {
                             }
                         }
 
-                        Component.onCompleted: loadUSets(txtURL, "stackUploadURL")
+                        Component.onCompleted: loadUSets(txtLength, "stackUploadURL")
+                    }
+                }
+            }
+
+            ComExpand {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                title: `日志记录 设置项`
+                body: Component {
+                    Rectangle {
+                        height: 100
+                        color: "#f1f2f6"
+
+                        Column {
+                            anchors.fill: parent
+                            anchors.topMargin: 6
+                            anchors.leftMargin: 8
+                            spacing: 8
+
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 10
+
+                                Rectangle {
+                                    color: "transparent"
+                                    width: lblLength.width + txtLength.width
+                                    height: txtLength.height
+
+                                    ComLabel {
+                                        id: lblLength
+                                        anchors.verticalCenter: txtLength.verticalCenter
+                                        text: "最大长度: "
+                                    }
+
+                                    ComTextField {
+                                        id: txtLength
+                                        anchors.left: lblLength.right
+                                        placeholderText: "最大长度"
+                                        width: 100
+                                    }
+                                }
+                            }
+
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 8
+
+                                ComButton {
+                                    text: "重置"
+                                    onClicked: loadUSets(txtLength, "logLength")
+                                }
+
+                                Rectangle {
+                                    color: "transparent"
+                                    width: btnSave.width
+                                    height: btnSave.height
+
+                                    ComButton {
+                                        id: btnSave
+                                        text: "保存"
+                                        onClicked: {
+                                            saveUSets(txtLength, "logLength")
+                                            btnSaveIconShowAni.start()
+                                        }
+                                        opacity: 1
+                                    }
+
+                                    Image {
+                                        id: btnSaveIcon
+                                        anchors.centerIn: btnSave
+                                        source: "resources/icon-success-green.svg"
+                                        width: 40
+                                        height: 40
+                                        mipmap: true
+                                        opacity: 0
+
+                                        SequentialAnimation {
+                                            id: btnSaveIconShowAni
+                                            onStarted: btnSave.opacity = 0
+                                            onFinished: btnSave.opacity = 1
+
+                                            OpacityAnimator {
+                                                target: btnSaveIcon
+                                                from: 0
+                                                to: 1
+                                                duration: 700
+                                                easing.type: Easing.InOutCubic
+                                            }
+
+                                            OpacityAnimator {
+                                                target: btnSaveIcon
+                                                from: 1
+                                                to: 0
+                                                duration: 500
+                                                easing.type: Easing.OutCubic
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Component.onCompleted: loadUSets(txtLength, "logLength")
                     }
                 }
             }
@@ -425,8 +530,8 @@ Item {
         GlobalVariable[`device${dId}Port`] = txtPort.text = bgservice.takeSetting(`device${dId}Port`)
     }
 
-    function loadUSets(txtURL, name) {
-        txtURL.text = bgservice.takeSetting(name)
+    function loadUSets(txt, name) {
+        txt.text = bgservice.takeSetting(name)
     }
 
     function saveDSets(txtIp, txtPort, dId) {
@@ -434,8 +539,8 @@ Item {
         bgservice.saveSettings(`device${dId}Port`, GlobalVariable[`device${dId}Port`] = txtPort.text)
     }
 
-    function saveUSets(txtURL, name) {
-        bgservice.saveSettings(name, txtURL.text)
+    function saveUSets(txt, name) {
+        bgservice.saveSettings(name, txt.text)
     }
 
     OpacityAnimator {
