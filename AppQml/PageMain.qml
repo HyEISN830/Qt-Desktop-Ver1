@@ -154,7 +154,6 @@ Item {
         if (!Consts.debug) {
             testPage.destroy()
         }
-        if (!initDb()) return false;
         stackView.replace(setsPage, null)
         stackView.replace(tlogsPage, null)
         stackView.replace(watchingPage, null)
