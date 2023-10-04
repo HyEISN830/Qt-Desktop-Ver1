@@ -23,18 +23,6 @@ public:
 
     ScannerWorker(DeviceScanner *scanner) : scanner(scanner)
     {
-        manager = new QNetworkAccessManager;
-        connect(manager, &QNetworkAccessManager::finished, this, [=] (QNetworkReply *reply) {
-            if (reply->error() == QNetworkReply::NoError)
-            {
-                QJsonDocument jdoc = QJsonDocument::fromJson(reply->readAll());
-                querydone(false, jdoc.object());
-            }
-            else
-            {
-                querydone(true, QJsonObject());
-            }
-        });
     }
 
     ~ScannerWorker()
@@ -42,8 +30,11 @@ public:
     }
 
 signals:
+    void queryFailed(DeviceScanner *scanner, QString barcode, QJsonObject result);
+    void querySuccess(DeviceScanner *scanner, QString barcode, QJsonObject result);
 
 public slots:
+    void init();
     void querydone(bool error, QJsonObject result);
     void analysis(DeviceScanner *scanner, QString barcode);
 
@@ -51,6 +42,7 @@ private:
     QNetworkAccessManager *manager = nullptr;
     DeviceScanner *scanner = nullptr;
     QSettings settings;
+    QString barcode;
 };
 
 #endif // SCANNERWORKER_H

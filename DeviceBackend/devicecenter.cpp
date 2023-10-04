@@ -52,12 +52,16 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
     connect(scanner, &DeviceScanner::connected, this, &DeviceCenter::scannerConnected);
     connect(scanner, &DeviceScanner::connectFailed, this, &DeviceCenter::scannerConnectFailed);
     connect(scanner, &DeviceScanner::disconnected, this, &DeviceCenter::scannerDisconnected);
+    connect(scanner, &DeviceScanner::barcodeReceived, this, &DeviceCenter::scannerReceived);
     connect(thread, &QThread::finished, scanner, &DeviceScanner::deleteLater);
     scanner->moveToThread(thread);
     scanner->start();
 
     workerThreads[dId] = thread;
     connect(scanner, &DeviceScanner::barcodeReceived, worker, &ScannerWorker::analysis);
+    connect(worker, &ScannerWorker::queryFailed, this, &DeviceCenter::scannerQueryFailed);
+    connect(worker, &ScannerWorker::querySuccess, this, &DeviceCenter::scannerQuerySuccess);
+    connect(thread, &QThread::started, worker, &ScannerWorker::init);
     connect(thread, &QThread::finished, worker, &ScannerWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     worker->moveToThread(thread);
@@ -84,12 +88,11 @@ void DeviceCenter::reconnect(int dId, QString ip, int port, char deviceProtocol)
 #pragma region "插槽事件处理 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
 void DeviceCenter::scannerReceived(DeviceScanner *scanner, QString barcode)
 {
-    qDebug() << "id:" << scanner->getDId() << "barcode received => " << barcode;
+    emit barcodeReceived(scanner->getDId(), barcode);
 }
 
 void DeviceCenter::scannerConnected(DeviceScanner *scanner)
 {
-    qDebug() << "scanner" << scanner->getIp() << "connected.";
     emit deviceConnected(scanner->getDId());
 }
 
@@ -100,8 +103,17 @@ void DeviceCenter::scannerConnectFailed(DeviceScanner *scanner)
 
 void DeviceCenter::scannerDisconnected(DeviceScanner *scanner)
 {
-    qDebug() << "scanner" << scanner->getIp() << "disconnected.";
     emit deviceDisconnect(scanner->getDId());
+}
+
+void DeviceCenter::scannerQueryFailed(DeviceScanner *scanner, QString barcode, QJsonObject result)
+{
+    emit barcodeQueryFailed(scanner->getDId(), barcode, result);
+}
+
+void DeviceCenter::scannerQuerySuccess(DeviceScanner *scanner, QString barcode, QJsonObject result)
+{
+    emit barcodeQuerySuccess(scanner->getDId(), barcode, result);
 }
 #pragma endregion }
 

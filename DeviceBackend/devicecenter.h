@@ -96,6 +96,10 @@ public slots:
     void scannerConnectFailed(DeviceScanner*);
     // @brief 扫码枪已断开连接
     void scannerDisconnected(DeviceScanner*);
+    // @brief 扫码枪查询条码失败
+    void scannerQueryFailed(DeviceScanner*, QString barcode, QJsonObject result);
+    // @brief 扫码枪查询条码成功
+    void scannerQuerySuccess(DeviceScanner*, QString barcode, QJsonObject result);
 
     void received() { qDebug() << "received"; }
 
@@ -108,6 +112,12 @@ signals:
     void deviceConnected(int dId);
     // @brief 当某个设备断开连接时
     void deviceDisconnect(int dId);
+    // @breif 当扫码枪接收到条码时
+    void barcodeReceived(int dId, QString barcode);
+    // @brief 当条码查询失败时
+    void barcodeQueryFailed(int dId, QString barcode, QJsonObject);
+    // @brief 当条码查询成功时
+    void barcodeQuerySuccess(int dId, QString barcode, QJsonObject);
 };
 
 #endif // DEVICECENTER_H

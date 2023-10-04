@@ -56,7 +56,7 @@ Item {
                 TabButton {
                     text: qsTr("TLogs")
                     width: 100
-                    icon.source: "resources/icon-stats.svg"
+                    icon.source: "resources/icon-document.svg"
                     icon.height: Consts.icon_h
                     icon.width: Consts.icon_w
                     onClicked: {
@@ -116,6 +116,7 @@ Item {
                 PageWatching {
                     id: watchingPage
                     view: stackView
+                    log: tlogsPage
                 }
                 PageTLogs {
                     id: tlogsPage

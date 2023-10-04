@@ -4,9 +4,12 @@ import AppQml
 import AppQmlBackend
 import DeviceBackend
 
+import "./js/Common.js" as JSLib
+
 
 Item {
     property StackView view
+    property PageTLogs log
     property bool isCurPage: view.currentItem == page
     property list<ComDevice> deviceList: [
         plc,
@@ -35,7 +38,24 @@ Item {
 
     DeviceCenter {
         id: deviceCenter
-
+        onDeviceConnected: (dId) => {
+            GlobalVariable[`device${dId}Connected`] = true
+            log.appendSuccessLog(dId, "已建立连接.")
+        }
+        onDeviceDisconnect: (dId) => {
+            GlobalVariable[`device${dId}Connected`] = false
+            log.appendErrorLog(dId, "已断开连接.")
+        }
+        onBarcodeReceived: (dId, barcode) => {
+            log.appendNormalLog(dId, `接收到条码内容 => ${barcode}`)
+            GlobalVariable.deviceMap[dId].rx()
+        }
+        onBarcodeQueryFailed: (dId, barcode, result) => {
+            log.appendErrorLog(dId, `查询条码信息 ${barcode} 失败, 返回结果 => ${JSON.stringify(result)}`)
+        }
+        onBarcodeQuerySuccess: (dId, barcode, result) => {
+            log.appendNormalLog(dId, `查询条码信息 ${barcode} 成功, 返回结果 => ${JSON.stringify(result)}`)
+        }
     }
 
     Pane {
@@ -444,12 +464,12 @@ Item {
             x: 35
             y: 318
             dId: 10
-            title: "0.0.0.0"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "W1机械臂"
             iconPath: "resources/robotic-arm.png"
             iconColor: "#80ffcd05"
-            connected: false
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: armSAni
@@ -490,12 +510,12 @@ Item {
             x: arm.x + arm.width + 30
             y: 318
             dId: 11
-            title: "0.0.0.0"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "W2机械臂"
             iconPath: "resources/robotic-arm.png"
             iconColor: "#80ffcd05"
-            connected: false
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: arm1SAni
@@ -534,12 +554,12 @@ Item {
             x: arm1.x + arm1.width + 30
             y: 318
             dId: 12
-            title: "0.0.0.0"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "W3机械臂"
             iconPath: "resources/robotic-arm.png"
             iconColor: "#80ffcd05"
-            connected: false
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: arm2SAni
@@ -578,12 +598,12 @@ Item {
             x: arm2.x + arm2.width + 30
             y: 318
             dId: 13
-            title: "0.0.0.0"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "N1机械臂"
             iconPath: "resources/robotic-arm.png"
             iconColor: "#80ffcd05"
-            connected: false
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: arm3SAni
@@ -622,12 +642,12 @@ Item {
             x: 35
             y: 418
             dId: 14
-            title: "0.0.0.0"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "N2机械臂"
             iconPath: "resources/robotic-arm.png"
             iconColor: "#80ffcd05"
-            connected: false
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: arm4SAni
@@ -666,12 +686,12 @@ Item {
             x: arm4.x + arm4.width + 30
             y: 418
             dId: 15
-            title: "0.0.0.0"
+            title: GlobalVariable[`device${dId}Ip`]
             opacity: 0
             content: "N3机械臂"
             iconPath: "resources/robotic-arm.png"
             iconColor: "#80ffcd05"
-            connected: false
+            connected: GlobalVariable[`device${dId}Connected`]
 
             OpacityAnimator {
                 id: arm5SAni
@@ -738,10 +758,12 @@ Item {
 
     Component.onCompleted: {
         GlobalVariable.maxDeviceCtn = deviceList.length
-        for (let i in deviceList)
+        for (let i in deviceList) {
             GlobalVariable.deviceList.push(deviceList[i])
+            GlobalVariable.deviceMap[deviceList[i].dId] = deviceList[i]
+        }
 
-        delay.delay(3000, () => {
+        delay.delay(1000, () => {
             deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)
 
             // start devicecenter loop
