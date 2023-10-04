@@ -80,6 +80,7 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/icon-location.svg
     resources/icon-camera.svg
     resources/icon-arrow-right-fill.svg
+    resources/icon-document.svg
 
     resources/home.jpg
     resources/logo.png

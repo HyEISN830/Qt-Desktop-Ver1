@@ -45,3 +45,15 @@ bool QmlService::testTcpConn(QString host, int port)
 
     return ok;
 }
+
+bool QmlService::saveContent2Log(QString name, QString content)
+{
+    QDir dir("");
+    if (!dir.exists("log")) dir.mkdir("log");
+    QFile file("log/" + name.replace(":", "_"));
+    file.open(QFile::ReadWrite);
+    QTextStream in(&file);
+    in << content;
+    file.close();
+    return true;
+}
