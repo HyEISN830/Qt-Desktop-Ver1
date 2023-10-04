@@ -8,6 +8,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkRequest>
+#include <QSettings>
+#include <QUrlQuery>
 
 #include "devicescanner.h"
 
@@ -48,6 +50,7 @@ public slots:
 private:
     QNetworkAccessManager *manager = nullptr;
     DeviceScanner *scanner = nullptr;
+    QSettings settings;
 };
 
 #endif // SCANNERWORKER_H
