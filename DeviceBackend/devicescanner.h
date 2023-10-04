@@ -4,9 +4,12 @@
 #include <QDebug>
 #include <QObject>
 #include <QTcpSocket>
-#include <QTimer>
+#include <QTime>
+#include <QThread>
+#include <QRunnable>
 
 #include "devicelineno.h"
+#include "worker/tcpworker.h"
 
 class DeviceScanner : public QObject
 {
@@ -15,6 +18,7 @@ public:
     explicit DeviceScanner(QObject *parent = nullptr);
     DeviceScanner(int dId, QString ip, int port, DeviceLineNo lineNo) : dId(dId), ip(ip), port(port), line(lineNo) {}
     DeviceScanner(const DeviceScanner &scanner) : dId(scanner.dId), ip(scanner.ip), port(scanner.port), line(scanner.line) {}
+    ~DeviceScanner();
 
     inline void setDId(int dId) { this->dId = dId; }
     inline void setIp(QString ip) { this->ip = ip; }
@@ -25,12 +29,9 @@ public:
     inline QString getIp() { return this->ip; }
     inline int getPort() { return this->port; }
     inline DeviceLineNo getLine() { return this->line; }
-    inline bool getConnected() { return this->c; }
 
-    void connect();
-    void heartcheck();
-
-    ~DeviceScanner();
+    void start();
+    void apply(QString ip, int port);   // modify ip and port and reconnect
 
 signals:
     void connected(DeviceScanner*);
@@ -39,16 +40,11 @@ signals:
     void barcodeReceived(DeviceScanner*, QString barcode);
 
 private:
-    QTcpSocket *tcp = nullptr;
     int dId = 0;
     DeviceLineNo line = Unknow;
     QString ip;
     int port = 0;
-    bool c = false;
-
-    bool connecting = false;
-    bool readTcpSlotConnected = false;
-
+    TcpWorker *worker = nullptr;    // auto delete after quited
 };
 
 #endif // DEVICESCANNER_H

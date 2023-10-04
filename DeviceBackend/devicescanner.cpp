@@ -6,46 +6,34 @@ DeviceScanner::DeviceScanner(QObject *parent)
 
 }
 
-void DeviceScanner::connect()
+void DeviceScanner::start()
 {
-    QTimer::singleShot(100, this, [=] () {
-        if (connecting) return;
-
-        bool ok = false;
-
-        connecting = true;
-        if (!tcp)
-            tcp = new QTcpSocket;
-        tcp->connectToHost(ip, port);
-        ok = tcp->waitForConnected(3000);
-
-        if (ok && (c = true))
-            emit connected(this);
-        else
-            emit connectFailed(this);
-
-        if (!readTcpSlotConnected)
-        {
-            this->QObject::connect(tcp, &QIODevice::readyRead, this, [=] () {
-                readTcpSlotConnected = true;
-                emit barcodeReceived(this, tcp->readAll());
-            });
-            this->QObject::connect(tcp, &QTcpSocket::disconnected, this, [=] () {
-                c = false;
-                emit disconnected(this);
-            });
-        }
-        connecting = false;
-    });
+    if (!worker)
+    {
+        worker = new TcpWorker(ip, port);
+        connect(worker, &TcpWorker::connected, this, [=] { emit connected(this); });
+        connect(worker, &TcpWorker::disconnected, this, [=] { emit disconnected(this); });
+        connect(worker, &TcpWorker::connectFailed, this, [=] { emit connectFailed(this); });
+        connect(worker, &TcpWorker::received, this, [=] (QByteArray data) { emit barcodeReceived(this, data); });
+//        connect(worker, &TcpWorker::finished, worker, &TcpWorker::deleteLater);
+        worker->start();
+    }
 }
 
-void DeviceScanner::heartcheck()
+void DeviceScanner::apply(QString ip, int port)
 {
-    if (!c)
-        connect();
+    if (worker)
+    {
+        worker->setIp(ip);
+        worker->setPort(port);
+        worker->apply();
+    }
 }
 
 DeviceScanner::~DeviceScanner()
 {
-    delete tcp;
+    worker->quit();
+    worker->wait();
+
+    delete worker;
 }

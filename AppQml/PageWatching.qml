@@ -35,6 +35,7 @@ Item {
 
     DeviceCenter {
         id: deviceCenter
+
     }
 
     Pane {

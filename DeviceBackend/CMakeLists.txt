@@ -2,16 +2,15 @@ qt_add_library(devicebackend STATIC)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS
     Quick
-)
-
-target_link_libraries(devicebackend
-    PRIVATE Qt${QT_VERSION_MAJOR}::Quick
+    SerialBus
+    Network
 )
 
 set_target_properties(devicebackend PROPERTIES AUTOMOC ON)
 target_link_libraries(devicebackend
     PRIVATE Qt${QT_VERSION_MAJOR}::Quick
     PRIVATE Qt${QT_VERSION_MAJOR}::SerialBus
+    PRIVATE Qt${QT_VERSION_MAJOR}::Network
 )
 
 qt_add_qml_module(devicebackend
@@ -25,4 +24,10 @@ qt_add_qml_module(devicebackend
         devicescanner.cpp
         deviceplc.h
         deviceplc.cpp
+        worker/tcpworker.h
+        worker/tcpworker.cpp
+        worker/tcpworkersender.h
+        worker/tcpworkersender.cpp
+        centworker/scannerworker.h
+        centworker/scannerworker.cpp
 )
