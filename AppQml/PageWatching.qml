@@ -723,37 +723,6 @@ Item {
                 onStarted: arm5SAni.start()
             }
         }
-
-        Column {
-            x: 35
-            y: 700
-            visible: true
-
-            Row {
-                spacing: 30
-            }
-
-            Row {
-                spacing: 8
-
-                ComButton {
-                    text:  "rx"
-                    onClicked: plc.rx()
-                }
-
-                ComButton {
-                    text:  "tx"
-                    onClicked: plc.tx()
-                }
-
-                ComButton {
-                    property bool conn: false
-
-                    text: "conn"
-                    onClicked: GlobalVariable.deviceConnected = !GlobalVariable.deviceConnected
-                }
-            }
-        }
     }
 
     Component.onCompleted: {
@@ -770,34 +739,4 @@ Item {
             deviceCenter.start()
         })
     }
-
-//    onIsCurPageChanged: function () {
-//        if (!isCurPage) {
-//            // when quicky swap pages, complete all animations
-////            plcSAni.complete()
-//            plcHAni.complete()
-//            plcYAni.complete()
-////            plc1SAni.complete()
-//            plc1HAni.complete()
-//            plc1YAni.complete()
-////            camSAni.complete()
-//            camHAni.complete()
-//            camYAni.complete()
-////            cam1SAni.complete()
-//            cam1HAni.complete()
-//            cam1YAni.complete()
-////            cam2SAni.complete()
-//            cam2HAni.complete()
-//            cam2YAni.complete()
-////            cam3SAni.complete()
-//            cam3HAni.complete()
-//            cam3YAni.complete()
-////            cam4SAni.complete()
-//            cam4HAni.complete()
-//            cam4YAni.complete()
-////            cam5SAni.complete()
-//            cam5HAni.complete()
-//            cam5YAni.complete()
-//        }
-//    }
 }
