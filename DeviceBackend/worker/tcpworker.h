@@ -45,6 +45,11 @@ public:
                 if (!ok) emit connectFailed();
                 connecting = false;
             }
+            else if (a)
+            {
+                a = false;
+                tcp->disconnectFromHost();
+            }
         });
         connect(this, &QThread::finished, timer, &QTimer::stop);
         connect(this, &QThread::finished, timer, &QTimer::deleteLater);
@@ -57,7 +62,6 @@ public:
     void write(QByteArray data) { emit sendb(tcp, data); }
     void setIp(QString ip) { this->ip = ip; }
     void setPort(int port) { this->port = port; }
-    void apply() { tcp->disconnectFromHost(); }     // call this function if change ip or port after
 
 signals:
     void send(QTcpSocket*, QString);    // send string to tcp
@@ -74,6 +78,7 @@ public slots:
     void connd() { emit connected(); conn = true; }
     void connf() { emit connectFailed(); conn = false; }
     void conndis() { emit disconnected(); conn = false; }
+    void apply(QString ip, int port) { this->ip = ip; this->port = port; this->a = true; }     // call this function if change ip or port after
 
 private:
     QTcpSocket *tcp = nullptr;  // auto delete after used
@@ -82,6 +87,7 @@ private:
     QString ip;
     int port;
 
+    bool a = false;
     bool conn = false;
     bool connecting = false;
 };

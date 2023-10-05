@@ -1,4 +1,6 @@
 #include "devicecenter.h"
+#include "centworker/scannerworker.h"
+#include "centworker/plcworker.h"
 
 
 DeviceCenter::DeviceCenter()
@@ -53,6 +55,7 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
     connect(scanner, &DeviceScanner::connectFailed, this, &DeviceCenter::scannerConnectFailed);
     connect(scanner, &DeviceScanner::disconnected, this, &DeviceCenter::scannerDisconnected);
     connect(scanner, &DeviceScanner::barcodeReceived, this, &DeviceCenter::scannerReceived);
+    connect(scanner, &DeviceScanner::applied, this, &DeviceCenter::deviceApplied);
     connect(thread, &QThread::finished, scanner, &DeviceScanner::deleteLater);
     scanner->moveToThread(thread);
     scanner->start();
@@ -73,14 +76,38 @@ void DeviceCenter::addrobot(int dId, QString ip, int port, DeviceLineNo lineNo)
 
 }
 
-void DeviceCenter::addplc(int dId, QString ip, int port)
+void DeviceCenter::addplc(int dId, QString ip, int port, DeviceLineNo lineNo)
 {
+    DevicePLC *plc = new DevicePLC(dId, ip, port, lineNo);
+    PlcWorker *worker = new PlcWorker(plc);
+    QThread *thread = new QThread;
 
+    plcList[dId] = plc;
+    connect(plc, &DevicePLC::connected, this, &DeviceCenter::plcConnected);
+    connect(plc, &DevicePLC::disconnected, this, &DeviceCenter::plcDisconnected);
+    connect(plc, &DevicePLC::applied, this, &DeviceCenter::deviceApplied);
+    connect(plc, &DevicePLC::tx, this, &DeviceCenter::_plcTx);
+    connect(plc, &DevicePLC::rx, this, &DeviceCenter::_plcRx);
+    connect(thread, &QThread::finished, plc, &DevicePLC::deleteLater);
+    plc->moveToThread(thread);
+    plc->start();
+
+    workerThreads[dId] = thread;
+    connect(worker, &PlcWorker::writeRegister, plc, &DevicePLC::writeRegister);
+    connect(worker, &PlcWorker::readRegisters, plc, &DevicePLC::readRegisters);
+    connect(plc, &DevicePLC::received, worker, &PlcWorker::received);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    worker->moveToThread(thread);
+    thread->start();
 }
 
-void DeviceCenter::reconnect(int dId, QString ip, int port, char deviceProtocol)
+void DeviceCenter::reconnect(int dId, QString ip, int port)
 {
+    if (scannerList.contains(dId))
+        scannerList[dId]->apply(ip, port);
 
+    if (plcList.contains(dId))
+        plcList[dId]->apply(ip, port);
 }
 #pragma endregion }
 
@@ -98,7 +125,7 @@ void DeviceCenter::scannerConnected(DeviceScanner *scanner)
 
 void DeviceCenter::scannerConnectFailed(DeviceScanner *scanner)
 {
-    qDebug() << "scanner" << scanner->getIp() << "connect failed.";
+    emit deviceConnectFailed(scanner->getDId());
 }
 
 void DeviceCenter::scannerDisconnected(DeviceScanner *scanner)
@@ -115,6 +142,26 @@ void DeviceCenter::scannerQuerySuccess(DeviceScanner *scanner, QString barcode, 
 {
     emit barcodeQuerySuccess(scanner->getDId(), barcode, result);
 }
+
+void DeviceCenter::plcConnected(DevicePLC *plc)
+{
+    emit deviceConnected(plc->getDId());
+}
+
+void DeviceCenter::plcDisconnected(DevicePLC *plc)
+{
+    emit deviceConnectFailed(plc->getDId());
+}
+
+void DeviceCenter::_plcTx(DevicePLC *plc)
+{
+    emit plcTx(plc->getDId());
+}
+
+void DeviceCenter::_plcRx(DevicePLC *plc)
+{
+    emit plcRx(plc->getDId());
+}
 #pragma endregion }
 
 
@@ -127,10 +174,7 @@ DeviceCenter::~DeviceCenter()
 
     dIds = plcList.keys();
     for (int i = 0; i < dIds.size(); ++i)
-    {
-        delete plcList[dIds[i]];
         plcList.remove(dIds[i]);
-    }
 
     dIds = workerThreads.keys();
     for (int i = 0; i < dIds.size(); ++i)

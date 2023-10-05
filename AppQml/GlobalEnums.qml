@@ -10,6 +10,7 @@ QtObject {
 
     enum LineNo {
         Unknow,
+        All,
         W1,
         W2,
         W3,

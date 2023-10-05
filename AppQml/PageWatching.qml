@@ -10,6 +10,7 @@ import "./js/Common.js" as JSLib
 Item {
     property StackView view
     property PageTLogs log
+    property DeviceCenter deviceCenter
     property bool isCurPage: view.currentItem == page
     property list<ComDevice> deviceList: [
         plc,
@@ -34,28 +35,6 @@ Item {
 
     ComDelay {
         id: delay
-    }
-
-    DeviceCenter {
-        id: deviceCenter
-        onDeviceConnected: (dId) => {
-            GlobalVariable[`device${dId}Connected`] = true
-            log.appendSuccessLog(dId, "已建立连接.")
-        }
-        onDeviceDisconnect: (dId) => {
-            GlobalVariable[`device${dId}Connected`] = false
-            log.appendErrorLog(dId, "已断开连接.")
-        }
-        onBarcodeReceived: (dId, barcode) => {
-            log.appendNormalLog(dId, `接收到条码内容 => ${barcode}`)
-            GlobalVariable.deviceMap[dId].rx()
-        }
-        onBarcodeQueryFailed: (dId, barcode, result) => {
-            log.appendErrorLog(dId, `查询条码信息 ${barcode} 失败, 返回结果 => ${JSON.stringify(result)}`)
-        }
-        onBarcodeQuerySuccess: (dId, barcode, result) => {
-            log.appendNormalLog(dId, `查询条码信息 ${barcode} 成功, 返回结果 => ${JSON.stringify(result)}`)
-        }
     }
 
     Pane {
@@ -734,9 +713,10 @@ Item {
 
         delay.delay(1000, () => {
             deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)
+            deviceCenter.addplc(1, GlobalVariable["device1Ip"], GlobalVariable["device1Port"], GlobalEnums.LineNo.All)
 
             // start devicecenter loop
-            deviceCenter.start()
+//            deviceCenter.start()
         })
     }
 }

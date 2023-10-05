@@ -16,7 +16,6 @@
 #include "devicelineno.h"
 #include "devicescanner.h"
 #include "deviceplc.h"
-#include "centworker/scannerworker.h"
 
 
 /*
@@ -68,13 +67,13 @@ public:
     Q_INVOKABLE void addrobot(int dId, QString ip, int port, DeviceLineNo lineNo);
 
     // @brief 连接PLC
-    Q_INVOKABLE void addplc(int dId, QString ip, int port);
+    Q_INVOKABLE void addplc(int dId, QString ip, int port, DeviceLineNo lineNo);
 
     /*
         @brief 基于指定设备一个新的连接参数
         @param deviceType - GlobalEnums.DeviceType
     */
-    Q_INVOKABLE void reconnect(int dId, QString ip, int port, char deviceType);
+    Q_INVOKABLE void reconnect(int dId, QString ip, int port);
 #pragma endregion }
 
 private:
@@ -100,6 +99,14 @@ public slots:
     void scannerQueryFailed(DeviceScanner*, QString barcode, QJsonObject result);
     // @brief 扫码枪查询条码成功
     void scannerQuerySuccess(DeviceScanner*, QString barcode, QJsonObject result);
+    // @brief PLC连接成功时
+    void plcConnected(DevicePLC*);
+    // @brief PLC断开连接或连接失败时
+    void plcDisconnected(DevicePLC*);
+    // @brief on PLC TX
+    void _plcTx(DevicePLC*);
+    // @brief on PLC RX
+    void _plcRx(DevicePLC*);
 
     void received() { qDebug() << "received"; }
 
@@ -112,12 +119,20 @@ signals:
     void deviceConnected(int dId);
     // @brief 当某个设备断开连接时
     void deviceDisconnect(int dId);
+    // @brief 当某个设备重新应用了新的连接参数时
+    void deviceApplied(int dId, QString ip, int port);
+    // @biref 当某个设备连接失败时
+    void deviceConnectFailed(int dId);
     // @breif 当扫码枪接收到条码时
     void barcodeReceived(int dId, QString barcode);
     // @brief 当条码查询失败时
     void barcodeQueryFailed(int dId, QString barcode, QJsonObject);
     // @brief 当条码查询成功时
     void barcodeQuerySuccess(int dId, QString barcode, QJsonObject);
+    // @brief on PLC TX
+    void plcTx(int dId);
+    // @brief on PLC RX
+    void plcRx(int dId);
 };
 
 #endif // DEVICECENTER_H

@@ -64,6 +64,7 @@ Item {
             anchors.left: parent.left
             background: Rectangle {
                 color: "#2f3542"
+                radius: 5
             }
 
             ComTextEdit {

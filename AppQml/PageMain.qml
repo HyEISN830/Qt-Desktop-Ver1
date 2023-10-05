@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import AppQmlBackend
+import DeviceBackend
 
 Item {
     id: page
@@ -117,6 +118,7 @@ Item {
                     id: watchingPage
                     view: stackView
                     log: tlogsPage
+                    deviceCenter: deviceCenter
                 }
                 PageTLogs {
                     id: tlogsPage
@@ -127,6 +129,7 @@ Item {
                     id: setsPage
                     view: stackView
                     bgservice: bgservice
+                    deviceCenter: deviceCenter
                 }
                 T_PageTests {
                     id: testPage
@@ -142,6 +145,40 @@ Item {
 
     QmlService {
         id: bgservice
+    }
+
+    DeviceCenter {
+        id: deviceCenter
+        onDeviceConnected: (dId) => {
+            GlobalVariable[`device${dId}Connected`] = true
+            tlogsPage.appendSuccessLog(dId, "已建立连接.")
+        }
+        onDeviceDisconnect: (dId) => {
+            GlobalVariable[`device${dId}Connected`] = false
+            tlogsPage.appendErrorLog(dId, "已断开连接.")
+        }
+        onDeviceConnectFailed: (dId) => {
+            tlogsPage.appendErrorLog(dId, "连接失败或连接已断开.")
+        }
+        onDeviceApplied: (dId, ip, port) => {
+            tlogsPage.appendNormalLog(dId, `已采用了新的连接参数 ${ip}:${port} , 正在重新连接.`)
+        }
+        onBarcodeReceived: (dId, barcode) => {
+            tlogsPage.appendNormalLog(dId, `接收到条码内容 => ${barcode}`)
+            GlobalVariable.deviceMap[dId].rx()
+        }
+        onBarcodeQueryFailed: (dId, barcode, result) => {
+            tlogsPage.appendErrorLog(dId, `查询条码信息 ${barcode} 失败, 返回结果 => ${JSON.stringify(result)}`)
+        }
+        onBarcodeQuerySuccess: (dId, barcode, result) => {
+            tlogsPage.appendNormalLog(dId, `查询条码信息 ${barcode} 成功, 返回结果 => ${JSON.stringify(result)}`)
+        }
+        onPlcTx: (dId) => {
+            GlobalVariable.deviceMap[dId].tx()
+        }
+        onPlcRx: (dId) => {
+            GlobalVariable.deviceMap[dId].rx()
+        }
     }
 
     function showDialog(title, content, type, acceptCb, rejectCb) {

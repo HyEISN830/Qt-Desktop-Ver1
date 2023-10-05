@@ -28,6 +28,12 @@ qt_add_qml_module(devicebackend
         worker/tcpworker.cpp
         worker/tcpworkersender.h
         worker/tcpworkersender.cpp
+        worker/modbustcpworker.h
+        worker/modbustcpworker.cpp
+        worker/modbustcpworkersender.h
+        worker/modbustcpworkersender.cpp
         centworker/scannerworker.h
         centworker/scannerworker.cpp
+        centworker/plcworker.h
+        centworker/plcworker.cpp
 )

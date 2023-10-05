@@ -38,6 +38,8 @@ signals:
     void disconnected(DeviceScanner*);
     void connectFailed(DeviceScanner*);
     void barcodeReceived(DeviceScanner*, QString barcode);
+    void _apply(QString ip, int port);
+    void applied(int dId, QString ip, int port);
 
 private:
     int dId = 0;

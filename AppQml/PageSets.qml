@@ -2,11 +2,13 @@ import QtQuick
 import QtQuick.Controls
 import AppQml
 import AppQmlBackend
+import DeviceBackend
 
 import "./js/Common.js" as JSLib
 
 Item {
     property StackView view
+    property DeviceCenter deviceCenter
     property QmlService bgservice: null
     property bool loading: false
 
@@ -149,6 +151,7 @@ Item {
                                             text: "保存"
                                             onClicked: {
                                                 saveDSets(txtLength, txtDevicePort, modelData.dId)
+                                                deviceCenter.reconnect(modelData.dId, txtLength.text, txtDevicePort.text)
                                                 btnSaveIconShowAni.start()
                                             }
                                             opacity: 1

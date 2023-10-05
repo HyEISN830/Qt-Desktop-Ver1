@@ -3,6 +3,7 @@
 enum DeviceLineNo
 {
     Unknow,
+    All,
     W1,
     W2,
     W3,
