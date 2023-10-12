@@ -15,8 +15,6 @@ void DeviceScanner::start()
         connect(worker, &TcpWorker::disconnected, this, [=] { emit disconnected(this); });
         connect(worker, &TcpWorker::connectFailed, this, [=] { emit connectFailed(this); });
         connect(worker, &TcpWorker::received, this, [=] (QByteArray data) { emit barcodeReceived(this, data); });
-//        connect(this, &DeviceScanner::_apply, worker, &TcpWorker::apply);
-//        connect(worker, &TcpWorker::finished, worker, &TcpWorker::deleteLater);
         worker->start();
     }
 }

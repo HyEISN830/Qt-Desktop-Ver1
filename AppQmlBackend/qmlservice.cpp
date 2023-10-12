@@ -3,11 +3,13 @@
 QmlService::QmlService()
 {
     settings = new QSettings;
+    manager = new QNetworkAccessManager;
 }
 
 QmlService::~QmlService()
 {
     delete settings;
+    delete manager;
 }
 
 bool QmlService::openurlwithbrowser(QString url)
@@ -56,4 +58,23 @@ bool QmlService::saveContent2Log(QString name, QString content)
     in << content;
     file.close();
     return true;
+}
+
+void QmlService::addAppLog(QString content, int level)
+{
+    QUrl url = takeSetting("appLogURL").toString().trimmed();
+
+    if (url.toString().length())
+    {
+        QUrlQuery query;
+
+        query.addQueryItem("content", content);
+        query.addQueryItem("level", QString::number(level));
+        url.setQuery(query);
+
+        QNetworkReply *reply = manager->get(QNetworkRequest(url));
+
+        if (reply)
+            connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+    }
 }

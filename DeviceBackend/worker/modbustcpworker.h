@@ -60,6 +60,9 @@ public:
         exec();
     }
 
+    inline bool getConnected() { return this->conn; }
+    inline bool getConnecting() { return this->connecting; }
+
 signals:
     void _writeRegister(QModbusTcpClient *modbus, int type, int id, int addr, ushort value);
     void _readRegisters(QModbusTcpClient *modbus, int type, int id, int startAddr, ushort length);

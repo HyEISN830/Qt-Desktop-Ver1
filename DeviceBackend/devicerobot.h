@@ -1,24 +1,20 @@
-#ifndef DEVICESCANNER_H
-#define DEVICESCANNER_H
+#ifndef DEVICEROBOT_H
+#define DEVICEROBOT_H
 
-#include <QDebug>
 #include <QObject>
-#include <QTcpSocket>
-#include <QTime>
-#include <QThread>
-#include <QRunnable>
+#include <QStringBuilder>
 
 #include "devicelineno.h"
 #include "worker/tcpworker.h"
 
-class DeviceScanner : public QObject
+
+class DeviceRobot : public QObject
 {
     Q_OBJECT
 public:
-    explicit DeviceScanner(QObject *parent = nullptr);
-    DeviceScanner(int dId, QString ip, int port, DeviceLineNo lineNo) : dId(dId), ip(ip), port(port), line(lineNo) {}
-    DeviceScanner(const DeviceScanner &scanner) : dId(scanner.dId), ip(scanner.ip), port(scanner.port), line(scanner.line) {}
-    ~DeviceScanner();
+    explicit DeviceRobot(QObject *parent = nullptr);
+    DeviceRobot(int dId, QString ip, int port, DeviceLineNo lineNo) : dId(dId), ip(ip), port(port), line(lineNo) {}
+    ~DeviceRobot();
 
     inline void setDId(int dId) { this->dId = dId; }
     inline void setIp(QString ip) { this->ip = ip; }
@@ -34,13 +30,21 @@ public:
     void apply(QString ip, int port);   // modify ip and port and reconnect
 
 signals:
-    void connected(DeviceScanner*);
-    void disconnected(DeviceScanner*);
-    void connectFailed(DeviceScanner*);
-    void barcodeReceived(DeviceScanner*, QString barcode);
+    void connected(DeviceRobot*);
+    void disconnected(DeviceRobot*);
+    void connectFailed(DeviceRobot*);
+    void sended(DeviceRobot*, QString content);
+    void received(DeviceRobot*, QString content);
     void _apply(QString ip, int port);
     void applied(int dId, QString ip, int port);
-    void _send(QString);
+    void _write(QString content);
+    void tx(DeviceRobot*);
+    void rx(DeviceRobot*);
+
+public slots:
+    void write(QString content) { emit tx(this); emit sended(this, content); emit _write(content); }
+    // @brief 向机器人发送参数: 长宽高行列层
+    void writeParams(int len, int wide, int height, int row, int col, int layer);
 
 private:
     int dId = 0;
@@ -48,6 +52,7 @@ private:
     QString ip;
     int port = 0;
     TcpWorker *worker = nullptr;    // auto delete after quited
+
 };
 
-#endif // DEVICESCANNER_H
+#endif // DEVICEROBOT_H

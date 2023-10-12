@@ -1,6 +1,4 @@
 #include "devicecenter.h"
-#include "centworker/scannerworker.h"
-#include "centworker/plcworker.h"
 
 
 DeviceCenter::DeviceCenter()
@@ -11,34 +9,119 @@ DeviceCenter::DeviceCenter()
 #pragma region "设备启动以及生命周期相关相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
 void DeviceCenter::start()
 {
-    main();
+    // TODO: 在此处处理所有的worker相关connect
+    // W1
+    ScannerWorker *w1sw = findScannerWorker(DeviceLineNo::W1);
+    PlcWorker *w1pw = findPlcWorker(DeviceLineNo::W1);
+    RobotWorker *w1rw = findRobotWorker(DeviceLineNo::W1);
+    connect(w1pw, &PlcWorker::pullUp, w1sw, &ScannerWorker::pullUp);
+    connect(w1pw, &PlcWorker::commitReq, w1sw, &ScannerWorker::commitReq);
+    connect(w1sw, &ScannerWorker::gotoChange, w1pw, &PlcWorker::gotoChange);
+    connect(w1sw, &ScannerWorker::txRobotParams, w1rw, &RobotWorker::writeParams);
+    connect(w1sw, &ScannerWorker::approveOut, w1pw, &PlcWorker::approveOut);
+    connect(w1sw, &ScannerWorker::rejectOut, w1pw, &PlcWorker::rejectOut);
+
+    // W2
+//    ScannerWorker *w2sw = findScannerWorker(DeviceLineNo::W2);
+//    PlcWorker *w2pw = findPlcWorker(DeviceLineNo::W2);
+//    RobotWorker *w2rw = findRobotWorker(DeviceLineNo::W2);
+//    connect(w2pw, &PlcWorker::pullUp, w2sw, &ScannerWorker::pullUp);
+//    connect(w2pw, &PlcWorker::commitReq, w2sw, &ScannerWorker::commitReq);
+//    connect(w2sw, &ScannerWorker::gotoChange, w2pw, &PlcWorker::gotoChange);
+//    connect(w2sw, &ScannerWorker::txRobotParams, w2rw, &RobotWorker::writeParams);
+//    connect(w2sw, &ScannerWorker::approveOut, w2pw, &PlcWorker::approveOut);
+//    connect(w2sw, &ScannerWorker::rejectOut, w2pw, &PlcWorker::rejectOut);
+
+    // W3
+//    ScannerWorker *w3sw = findScannerWorker(DeviceLineNo::W3);
+//    PlcWorker *w3pw = findPlcWorker(DeviceLineNo::W3);
+//    RobotWorker *w3rw = findRobotWorker(DeviceLineNo::W3);
+//    connect(w3pw, &PlcWorker::pullUp, w3sw, &ScannerWorker::pullUp);
+//    connect(w3pw, &PlcWorker::commitReq, w3sw, &ScannerWorker::commitReq);
+//    connect(w3sw, &ScannerWorker::gotoChange, w3pw, &PlcWorker::gotoChange);
+//    connect(w3sw, &ScannerWorker::txRobotParams, w3rw, &RobotWorker::writeParams);
+//    connect(w3sw, &ScannerWorker::approveOut, w3pw, &PlcWorker::approveOut);
+//    connect(w3sw, &ScannerWorker::rejectOut, w3pw, &PlcWorker::rejectOut);
+
+    // N3
+//    ScannerWorker *n3sw = findScannerWorker(DeviceLineNo::N3);
+//    PlcWorker *n3pw = findPlcWorker(DeviceLineNo::N3);
+//    RobotWorker *n3rw = findRobotWorker(DeviceLineNo::N3);
+//    connect(n3pw, &PlcWorker::pullUp, n3sw, &ScannerWorker::pullUp);
+//    connect(n3pw, &PlcWorker::commitReq, n3sw, &ScannerWorker::commitReq);
+//    connect(n3sw, &ScannerWorker::gotoChange, n3pw, &PlcWorker::gotoChange);
+//    connect(n3sw, &ScannerWorker::txRobotParams, n3rw, &RobotWorker::writeParams);
+//    connect(n3sw, &ScannerWorker::approveOut, n3pw, &PlcWorker::approveOut);
+//    connect(n3sw, &ScannerWorker::rejectOut, n3pw, &PlcWorker::rejectOut);
+
+    // N2
+//    ScannerWorker *n2sw = findScannerWorker(DeviceLineNo::N2);
+//    PlcWorker *n2pw = findPlcWorker(DeviceLineNo::N2);
+//    RobotWorker *n2rw = findRobotWorker(DeviceLineNo::N2);
+//    connect(n2pw, &PlcWorker::pullUp, n2sw, &ScannerWorker::pullUp);
+//    connect(n2pw, &PlcWorker::commitReq, n2sw, &ScannerWorker::commitReq);
+//    connect(n2sw, &ScannerWorker::gotoChange, n2pw, &PlcWorker::gotoChange);
+//    connect(n2sw, &ScannerWorker::txRobotParams, n2rw, &RobotWorker::writeParams);
+//    connect(n2sw, &ScannerWorker::approveOut, n2pw, &PlcWorker::approveOut);
+//    connect(n2sw, &ScannerWorker::rejectOut, n2pw, &PlcWorker::rejectOut);
+
+    // N1
+//    ScannerWorker *n1sw = findScannerWorker(DeviceLineNo::N1);
+//    PlcWorker *n1pw = findPlcWorker(DeviceLineNo::N1);
+//    RobotWorker *n1rw = findRobotWorker(DeviceLineNo::N1);
+//    connect(n1pw, &PlcWorker::pullUp, n1sw, &ScannerWorker::pullUp);
+//    connect(n1pw, &PlcWorker::commitReq, n1sw, &ScannerWorker::commitReq);
+//    connect(n1sw, &ScannerWorker::gotoChange, n1pw, &PlcWorker::gotoChange);
+//    connect(n1sw, &ScannerWorker::txRobotParams, n1rw, &RobotWorker::writeParams);
+//    connect(n1sw, &ScannerWorker::approveOut, n1pw, &PlcWorker::approveOut);
+//    connect(n1sw, &ScannerWorker::rejectOut, n1pw, &PlcWorker::rejectOut);
 }
 
 void DeviceCenter::stop()
 {
-    if (loopTask)
-        loopTask->stop();
 }
 
-void DeviceCenter::main()
+ScannerWorker* DeviceCenter::findScannerWorker(DeviceLineNo line)
 {
-    // set up codes here
+    ScannerWorker *worker = nullptr;
+    QList<int> keys = scannerWorkers.keys();
 
+    for (int var = 0; var < keys.size(); ++var)
+    {
+        if (scannerWorkers[keys[var]]->getLineNo() == line)
+            worker = scannerWorkers[keys[var]];
+    }
 
-    // infinty loop without delay
-    // if you want to delay, you should add it in LoopTask::run()
-//    LoopTask *loopTask = new LoopTask(this);
-//    this->loopTask = loopTask;
-//    QThreadPool::globalInstance()->start(loopTask);
+    return worker;
 }
 
-void DeviceCenter::loop()
+RobotWorker* DeviceCenter::findRobotWorker(DeviceLineNo line)
 {
-//    QList<int> keys = scannerList.keys();
+    RobotWorker *worker = nullptr;
+    QList<int> keys = robotWorkers.keys();
 
-    // scanners connection heart check
-//    for (int i = 0; i < keys.size(); ++i)
-//        scannerList[keys[i]]->heartcheck();
+    for (int var = 0; var < keys.size(); ++var)
+    {
+        if (robotWorkers[keys[var]]->getLineNo() == line)
+            worker = robotWorkers[keys[var]];
+    }
+
+    return worker;
+}
+
+PlcWorker* DeviceCenter::findPlcWorker(DeviceLineNo line)
+{
+    PlcWorker *worker = nullptr;
+    QList<int> keys = plcWorkers.keys();
+
+    for (int var = 0; var < keys.size(); ++var)
+    {
+        DeviceLineNo workerline = plcWorkers[keys[var]]->getLineNo();
+        if (workerline == line || workerline == DeviceLineNo::All)
+            worker = plcWorkers[keys[var]];
+    }
+
+    return worker;
 }
 #pragma endregion }
 
@@ -61,9 +144,18 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
     scanner->start();
 
     workerThreads[dId] = thread;
+    scannerWorkers[dId] = worker;
     connect(scanner, &DeviceScanner::barcodeReceived, worker, &ScannerWorker::analysis);
     connect(worker, &ScannerWorker::queryFailed, this, &DeviceCenter::scannerQueryFailed);
     connect(worker, &ScannerWorker::querySuccess, this, &DeviceCenter::scannerQuerySuccess);
+    connect(worker, &ScannerWorker::gotoNormal, this, &DeviceCenter::scannerGotoNormal);
+    connect(worker, &ScannerWorker::gotoError, this, &DeviceCenter::scannerGotoError);
+    connect(worker, &ScannerWorker::gotoChange, this, &DeviceCenter::scannerGotoChange);
+    connect(worker, &ScannerWorker::pullUped, this, &DeviceCenter::scannerPullUped);
+    connect(worker, &ScannerWorker::noAvailableStack, this, &DeviceCenter::scannerNoAvailableStack);
+    connect(worker, &ScannerWorker::uploaded, this, &DeviceCenter::scannerUploaded);
+    connect(worker, &ScannerWorker::approveOut, this, &DeviceCenter::scannerApproveOut);
+    connect(worker, &ScannerWorker::rejectOut, this, &DeviceCenter::scannerRejectOut);
     connect(thread, &QThread::started, worker, &ScannerWorker::init);
     connect(thread, &QThread::finished, worker, &ScannerWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
@@ -73,13 +165,35 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
 
 void DeviceCenter::addrobot(int dId, QString ip, int port, DeviceLineNo lineNo)
 {
+    DeviceRobot *robot = new DeviceRobot(dId, ip, port, lineNo);
+    RobotWorker *worker = new RobotWorker(robot);
+    QThread *thread = new QThread;
 
+    robotList[dId] = robot;
+    connect(robot, &DeviceRobot::connected, this, &DeviceCenter::robotConnected);
+    connect(robot, &DeviceRobot::connectFailed, this, &DeviceCenter::robotConnectFailed);
+    connect(robot, &DeviceRobot::disconnected, this, &DeviceCenter::robotDisconnected);
+    connect(robot, &DeviceRobot::sended, this, &DeviceCenter::_robotSended);
+    connect(robot, &DeviceRobot::received, this, &DeviceCenter::_robotReceived);
+    connect(robot, &DeviceRobot::applied, this, &DeviceCenter::deviceApplied);
+    connect(robot, &DeviceRobot::tx, this, &DeviceCenter::_robotTx);
+    connect(robot, &DeviceRobot::rx, this, &DeviceCenter::_robotRx);
+    connect(thread, &QThread::finished, robot, &DeviceScanner::deleteLater);
+    robot->moveToThread(thread);
+    robot->start();
+
+    workerThreads[dId] = thread;
+    robotWorkers[dId] = worker;
+    connect(worker, &RobotWorker::writeParams, robot, &DeviceRobot::writeParams);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    worker->moveToThread(thread);
+    thread->start();
 }
 
-void DeviceCenter::addplc(int dId, QString ip, int port, DeviceLineNo lineNo)
+void DeviceCenter::addplc(int dId, QString ip, int port, DeviceLineNo lineNo, QList<int> allowLines)
 {
     DevicePLC *plc = new DevicePLC(dId, ip, port, lineNo);
-    PlcWorker *worker = new PlcWorker(plc);
+    PlcWorker *worker = new PlcWorker(plc, allowLines);
     QThread *thread = new QThread;
 
     plcList[dId] = plc;
@@ -93,8 +207,10 @@ void DeviceCenter::addplc(int dId, QString ip, int port, DeviceLineNo lineNo)
     plc->start();
 
     workerThreads[dId] = thread;
+    plcWorkers[dId] = worker;
     connect(worker, &PlcWorker::writeRegister, plc, &DevicePLC::writeRegister);
     connect(worker, &PlcWorker::readRegisters, plc, &DevicePLC::readRegisters);
+    connect(worker, &PlcWorker::writed, this, &DeviceCenter::_plcWrited);
     connect(plc, &DevicePLC::received, worker, &PlcWorker::received);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     worker->moveToThread(thread);
@@ -143,6 +259,59 @@ void DeviceCenter::scannerQuerySuccess(DeviceScanner *scanner, QString barcode, 
     emit barcodeQuerySuccess(scanner->getDId(), barcode, result);
 }
 
+void DeviceCenter::scannerGotoNormal(DeviceScanner *scanner, DeviceLineNo line, QString barcode)
+{
+    QList<int> keys = plcWorkers.keys();
+
+    for (int var = 0; var < keys.size(); ++var)
+        if (plcWorkers[keys[var]]->allowLine(line))
+            plcWorkers[keys[var]]->scaned(line, true);
+
+
+    emit barcodeGotoNormal(scanner->getDId(), barcode);
+}
+
+void DeviceCenter::scannerGotoError(DeviceScanner *scanner, DeviceLineNo line, QString barcode)
+{
+    QList<int> keys = plcWorkers.keys();
+
+    for (int var = 0; var < keys.size(); ++var)
+        if (plcWorkers[keys[var]]->allowLine(line))
+            plcWorkers[keys[var]]->scaned(line, false);
+
+    emit barcodeGotoError(scanner->getDId(), barcode);
+}
+
+void DeviceCenter::scannerGotoChange(DeviceScanner *scanner, DeviceLineNo line, QString orderNo, int len, int wide, int height)
+{
+    emit barcodeGotoChange(scanner->getDId(), line, orderNo, len, wide, height);
+}
+
+void DeviceCenter::scannerNoAvailableStack(DeviceScanner *scanner)
+{
+    emit barcodeNoAvailableStack(scanner->getDId());
+}
+
+void DeviceCenter::scannerPullUped(DeviceScanner *scanner, DeviceLineNo line, QString barcode)
+{
+    emit barcodePullUped(scanner->getDId(), barcode);
+}
+
+void DeviceCenter::scannerUploaded(DeviceScanner *scanner, DeviceLineNo line, QString barcode)
+{
+    emit barcodeUploaded(scanner->getDId(), barcode);
+}
+
+void DeviceCenter::scannerApproveOut(DeviceScanner *scanner, DeviceLineNo line)
+{
+    emit barcodeApproveOut(scanner->getDId());
+}
+
+void DeviceCenter::scannerRejectOut(DeviceScanner *scanner, DeviceLineNo line)
+{
+    emit barcodeRejectOut(scanner->getDId());
+}
+
 void DeviceCenter::plcConnected(DevicePLC *plc)
 {
     emit deviceConnected(plc->getDId());
@@ -162,6 +331,51 @@ void DeviceCenter::_plcRx(DevicePLC *plc)
 {
     emit plcRx(plc->getDId());
 }
+
+void DeviceCenter::_plcWrited(DevicePLC *plc, int addr, ushort value)
+{
+    emit plcWrited(plc->getDId(), addr, value);
+}
+
+void DeviceCenter::_plcPullUp(DevicePLC *plc, DeviceLineNo line)
+{
+    emit plcPullUp(plc->getDId(), line);
+}
+
+void DeviceCenter::_robotSended(DeviceRobot *robot, QString content)
+{
+    emit robotSended(robot->getDId(), content);
+}
+
+void DeviceCenter::_robotReceived(DeviceRobot *robot, QString content)
+{
+    emit robotReceived(robot->getDId(), content);
+}
+
+void DeviceCenter::robotConnected(DeviceRobot *robot)
+{
+    emit deviceConnected(robot->getDId());
+}
+
+void DeviceCenter::robotConnectFailed(DeviceRobot *robot)
+{
+    emit deviceConnectFailed(robot->getDId());
+}
+
+void DeviceCenter::robotDisconnected(DeviceRobot *robot)
+{
+    emit deviceDisconnect(robot->getDId());
+}
+
+void DeviceCenter::_robotTx(DeviceRobot *robot)
+{
+    emit robotTx(robot->getDId());
+}
+
+void DeviceCenter::_robotRx(DeviceRobot *robot)
+{
+    emit robotRx(robot->getDId());
+}
 #pragma endregion }
 
 
@@ -176,6 +390,10 @@ DeviceCenter::~DeviceCenter()
     for (int i = 0; i < dIds.size(); ++i)
         plcList.remove(dIds[i]);
 
+    dIds = robotList.keys();
+    for (int i = 0; i < dIds.size(); ++i)
+        robotList.remove(dIds[i]);
+
     dIds = workerThreads.keys();
     for (int i = 0; i < dIds.size(); ++i)
     {   // QThread is automatically delete by QThread::deleteLater after sending QThread::finished signal
@@ -183,9 +401,4 @@ DeviceCenter::~DeviceCenter()
         workerThreads[dIds[i]]->wait();
         workerThreads.remove(dIds[i]);
     }
-
-    if (loopTask)
-        loopTask->stop();
-
-    delete loopTask;
 }

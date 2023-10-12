@@ -45,7 +45,7 @@ Item {
                         property: "color"
                         from: "#ff4757"
                         to: "#2ecc71"
-                        duration: 70
+                        duration: 35
                         easing.type: Easing.InOutQuad
                         onFinished: rxLedLAni.start()
                     }
@@ -56,7 +56,7 @@ Item {
                         property: "color"
                         from: "#2ecc71"
                         to: "#ff4757"
-                        duration: 100
+                        duration: 50
                         easing.type: Easing.InOutQuad
                     }
                 }
@@ -84,7 +84,7 @@ Item {
                         property: "color"
                         from: "#ff4757"
                         to: "#2ecc71"
-                        duration: 10
+                        duration: 5
                         easing.type: Easing.InOutQuad
                         onFinished: txLedLAni.start()
                     }
@@ -95,7 +95,7 @@ Item {
                         property: "color"
                         from: "#2ecc71"
                         to: "#ff4757"
-                        duration: 100
+                        duration: 50
                         easing.type: Easing.InOutQuad
                     }
                 }

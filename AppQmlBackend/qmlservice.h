@@ -10,6 +10,9 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QDir>
+#include <QNetworkAccessManager>
+#include <QUrlQuery>
+#include <QNetworkReply>
 
 
 // qml 一般后台服务, 如append 到 剪贴板, 打开浏览器等..
@@ -27,9 +30,11 @@ public:
     Q_INVOKABLE void saveSettings(QString key, QString value);
     Q_INVOKABLE bool testTcpConn(QString host, int port);
     Q_INVOKABLE bool saveContent2Log(QString name, QString content);
+    Q_INVOKABLE void addAppLog(QString content, int level);
 
 private:
     QSettings *settings = nullptr;
+    QNetworkAccessManager *manager = nullptr;
 
 signals:
 

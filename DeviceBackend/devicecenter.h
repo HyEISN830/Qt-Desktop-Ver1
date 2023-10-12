@@ -16,6 +16,10 @@
 #include "devicelineno.h"
 #include "devicescanner.h"
 #include "deviceplc.h"
+#include "devicerobot.h"
+#include "centworker/scannerworker.h"
+#include "centworker/plcworker.h"
+#include "centworker/robotworker.h"
 
 
 /*
@@ -26,31 +30,12 @@ class DeviceCenter : public QQuickItem
     Q_OBJECT
     QML_ELEMENT
 public:
-    class LoopTask : public QRunnable
-    {
-    public:
-        LoopTask(DeviceCenter *deviceCenter) : deviceCenter(deviceCenter) { running = true; }
-        ~LoopTask() { qDebug() << "DeviceCenter.LoopTask finished."; }
-
-        void run() override
-        {
-            // TODO: 修复程序退出时崩溃
-            while (running)
-            {
-                QThread::msleep(1000);
-                deviceCenter->loop();
-            }
-        }
-
-        void stop() { running = false; }
-
-    private:
-        DeviceCenter *deviceCenter = nullptr;
-        bool running = false;
-    };
-
     DeviceCenter();
     ~DeviceCenter();
+
+    ScannerWorker* findScannerWorker(DeviceLineNo line);
+    RobotWorker* findRobotWorker(DeviceLineNo line);
+    PlcWorker* findPlcWorker(DeviceLineNo line);
 
 #pragma region "设备启动以及生命周期相关相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
     // @brief 开始处理设备逻辑
@@ -67,7 +52,7 @@ public:
     Q_INVOKABLE void addrobot(int dId, QString ip, int port, DeviceLineNo lineNo);
 
     // @brief 连接PLC
-    Q_INVOKABLE void addplc(int dId, QString ip, int port, DeviceLineNo lineNo);
+    Q_INVOKABLE void addplc(int dId, QString ip, int port, DeviceLineNo lineNo, QList<int> allowLines);
 
     /*
         @brief 基于指定设备一个新的连接参数
@@ -78,10 +63,13 @@ public:
 
 private:
     QMap<int, DeviceScanner*> scannerList;
-    QMap<int, QThread*> workerThreads;
+    QMap<int, ScannerWorker*> scannerWorkers;   // worker is automatically deleted after use
     QMap<int, DevicePLC*> plcList;
+    QMap<int, PlcWorker*> plcWorkers;   // worker is automatically deleted after use
+    QMap<int, DeviceRobot*> robotList;
+    QMap<int, RobotWorker*> robotWorkers;   // worker is automatically deleted after use
+    QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
     bool running = false;
-    LoopTask *loopTask = nullptr;
 
     void main();    // 主函数, 用于启动各类设置
     void loop();    // 任务主循环
@@ -99,6 +87,22 @@ public slots:
     void scannerQueryFailed(DeviceScanner*, QString barcode, QJsonObject result);
     // @brief 扫码枪查询条码成功
     void scannerQuerySuccess(DeviceScanner*, QString barcode, QJsonObject result);
+    // @brief 扫码结果产品流向正常线
+    void scannerGotoNormal(DeviceScanner*, DeviceLineNo, QString barcode);
+    // @brief 扫码结果产品流向异常线
+    void scannerGotoError(DeviceScanner*, DeviceLineNo, QString barcode);
+    // @brief 扫码结果即将换产
+    void scannerGotoChange(DeviceScanner*, DeviceLineNo, QString orderNo, int len, int wide, int height);
+    // @brief 发起了机器人已码垛请求, 但是未找到当前线体已扫码的物料
+    void scannerNoAvailableStack(DeviceScanner*);
+    // @brief 物料已上传且加入到码垛中
+    void scannerPullUped(DeviceScanner*, DeviceLineNo, QString barcode);
+    // @breif 物料扫码已确认
+    void scannerUploaded(DeviceScanner*, DeviceLineNo, QString barcode);
+    // @brief 允许指定线体出板
+    void scannerApproveOut(DeviceScanner*, DeviceLineNo);
+    // @brief 拒绝指定线体出板
+    void scannerRejectOut(DeviceScanner*, DeviceLineNo);
     // @brief PLC连接成功时
     void plcConnected(DevicePLC*);
     // @brief PLC断开连接或连接失败时
@@ -107,6 +111,24 @@ public slots:
     void _plcTx(DevicePLC*);
     // @brief on PLC RX
     void _plcRx(DevicePLC*);
+    // @breif PLC register writed
+    void _plcWrited(DevicePLC*, int addr, ushort value);
+    // @brief 指定线体机器人已码好
+    void _plcPullUp(DevicePLC*, DeviceLineNo);
+    // @brief 发送内容到机器人
+    void _robotSended(DeviceRobot*, QString content);
+    // @brief 收到来自机器人的响应
+    void _robotReceived(DeviceRobot*, QString content);
+    // @brief 机器人已连接
+    void robotConnected(DeviceRobot*);
+    // @brief 机器人连接失败
+    void robotConnectFailed(DeviceRobot*);
+    // @brief 机器人已断开连接
+    void robotDisconnected(DeviceRobot*);
+    // @brief on Robot TX
+    void _robotTx(DeviceRobot*);
+    // @brief on Robot RX
+    void _robotRx(DeviceRobot*);
 
     void received() { qDebug() << "received"; }
 
@@ -129,10 +151,38 @@ signals:
     void barcodeQueryFailed(int dId, QString barcode, QJsonObject);
     // @brief 当条码查询成功时
     void barcodeQuerySuccess(int dId, QString barcode, QJsonObject);
+    // @brief 扫码结果产品流向正常线
+    void barcodeGotoNormal(int dId, QString barcode);
+    // @brief 扫码结果产品流向异常线
+    void barcodeGotoError(int dId, QString barcode);
+    // @brief 扫码结果产品流向异常线
+    void barcodeGotoChange(int dId, int line, QString orderNo, int len, int wide, int height);
+    // @brief 发起了机器人已码垛请求, 但是未找到当前线体已扫码的物料
+    void barcodeNoAvailableStack(int dId);
+    // @brief 物料已上传且加入到码垛中
+    void barcodePullUped(int dId, QString barcode);
+    // @breif 物料扫码已确认
+    void barcodeUploaded(int dId, QString barcode);
+    // @brief 允许指定线体出板
+    void barcodeApproveOut(int dId);
+    // @brief 拒绝指定线体出板
+    void barcodeRejectOut(int dId);
     // @brief on PLC TX
     void plcTx(int dId);
     // @brief on PLC RX
     void plcRx(int dId);
+    // @brief plc register writed
+    void plcWrited(int dId, int addr, int value);
+    // @breif 指定线体机器人已码好
+    void plcPullUp(int dId, int line);
+    // @breif 当向机器人发送内容时
+    void robotSended(int dId, QString content);
+    // @breif 当机器人返回内容时
+    void robotReceived(int dId, QString content);
+    // @brief on Robot TX
+    void robotTx(int dId);
+    // @brief on Robot RX
+    void robotRx(int dId);
 };
 
 #endif // DEVICECENTER_H

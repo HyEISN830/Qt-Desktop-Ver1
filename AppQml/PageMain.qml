@@ -161,22 +161,64 @@ Item {
             tlogsPage.appendErrorLog(dId, "连接失败或连接已断开.")
         }
         onDeviceApplied: (dId, ip, port) => {
-            tlogsPage.appendNormalLog(dId, `已采用了新的连接参数 ${ip}:${port} , 正在重新连接.`)
+            tlogsPage.appendNormalLog(dId, `已采用了新的连接参数 <font color="#f1c40f">${ip}:${port}</font> , 正在重新连接.`)
         }
         onBarcodeReceived: (dId, barcode) => {
-            tlogsPage.appendNormalLog(dId, `接收到条码内容 => ${barcode}`)
+            tlogsPage.appendNormalLog(dId, `接收到条码内容 => <font color="${(barcode + '') == 'NG' ? '#e74c3c' : '#f1c40f'}">${barcode}</font>`)
             GlobalVariable.deviceMap[dId].rx()
         }
         onBarcodeQueryFailed: (dId, barcode, result) => {
-            tlogsPage.appendErrorLog(dId, `查询条码信息 ${barcode} 失败, 返回结果 => ${JSON.stringify(result)}`)
+            tlogsPage.appendErrorLog(dId, `响应条码/接口信息 <font color="#f1c40f">${barcode}</font> 失败, 返回结果 => <font color="#f1c40f">${JSON.stringify(result)}</font>`)
         }
         onBarcodeQuerySuccess: (dId, barcode, result) => {
-            tlogsPage.appendNormalLog(dId, `查询条码信息 ${barcode} 成功, 返回结果 => ${JSON.stringify(result)}`)
+            tlogsPage.appendNormalLog(dId, `响应条码接口/条码信息 <font color="#f1c40f">${barcode}</font> 成功, 返回结果 => <font color="#f1c40f">${JSON.stringify(result)}</font>`)
+        }
+        onBarcodeGotoNormal: (dId, barcode) => {
+            tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品将流向 <font color="#2ecc71">-正常-</font> 线.`)
+        }
+        onBarcodeGotoError: (dId, barcode) => {
+            tlogsPage.appendNormalLog(dId, `条码 <font color="${(barcode + '') == 'NG' ? '#e74c3c' : '#f1c40f'}">${barcode}</font> 产品将流向 <font color="#e74c3c">-异常-</font> 线.`)
+        }
+        onBarcodeGotoChange: (dId, line, orderNo, len, wide, height) => {
+            tlogsPage.appendNormalLog(dId, `已换产为 => <font color="#f1c40f">${orderNo}</font> 产品.`)
+        }
+        onBarcodeNoAvailableStack: (dId) => {
+            tlogsPage.appendErrorLog(dId, `发起了机器人已码垛物料完成请求, 但是未找到当前线体已扫码的物料.`)
+        }
+        onBarcodePullUped: (dId, barcode) => {
+            tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品已被机器人码好且已加入到码垛中.`)
+        }
+        onBarcodeUploaded: (dId, barcode) => {
+            tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品已扫码确认.`)
+        }
+        onBarcodeApproveOut: (dId) => {
+            tlogsPage.appendNormalLog(dId, `WMS 准许出料.`)
+        }
+        onBarcodeRejectOut: (dId) => {
+            tlogsPage.appendErrorLog(dId, `WMS 拒绝出料.`)
         }
         onPlcTx: (dId) => {
             GlobalVariable.deviceMap[dId].tx()
         }
         onPlcRx: (dId) => {
+            GlobalVariable.deviceMap[dId].rx()
+        }
+        onPlcWrited: (dId, addr, value) => {
+            tlogsPage.appendNormalLog(dId, `PLC寄存器 <font color="#f1c40f">${addr}</font> 写入 => <font color="#f1c40f">${value}</font>`)
+        }
+        onPlcPullUp: (dId, line) => {
+            tlogsPage.appendNormalLog(dId, `<font color="#f1c40f">${resolveLine(line)}</font> 线机器人已码好一个物料.`)
+        }
+        onRobotSended: (dId, content) => {
+            tlogsPage.appendNormalLog(dId, `发送到机器人内容 => <font color="#f1c40f">${content}</font>`)
+        }
+        onRobotReceived: (dId, content) => {
+            tlogsPage.appendNormalLog(dId, `接收到机器人内容 => <font color="#f1c40f">${content}</font>`)
+        }
+        onRobotTx: (dId) => {
+            GlobalVariable.deviceMap[dId].tx()
+        }
+        onRobotRx: (dId) => {
             GlobalVariable.deviceMap[dId].rx()
         }
     }
@@ -185,6 +227,23 @@ Item {
         let com = Qt.createComponent("com/ComDialog.qml");
         let dialog = com.createObject(page, { title, content, type, acceptCb, rejectCb });
         dialog.open();
+    }
+
+    function resolveLine(line) {
+        switch (line) {
+        case 2:
+            return "W1"
+        case 3:
+            return "W2"
+        case 4:
+            return "W3"
+        case 5:
+            return "N3"
+        case 6:
+            return "N2"
+        case 7:
+            return "N1"
+        }
     }
 
     Component.onCompleted: {

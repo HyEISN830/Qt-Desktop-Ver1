@@ -17,7 +17,60 @@ public:
     {
         Unknow,
         PollingRegisters,
-        WriteSingleRegister
+        WriteSingleRegister,
+
+        WriteW1ScanOK,
+        WriteW2ScanOK,
+        WriteW3ScanOK,
+        WriteN3ScanOK,
+        WriteN2ScanOK,
+        WriteN1ScanOK,
+
+        WriteW1ScanNG,
+        WriteW2ScanNG,
+        WriteW3ScanNG,
+        WriteN3ScanNG,
+        WriteN2ScanNG,
+        WriteN1ScanNG,
+
+        WriteW1PullUp,
+        WriteW2PullUp,
+        WriteW3PullUp,
+        WriteN3PullUp,
+        WriteN2PullUp,
+        WriteN1PullUp,
+
+        WriteW1Change,
+        WriteW2Change,
+        WriteW3Change,
+        WriteN3Change,
+        WriteN2Change,
+        WriteN1Change,
+
+        WriteW1Wide,
+        WriteW2Wide,
+        WriteW3Wide,
+
+        WriteW1CommitReaded,
+        WriteW2CommitReaded,
+        WriteW3CommitReaded,
+        WriteN3CommitReaded,
+        WriteN2CommitReaded,
+        WriteN1CommitReaded,
+
+        WriteW1CommitApprove,
+        WriteW2CommitApprove,
+        WriteW3CommitApprove,
+        WriteN3CommitApprove,
+        WriteN2CommitApprove,
+        WriteN1CommitApprove,
+
+        WriteW1CommitReject,
+        WriteW2CommitReject,
+        WriteW3CommitReject,
+        WriteN3CommitReject,
+        WriteN2CommitReject,
+        WriteN1CommitReject,
     };
 
     explicit DevicePLC(QObject *parent = nullptr);
@@ -54,8 +107,8 @@ public slots:
     void _connected() { emit connected(this); }
     void _disconnected() { emit disconnected(this); }
     void _received(PacketType type, QList<ushort> result) { emit received(type, result); }
-    void writeRegister(PacketType type, int id, int addr, ushort value) { emit _writeRegister(type, id, addr, value); }
-    void readRegisters(PacketType type, int id, int startAddr, ushort length) { emit _readRegisters(type, id, startAddr, length); }
+    void writeRegister(PacketType type, int id, int addr, ushort value) { if (worker->getConnected()) emit _writeRegister(type, id, addr, value); }
+    void readRegisters(PacketType type, int id, int startAddr, ushort length) { if (worker->getConnected()) emit _readRegisters(type, id, startAddr, length); }
     void _tx() { emit tx(this); }
     void _rx() { emit rx(this); }
 
