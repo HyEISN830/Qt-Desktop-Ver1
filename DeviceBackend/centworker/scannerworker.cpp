@@ -26,7 +26,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
 {
     if (error)
     {
-        emit queryFailed(scanner, barcode.length() ? barcode : url.toString(), result);
+        emit queryFailed(scanner, barcode.trimmed().length() ? barcode : url.toString(), result);
     }
     else
     {
