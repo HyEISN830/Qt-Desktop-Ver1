@@ -22,59 +22,59 @@ void DeviceCenter::start()
     connect(w1sw, &ScannerWorker::rejectOut, w1pw, &PlcWorker::rejectOut);
 
     // W2
-//    ScannerWorker *w2sw = findScannerWorker(DeviceLineNo::W2);
-//    PlcWorker *w2pw = findPlcWorker(DeviceLineNo::W2);
-//    RobotWorker *w2rw = findRobotWorker(DeviceLineNo::W2);
-//    connect(w2pw, &PlcWorker::pullUp, w2sw, &ScannerWorker::pullUp);
-//    connect(w2pw, &PlcWorker::commitReq, w2sw, &ScannerWorker::commitReq);
-//    connect(w2sw, &ScannerWorker::gotoChange, w2pw, &PlcWorker::gotoChange);
-//    connect(w2sw, &ScannerWorker::txRobotParams, w2rw, &RobotWorker::writeParams);
-//    connect(w2sw, &ScannerWorker::approveOut, w2pw, &PlcWorker::approveOut);
-//    connect(w2sw, &ScannerWorker::rejectOut, w2pw, &PlcWorker::rejectOut);
+    ScannerWorker *w2sw = findScannerWorker(DeviceLineNo::W2);
+    PlcWorker *w2pw = findPlcWorker(DeviceLineNo::W2);
+    RobotWorker *w2rw = findRobotWorker(DeviceLineNo::W2);
+    connect(w2pw, &PlcWorker::pullUp, w2sw, &ScannerWorker::pullUp);
+    connect(w2pw, &PlcWorker::commitReq, w2sw, &ScannerWorker::commitReq);
+    connect(w2sw, &ScannerWorker::gotoChange, w2pw, &PlcWorker::gotoChange);
+    connect(w2sw, &ScannerWorker::txRobotParams, w2rw, &RobotWorker::writeParams);
+    connect(w2sw, &ScannerWorker::approveOut, w2pw, &PlcWorker::approveOut);
+    connect(w2sw, &ScannerWorker::rejectOut, w2pw, &PlcWorker::rejectOut);
 
     // W3
-//    ScannerWorker *w3sw = findScannerWorker(DeviceLineNo::W3);
-//    PlcWorker *w3pw = findPlcWorker(DeviceLineNo::W3);
-//    RobotWorker *w3rw = findRobotWorker(DeviceLineNo::W3);
-//    connect(w3pw, &PlcWorker::pullUp, w3sw, &ScannerWorker::pullUp);
-//    connect(w3pw, &PlcWorker::commitReq, w3sw, &ScannerWorker::commitReq);
-//    connect(w3sw, &ScannerWorker::gotoChange, w3pw, &PlcWorker::gotoChange);
-//    connect(w3sw, &ScannerWorker::txRobotParams, w3rw, &RobotWorker::writeParams);
-//    connect(w3sw, &ScannerWorker::approveOut, w3pw, &PlcWorker::approveOut);
-//    connect(w3sw, &ScannerWorker::rejectOut, w3pw, &PlcWorker::rejectOut);
+    ScannerWorker *w3sw = findScannerWorker(DeviceLineNo::W3);
+    PlcWorker *w3pw = findPlcWorker(DeviceLineNo::W3);
+    RobotWorker *w3rw = findRobotWorker(DeviceLineNo::W3);
+    connect(w3pw, &PlcWorker::pullUp, w3sw, &ScannerWorker::pullUp);
+    connect(w3pw, &PlcWorker::commitReq, w3sw, &ScannerWorker::commitReq);
+    connect(w3sw, &ScannerWorker::gotoChange, w3pw, &PlcWorker::gotoChange);
+    connect(w3sw, &ScannerWorker::txRobotParams, w3rw, &RobotWorker::writeParams);
+    connect(w3sw, &ScannerWorker::approveOut, w3pw, &PlcWorker::approveOut);
+    connect(w3sw, &ScannerWorker::rejectOut, w3pw, &PlcWorker::rejectOut);
 
     // N3
-//    ScannerWorker *n3sw = findScannerWorker(DeviceLineNo::N3);
-//    PlcWorker *n3pw = findPlcWorker(DeviceLineNo::N3);
-//    RobotWorker *n3rw = findRobotWorker(DeviceLineNo::N3);
-//    connect(n3pw, &PlcWorker::pullUp, n3sw, &ScannerWorker::pullUp);
-//    connect(n3pw, &PlcWorker::commitReq, n3sw, &ScannerWorker::commitReq);
-//    connect(n3sw, &ScannerWorker::gotoChange, n3pw, &PlcWorker::gotoChange);
-//    connect(n3sw, &ScannerWorker::txRobotParams, n3rw, &RobotWorker::writeParams);
-//    connect(n3sw, &ScannerWorker::approveOut, n3pw, &PlcWorker::approveOut);
-//    connect(n3sw, &ScannerWorker::rejectOut, n3pw, &PlcWorker::rejectOut);
+    ScannerWorker *n3sw = findScannerWorker(DeviceLineNo::N3);
+    PlcWorker *n3pw = findPlcWorker(DeviceLineNo::N3);
+    RobotWorker *n3rw = findRobotWorker(DeviceLineNo::N3);
+    connect(n3pw, &PlcWorker::pullUp, n3sw, &ScannerWorker::pullUp);
+    connect(n3pw, &PlcWorker::commitReq, n3sw, &ScannerWorker::commitReq);
+    connect(n3sw, &ScannerWorker::gotoChange, n3pw, &PlcWorker::gotoChange);
+    connect(n3sw, &ScannerWorker::txRobotParams, n3rw, &RobotWorker::writeParams);
+    connect(n3sw, &ScannerWorker::approveOut, n3pw, &PlcWorker::approveOut);
+    connect(n3sw, &ScannerWorker::rejectOut, n3pw, &PlcWorker::rejectOut);
 
     // N2
-//    ScannerWorker *n2sw = findScannerWorker(DeviceLineNo::N2);
-//    PlcWorker *n2pw = findPlcWorker(DeviceLineNo::N2);
-//    RobotWorker *n2rw = findRobotWorker(DeviceLineNo::N2);
-//    connect(n2pw, &PlcWorker::pullUp, n2sw, &ScannerWorker::pullUp);
-//    connect(n2pw, &PlcWorker::commitReq, n2sw, &ScannerWorker::commitReq);
-//    connect(n2sw, &ScannerWorker::gotoChange, n2pw, &PlcWorker::gotoChange);
-//    connect(n2sw, &ScannerWorker::txRobotParams, n2rw, &RobotWorker::writeParams);
-//    connect(n2sw, &ScannerWorker::approveOut, n2pw, &PlcWorker::approveOut);
-//    connect(n2sw, &ScannerWorker::rejectOut, n2pw, &PlcWorker::rejectOut);
+    ScannerWorker *n2sw = findScannerWorker(DeviceLineNo::N2);
+    PlcWorker *n2pw = findPlcWorker(DeviceLineNo::N2);
+    RobotWorker *n2rw = findRobotWorker(DeviceLineNo::N2);
+    connect(n2pw, &PlcWorker::pullUp, n2sw, &ScannerWorker::pullUp);
+    connect(n2pw, &PlcWorker::commitReq, n2sw, &ScannerWorker::commitReq);
+    connect(n2sw, &ScannerWorker::gotoChange, n2pw, &PlcWorker::gotoChange);
+    connect(n2sw, &ScannerWorker::txRobotParams, n2rw, &RobotWorker::writeParams);
+    connect(n2sw, &ScannerWorker::approveOut, n2pw, &PlcWorker::approveOut);
+    connect(n2sw, &ScannerWorker::rejectOut, n2pw, &PlcWorker::rejectOut);
 
     // N1
-//    ScannerWorker *n1sw = findScannerWorker(DeviceLineNo::N1);
-//    PlcWorker *n1pw = findPlcWorker(DeviceLineNo::N1);
-//    RobotWorker *n1rw = findRobotWorker(DeviceLineNo::N1);
-//    connect(n1pw, &PlcWorker::pullUp, n1sw, &ScannerWorker::pullUp);
-//    connect(n1pw, &PlcWorker::commitReq, n1sw, &ScannerWorker::commitReq);
-//    connect(n1sw, &ScannerWorker::gotoChange, n1pw, &PlcWorker::gotoChange);
-//    connect(n1sw, &ScannerWorker::txRobotParams, n1rw, &RobotWorker::writeParams);
-//    connect(n1sw, &ScannerWorker::approveOut, n1pw, &PlcWorker::approveOut);
-//    connect(n1sw, &ScannerWorker::rejectOut, n1pw, &PlcWorker::rejectOut);
+    ScannerWorker *n1sw = findScannerWorker(DeviceLineNo::N1);
+    PlcWorker *n1pw = findPlcWorker(DeviceLineNo::N1);
+    RobotWorker *n1rw = findRobotWorker(DeviceLineNo::N1);
+    connect(n1pw, &PlcWorker::pullUp, n1sw, &ScannerWorker::pullUp);
+    connect(n1pw, &PlcWorker::commitReq, n1sw, &ScannerWorker::commitReq);
+    connect(n1sw, &ScannerWorker::gotoChange, n1pw, &PlcWorker::gotoChange);
+    connect(n1sw, &ScannerWorker::txRobotParams, n1rw, &RobotWorker::writeParams);
+    connect(n1sw, &ScannerWorker::approveOut, n1pw, &PlcWorker::approveOut);
+    connect(n1sw, &ScannerWorker::rejectOut, n1pw, &PlcWorker::rejectOut);
 }
 
 void DeviceCenter::stop()
@@ -224,6 +224,9 @@ void DeviceCenter::reconnect(int dId, QString ip, int port)
 
     if (plcList.contains(dId))
         plcList[dId]->apply(ip, port);
+
+    if (robotList.contains(dId))
+        robotList[dId]->apply(ip, port);
 }
 #pragma endregion }
 

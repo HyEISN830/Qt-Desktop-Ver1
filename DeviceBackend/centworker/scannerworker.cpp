@@ -72,8 +72,6 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
                     emit gotoError(scanner, scanner->getLine(), barcode);
                 }
             }
-//            emit gotoError(scanner, scanner->getLine(), barcode);
-//            emit gotoNormal(scanner, scanner->getLine(), barcode);
         }
         else if (u == uploadMatlURL)
         {
@@ -122,9 +120,9 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
 
             emit querySuccess(scanner, "API:/CommitStacksURL", result);
             if (response["return"].toObject()["returnFlag"].toString() == "1")
-                emit approveOut(scanner, DeviceLineNo(curStack["line"].toInt()));
+                emit approveOut(scanner, scanner->getLine());
             else
-                emit rejectOut(scanner, DeviceLineNo(curStack["line"].toInt()));
+                emit rejectOut(scanner, scanner->getLine());
         }
     }
 }
