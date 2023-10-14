@@ -715,24 +715,24 @@ Item {
             deviceCenter.addplc(1, GlobalVariable["device1Ip"], GlobalVariable["device1Port"], GlobalEnums.LineNo.All, [GlobalEnums.LineNo.All])
 
             // W1 line devices
-            deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)
-            deviceCenter.addrobot(10, GlobalVariable["device10Ip"], GlobalVariable["device10Port"], GlobalEnums.LineNo.W1)
+//            deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)
+//            deviceCenter.addrobot(10, GlobalVariable["device10Ip"], GlobalVariable["device10Port"], GlobalEnums.LineNo.W1)
 
             // W2 line devices
-            deviceCenter.addscanner(4, GlobalVariable["device4Ip"], GlobalVariable["device4Port"], GlobalEnums.LineNo.W2)
-            deviceCenter.addrobot(11, GlobalVariable["device11Ip"], GlobalVariable["device11Port"], GlobalEnums.LineNo.W2)
+//            deviceCenter.addscanner(4, GlobalVariable["device4Ip"], GlobalVariable["device4Port"], GlobalEnums.LineNo.W2)
+//            deviceCenter.addrobot(11, GlobalVariable["device11Ip"], GlobalVariable["device11Port"], GlobalEnums.LineNo.W2)
 
             // W3 line devices
-            deviceCenter.addscanner(5, GlobalVariable["device5Ip"], GlobalVariable["device5Port"], GlobalEnums.LineNo.W3)
-            deviceCenter.addrobot(12, GlobalVariable["device12Ip"], GlobalVariable["device12Port"], GlobalEnums.LineNo.W3)
+//            deviceCenter.addscanner(5, GlobalVariable["device5Ip"], GlobalVariable["device5Port"], GlobalEnums.LineNo.W3)
+//            deviceCenter.addrobot(12, GlobalVariable["device12Ip"], GlobalVariable["device12Port"], GlobalEnums.LineNo.W3)
 
             // N3 line devices
-            deviceCenter.addscanner(8, GlobalVariable["device8Ip"], GlobalVariable["device8Port"], GlobalEnums.LineNo.N3)
-            deviceCenter.addrobot(15, GlobalVariable["device15Ip"], GlobalVariable["device15Port"], GlobalEnums.LineNo.N3)
+//            deviceCenter.addscanner(8, GlobalVariable["device8Ip"], GlobalVariable["device8Port"], GlobalEnums.LineNo.N3)
+//            deviceCenter.addrobot(15, GlobalVariable["device15Ip"], GlobalVariable["device15Port"], GlobalEnums.LineNo.N3)
 
             // N2 line devices
-            deviceCenter.addscanner(7, GlobalVariable["device7Ip"], GlobalVariable["device7Port"], GlobalEnums.LineNo.N2)
-            deviceCenter.addrobot(14, GlobalVariable["device14Ip"], GlobalVariable["device14Port"], GlobalEnums.LineNo.N2)
+//            deviceCenter.addscanner(7, GlobalVariable["device7Ip"], GlobalVariable["device7Port"], GlobalEnums.LineNo.N2)
+//            deviceCenter.addrobot(14, GlobalVariable["device14Ip"], GlobalVariable["device14Port"], GlobalEnums.LineNo.N2)
 
             // N1 line devices
             deviceCenter.addscanner(6, GlobalVariable["device6Ip"], GlobalVariable["device6Port"], GlobalEnums.LineNo.N1)

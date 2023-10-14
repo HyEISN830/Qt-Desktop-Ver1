@@ -72,6 +72,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
                     emit gotoError(scanner, scanner->getLine(), barcode);
                 }
             }
+//            emit gotoNormal(scanner, scanner->getLine(), barcode);
         }
         else if (u == uploadMatlURL)
         {
@@ -79,7 +80,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             QJsonObject rrnew = rr["newstack"].toObject();
             QUrlQuery query(url.query());
 
-            emit uploaded(scanner, scanner->getLine(), query.queryItemValue("SN"));
+            emit uploaded(scanner, scanner->getLine(), query.queryItemValue("SN").trimmed());
             if (rr["change"].toBool())
             {
                 emit gotoChange(scanner, scanner->getLine(), rrnew["orderNo"].toString(), rrnew["len"].toInt(), rrnew["wide"].toInt(), rrnew["height"].toInt());
@@ -133,7 +134,8 @@ void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
     QUrlQuery query;
     QNetworkRequest request;
 
-    if (barcode.trimmed() == "NG")
+    barcode = barcode.trimmed().replace("\r\n", "");
+    if (barcode == "NG")
     {
         emit gotoError(scanner, scanner->getLine(), barcode);
         return;
