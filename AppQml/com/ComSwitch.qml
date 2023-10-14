@@ -6,8 +6,11 @@ Item {
     property string closeStr: "FALSE"
 
     id: toggle
+    width: child.width
+    height: child.height
 
     Rectangle {
+        id: child
         height: 40
         width: body.width
         color: "transparent"
