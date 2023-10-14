@@ -45,6 +45,7 @@ list(APPEND MODULE_QML_COMPONENT_FILES
     com/ComToolTip.qml
     com/ComDevice.qml
     com/ComExpand.qml
+    com/ComSwitch.qml
 )
 
 list(APPEND MODULE_APPQML_JS_FILES
@@ -81,6 +82,8 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/icon-camera.svg
     resources/icon-arrow-right-fill.svg
     resources/icon-document.svg
+    resources/icon-play.svg
+    resources/icon-pause.svg
 
     resources/home.jpg
     resources/logo.png

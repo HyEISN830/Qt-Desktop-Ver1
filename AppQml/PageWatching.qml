@@ -27,7 +27,7 @@ Item {
         arm3,
         arm4,
         arm5,
-        agv
+//        agv
     ]
 
     id: page
@@ -394,49 +394,49 @@ Item {
             }
         }
 
-        ComDevice {
-            id: agv
-            x: 35
-            y: 518
-            dId: 9
-            title: GlobalVariable[`device${dId}Ip`]
-            opacity: 0
-            content: "SJ AGV"
-            iconPath: "resources/agv-robot.png"
-            iconColor: "#7effd15b"
-            connected: GlobalVariable[`device${dId}Connected`]
+//        ComDevice {
+//            id: agv
+//            x: 35
+//            y: 518
+//            dId: 9
+//            title: GlobalVariable[`device${dId}Ip`]
+//            opacity: 0
+//            content: "SJ AGV"
+//            iconPath: "resources/agv-robot.png"
+//            iconColor: "#7effd15b"
+//            connected: GlobalVariable[`device${dId}Connected`]
 
-            OpacityAnimator {
-                id: agvSAni
-                target: agv
-                from: 0
-                to: 1
-                duration: 500
-                easing.type: Easing.InOutQuad
-                running: view.currentItem == page
-            }
+//            OpacityAnimator {
+//                id: agvSAni
+//                target: agv
+//                from: 0
+//                to: 1
+//                duration: 500
+//                easing.type: Easing.InOutQuad
+//                running: view.currentItem == page
+//            }
 
-            OpacityAnimator {
-                id: agvHAni
-                target: agv
-                from: 1
-                to: 0
-                duration: 10
-                running: view.currentItem != page
-                easing.type: Easing.InOutQuad
-            }
+//            OpacityAnimator {
+//                id: agvHAni
+//                target: agv
+//                from: 1
+//                to: 0
+//                duration: 10
+//                running: view.currentItem != page
+//                easing.type: Easing.InOutQuad
+//            }
 
-            NumberAnimation {
-                id: agvYAni
-                target: agv
-                property: "y"
-                duration: 200
-                from: 568
-                to: 518
-                easing.type: Easing.InOutQuad
-                onStarted: agvSAni.start()
-            }
-        }
+//            NumberAnimation {
+//                id: agvYAni
+//                target: agv
+//                property: "y"
+//                duration: 200
+//                from: 568
+//                to: 518
+//                easing.type: Easing.InOutQuad
+//                onStarted: agvSAni.start()
+//            }
+//        }
 
         ComDevice {
             id: arm
@@ -700,6 +700,25 @@ Item {
                 to: 418
                 easing.type: Easing.InOutQuad
                 onStarted: arm5SAni.start()
+            }
+        }
+    }
+
+    ComPane {
+        height: 250
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: 33
+        padding: 0
+        background: Rectangle { color: "transparent" }
+
+        Column {
+            Row {
+                ComSwitch {
+                    openStr: "运行中"
+                    closeStr: "停止中"
+                }
             }
         }
     }

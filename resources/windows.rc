@@ -18,12 +18,12 @@ BEGIN
     BLOCK "000004b0"
 BEGIN
     VALUE "CompanyName", "HyEISN"
-VALUE "FileDescription", "Air-conditioning Outside unit testing System"
+VALUE "FileDescription", "MFS"
 VALUE "FileVersion", "1.0.0.1"
 VALUE "LegalCopyright", "HyEISN"
-VALUE "InternalName", "AOS"
+VALUE "InternalName", "MFS"
 VALUE "OriginalFilename", ""
-VALUE "ProductName", "AOS"
+VALUE "ProductName", "MFS"
 VALUE "ProductVersion", "1.0.0.1"
 END
     END
