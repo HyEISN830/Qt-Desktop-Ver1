@@ -164,7 +164,8 @@ Item {
             tlogsPage.appendNormalLog(dId, `已采用了新的连接参数 <font color="#f1c40f">${ip}:${port}</font> , 正在重新连接.`)
         }
         onBarcodeReceived: (dId, barcode) => {
-            tlogsPage.appendNormalLog(dId, `接收到条码内容 => <font color="${(barcode + '') == 'NG' ? '#e74c3c' : '#f1c40f'}">${barcode}</font>`)
+            if (barcode.indexOf("OK,KEYENCE") !== 0)
+                tlogsPage.appendNormalLog(dId, `接收到条码内容 => <font color="${(barcode + '') == 'NG' ? '#e74c3c' : '#f1c40f'}">${barcode}</font>`)
             GlobalVariable.deviceMap[dId].rx()
         }
         onBarcodeQueryFailed: (dId, barcode, result) => {
@@ -196,6 +197,9 @@ Item {
         }
         onBarcodeRejectOut: (dId) => {
             tlogsPage.appendErrorLog(dId, `WMS 拒绝出料.`)
+        }
+        onBarcodeSendedKeep: (dId, cmd) => {
+            GlobalVariable.deviceMap[dId].tx()
         }
         onPlcTx: (dId) => {
             GlobalVariable.deviceMap[dId].tx()

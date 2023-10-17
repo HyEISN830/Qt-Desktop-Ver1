@@ -14,7 +14,7 @@ Item {
     property bool isCurPage: view.currentItem == page
     property list<ComDevice> deviceList: [
         plc,
-        plc1,
+//        plc1,
         cam,
         cam1,
         cam2,
@@ -84,51 +84,51 @@ Item {
                 to: 18
                 easing.type: Easing.InOutQuad
                 running: view.currentItem == page
-                onFinished: plc1YAni.start()
+//                onFinished: plc1YAni.start()
             }
         }
 
-        ComDevice {
-            id: plc1
-            x: plc.x + plc.width + 30
-            y: 18
-            dId: 2
-            title: GlobalVariable[`device${dId}Ip`]
-            opacity: 0
-            content: "线体PLC2"
-            iconPath: "resources/plc.png"
-            connected: GlobalVariable[`device${dId}Connected`]
+//        ComDevice {
+//            id: plc1
+//            x: plc.x + plc.width + 30
+//            y: 18
+//            dId: 2
+//            title: GlobalVariable[`device${dId}Ip`]
+//            opacity: 0
+//            content: "线体PLC2"
+//            iconPath: "resources/plc.png"
+//            connected: GlobalVariable[`device${dId}Connected`]
 
-            OpacityAnimator {
-                id: plc1SAni
-                target: plc1
-                from: 0
-                to: 1
-                duration: 500
-                easing.type: Easing.InOutQuad
-            }
+//            OpacityAnimator {
+//                id: plc1SAni
+//                target: plc1
+//                from: 0
+//                to: 1
+//                duration: 500
+//                easing.type: Easing.InOutQuad
+//            }
 
-            OpacityAnimator {
-                id: plc1HAni
-                target: plc1
-                from: 1
-                to: 0
-                duration: 10
-                running: view.currentItem != page
-                easing.type: Easing.InOutQuad
-            }
+//            OpacityAnimator {
+//                id: plc1HAni
+//                target: plc1
+//                from: 1
+//                to: 0
+//                duration: 10
+//                running: view.currentItem != page
+//                easing.type: Easing.InOutQuad
+//            }
 
-            NumberAnimation {
-                id: plc1YAni
-                target: plc1
-                property: "y"
-                duration: 200
-                from: 50
-                to: 18
-                easing.type: Easing.InOutQuad
-                onStarted: plc1SAni.start()
-            }
-        }
+//            NumberAnimation {
+//                id: plc1YAni
+//                target: plc1
+//                property: "y"
+//                duration: 200
+//                from: 50
+//                to: 18
+//                easing.type: Easing.InOutQuad
+//                onStarted: plc1SAni.start()
+//            }
+//        }
 
         ComDevice {
             x: 35
@@ -714,13 +714,105 @@ Item {
         background: Rectangle { color: "transparent" }
 
         Column {
+            spacing: 8
+
             Row {
+                spacing: 8
+
                 ComSwitch {
-                    openStr: "运行中"
-                    closeStr: "停止中"
+                    id: w1Auto
+                    openStr: "W1托管在线中"
+                    closeStr: "W1托管离线中"
+                    onOpenChanged: setChange("W1Auto", open)
+                }
+
+                ComSwitch {
+                    id: w2Auto
+                    openStr: "W2托管在线中"
+                    closeStr: "W2托管离线中"
+                    onOpenChanged: setChange("W2Auto", open)
+                }
+
+                ComSwitch {
+                    id: w3Auto
+                    openStr: "W3托管在线中"
+                    closeStr: "W3托管离线中"
+                    onOpenChanged: setChange("W3Auto", open)
+                }
+
+                ComSwitch {
+                    id: n3Auto
+                    openStr: "N3托管在线中"
+                    closeStr: "N3托管离线中"
+                    onOpenChanged: setChange("N3Auto", open)
+                }
+
+                ComSwitch {
+                    id: n2Auto
+                    openStr: "N2托管在线中"
+                    closeStr: "N2托管离线中"
+                    onOpenChanged: setChange("N2Auto", open)
+                }
+
+                ComSwitch {
+                    id: n1Auto
+                    openStr: "N1托管在线中"
+                    closeStr: "N1托管离线中"
+                    onOpenChanged: setChange("N1Auto", open)
+                }
+            }
+
+            Row {
+                spacing: 8
+
+                ComSwitch {
+                    id: w1Commit
+                    openStr: "W1交收在线中"
+                    closeStr: "W1交收离线中"
+                    onOpenChanged: setChange("W1Commit", open)
+                }
+
+                ComSwitch {
+                    id: w2Commit
+                    openStr: "W2交收在线中"
+                    closeStr: "W2交收离线中"
+                    onOpenChanged: setChange("W2Commit", open)
+                }
+
+                ComSwitch {
+                    id: w3Commit
+                    openStr: "W3交收在线中"
+                    closeStr: "W3交收离线中"
+                    onOpenChanged: setChange("W3Commit", open)
+                }
+
+                ComSwitch {
+                    id: n3Commit
+                    openStr: "N3交收在线中"
+                    closeStr: "N3交收离线中"
+                    onOpenChanged: setChange("N3Commit", open)
+                }
+
+                ComSwitch {
+                    id: n2Commit
+                    openStr: "N2交收在线中"
+                    closeStr: "N2交收离线中"
+                    onOpenChanged: setChange("N2Commit", open)
+                }
+
+                ComSwitch {
+                    id: n1Commit
+                    openStr: "N1交收在线中"
+                    closeStr: "N1交收离线中"
+                    onOpenChanged: setChange("N1Commit", open)
                 }
             }
         }
+    }
+
+    // use only in line settings
+    function setChange(key, value) {
+        bgservice.saveSettings(key, value + "")
     }
 
     Component.onCompleted: {
@@ -734,28 +826,43 @@ Item {
             deviceCenter.addplc(1, GlobalVariable["device1Ip"], GlobalVariable["device1Port"], GlobalEnums.LineNo.All, [GlobalEnums.LineNo.All])
 
             // W1 line devices
-//            deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)
-//            deviceCenter.addrobot(10, GlobalVariable["device10Ip"], GlobalVariable["device10Port"], GlobalEnums.LineNo.W1)
+            deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)
+            deviceCenter.addrobot(10, GlobalVariable["device10Ip"], GlobalVariable["device10Port"], GlobalEnums.LineNo.W1)
 
             // W2 line devices
-//            deviceCenter.addscanner(4, GlobalVariable["device4Ip"], GlobalVariable["device4Port"], GlobalEnums.LineNo.W2)
-//            deviceCenter.addrobot(11, GlobalVariable["device11Ip"], GlobalVariable["device11Port"], GlobalEnums.LineNo.W2)
+            deviceCenter.addscanner(4, GlobalVariable["device4Ip"], GlobalVariable["device4Port"], GlobalEnums.LineNo.W2)
+            deviceCenter.addrobot(11, GlobalVariable["device11Ip"], GlobalVariable["device11Port"], GlobalEnums.LineNo.W2)
 
             // W3 line devices
-//            deviceCenter.addscanner(5, GlobalVariable["device5Ip"], GlobalVariable["device5Port"], GlobalEnums.LineNo.W3)
-//            deviceCenter.addrobot(12, GlobalVariable["device12Ip"], GlobalVariable["device12Port"], GlobalEnums.LineNo.W3)
+            deviceCenter.addscanner(5, GlobalVariable["device5Ip"], GlobalVariable["device5Port"], GlobalEnums.LineNo.W3)
+            deviceCenter.addrobot(12, GlobalVariable["device12Ip"], GlobalVariable["device12Port"], GlobalEnums.LineNo.W3)
 
             // N3 line devices
-//            deviceCenter.addscanner(8, GlobalVariable["device8Ip"], GlobalVariable["device8Port"], GlobalEnums.LineNo.N3)
-//            deviceCenter.addrobot(15, GlobalVariable["device15Ip"], GlobalVariable["device15Port"], GlobalEnums.LineNo.N3)
+            deviceCenter.addscanner(8, GlobalVariable["device8Ip"], GlobalVariable["device8Port"], GlobalEnums.LineNo.N3)
+            deviceCenter.addrobot(15, GlobalVariable["device15Ip"], GlobalVariable["device15Port"], GlobalEnums.LineNo.N3)
 
             // N2 line devices
-//            deviceCenter.addscanner(7, GlobalVariable["device7Ip"], GlobalVariable["device7Port"], GlobalEnums.LineNo.N2)
-//            deviceCenter.addrobot(14, GlobalVariable["device14Ip"], GlobalVariable["device14Port"], GlobalEnums.LineNo.N2)
+            deviceCenter.addscanner(7, GlobalVariable["device7Ip"], GlobalVariable["device7Port"], GlobalEnums.LineNo.N2)
+            deviceCenter.addrobot(14, GlobalVariable["device14Ip"], GlobalVariable["device14Port"], GlobalEnums.LineNo.N2)
 
             // N1 line devices
             deviceCenter.addscanner(6, GlobalVariable["device6Ip"], GlobalVariable["device6Port"], GlobalEnums.LineNo.N1)
             deviceCenter.addrobot(13, GlobalVariable["device13Ip"], GlobalVariable["device13Port"], GlobalEnums.LineNo.N1)
+
+            // settings
+            w1Auto.open = bgservice.takeSetting("W1Auto") === "true"
+            w2Auto.open = bgservice.takeSetting("W2Auto") === "true"
+            w3Auto.open = bgservice.takeSetting("W3Auto") === "true"
+            n3Auto.open = bgservice.takeSetting("N3Auto") === "true"
+            n2Auto.open = bgservice.takeSetting("N2Auto") === "true"
+            n1Auto.open = bgservice.takeSetting("N1Auto") === "true"
+
+            w1Commit.open = bgservice.takeSetting("W1Commit") === "true"
+            w2Commit.open = bgservice.takeSetting("W2Commit") === "true"
+            w3Commit.open = bgservice.takeSetting("W3Commit") === "true"
+            n3Commit.open = bgservice.takeSetting("N3Commit") === "true"
+            n2Commit.open = bgservice.takeSetting("N2Commit") === "true"
+            n1Commit.open = bgservice.takeSetting("N1Commit") === "true"
 
             // start devicecenter
             deviceCenter.start()

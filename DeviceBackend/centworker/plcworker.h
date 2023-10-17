@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QDateTime>
+#include <QSettings>
 
 #include "../deviceplc.h"
 #include "../devicescanner.h"
@@ -13,7 +14,6 @@ class PlcWorker : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlcWorker(QObject *parent = nullptr);
     PlcWorker(DevicePLC *plc, QList<int> allowLines);
     ~PlcWorker();
 
@@ -42,6 +42,7 @@ public slots:
     void rejectOut(DeviceScanner*, DeviceLineNo);
 
 private:
+    QSettings settings;
     // @brief salve id
     const int id = 1;
     // @brief register start address

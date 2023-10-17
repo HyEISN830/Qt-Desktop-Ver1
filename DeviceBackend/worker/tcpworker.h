@@ -61,6 +61,8 @@ public:
     void setIp(QString ip) { this->ip = ip; }
     void setPort(int port) { this->port = port; }
 
+    bool getConnected() { return this->conn; }
+
 signals:
     void send(QTcpSocket*, QString);    // send string to tcp
     void sendb(QTcpSocket*, QByteArray);    // send bytes to tcp

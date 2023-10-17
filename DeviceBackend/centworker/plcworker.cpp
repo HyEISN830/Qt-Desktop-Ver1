@@ -1,11 +1,5 @@
 #include "plcworker.h"
 
-PlcWorker::PlcWorker(QObject *parent)
-    : QObject{parent}
-{
-
-}
-
 PlcWorker::PlcWorker(DevicePLC *plc, QList<int> allowLines) : plc(plc)
 {
     for (int var = 0; var < allowLines.size(); ++var)
@@ -120,12 +114,15 @@ void PlcWorker::received(int type, QList<ushort> result)
 
 void PlcWorker::processPullUp()
 {
+
     for (int var = 0; var < lines.size(); ++var)
     {
         int addr = pullPlcRegisters[lines[var]];
 
         if (registers[addr] == _pullUpR)
         {
+            // HACK: 托管开关设置
+            if (settings.value(DC::DC_TOSTRING(lines[var]) + "Auto").toString() != "true") continue;
             registers[addr] = 0;
             emit writeRegister(DevicePLC::PacketType(lines[var] + 13), plc->getDId(), addr, _pullUpT);
             emit pullUp(plc, lines[var]);
@@ -141,6 +138,8 @@ void PlcWorker::processCommit()
 
         if (registers[addr] == _commitReq)
         {
+            // HACK: 交收开关设置
+//            if ((settings.value(DC::DC_TOSTRING(lines[var]) + "Commit").toString()) != "true") continue;
             registers[addr] = 0;
             emit writeRegister(DevicePLC::PacketType(lines[var] + 28), plc->getDId(), addr, _commitReaded);
             emit commitReq(plc, lines[var]);

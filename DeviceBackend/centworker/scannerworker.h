@@ -11,6 +11,7 @@
 #include <QSettings>
 #include <QUrlQuery>
 #include <QStringBuilder>
+#include <QTimer>
 
 #include "devicescanner.h"
 #include "deviceplc.h"
@@ -21,15 +22,9 @@ class ScannerWorker : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScannerWorker(QObject *parent = nullptr);
+    ScannerWorker(DeviceScanner *scanner);
 
-    ScannerWorker(DeviceScanner *scanner) : scanner(scanner)
-    {
-    }
-
-    ~ScannerWorker()
-    {
-    }
+    ~ScannerWorker();
 
     DeviceLineNo getLineNo() { return scanner->getLine(); }
 
@@ -45,6 +40,8 @@ signals:
     void txRobotParams(int len, int wide, int height, int row, int col, int layer);   // 在查询后发送机器人参数
     void approveOut(DeviceScanner*, DeviceLineNo);  // 同意指定线体出板
     void rejectOut(DeviceScanner*, DeviceLineNo);   // 拒绝指定线体出板
+    void sendKeepalive(QString);
+    void sendedKeep(DeviceScanner*, QString);
 
 public slots:
     void init();
@@ -63,8 +60,10 @@ public slots:
 private:
     QNetworkAccessManager *manager = nullptr;
     DeviceScanner *scanner = nullptr;
+    QTimer *keepaliveTimmer = nullptr;
     QSettings settings;
     QString barcode;
+    const QString keepaliveCmd = "KEYENCE\r\n";
 
     QJsonObject barcodeInfoResult;
     QJsonObject uploadMatlResult;

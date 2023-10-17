@@ -29,9 +29,13 @@ public:
     inline QString getIp() { return this->ip; }
     inline int getPort() { return this->port; }
     inline DeviceLineNo getLine() { return this->line; }
+    inline bool getConnected() { return worker && worker->getConnected(); }
 
     void start();
     void apply(QString ip, int port);   // modify ip and port and reconnect
+
+public slots:
+    void send(QString);
 
 signals:
     void connected(DeviceScanner*);

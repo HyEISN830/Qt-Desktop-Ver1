@@ -103,6 +103,8 @@ public slots:
     void scannerApproveOut(DeviceScanner*, DeviceLineNo);
     // @brief 拒绝指定线体出板
     void scannerRejectOut(DeviceScanner*, DeviceLineNo);
+    // @brief 发送扫码枪心跳数据
+    void scannerSendedKeep(DeviceScanner*, QString);
     // @brief PLC连接成功时
     void plcConnected(DevicePLC*);
     // @brief PLC断开连接或连接失败时
@@ -167,6 +169,8 @@ signals:
     void barcodeApproveOut(int dId);
     // @brief 拒绝指定线体出板
     void barcodeRejectOut(int dId);
+    // @breif 已向扫码枪发送心跳指令
+    void barcodeSendedKeep(int dId, QString cmd);
     // @brief on PLC TX
     void plcTx(int dId);
     // @brief on PLC RX

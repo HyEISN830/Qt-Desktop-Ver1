@@ -156,6 +156,8 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
     connect(worker, &ScannerWorker::uploaded, this, &DeviceCenter::scannerUploaded);
     connect(worker, &ScannerWorker::approveOut, this, &DeviceCenter::scannerApproveOut);
     connect(worker, &ScannerWorker::rejectOut, this, &DeviceCenter::scannerRejectOut);
+    connect(worker, &ScannerWorker::sendKeepalive, scanner, &DeviceScanner::send);
+    connect(worker, &ScannerWorker::sendedKeep, this, &DeviceCenter::scannerSendedKeep);
     connect(thread, &QThread::started, worker, &ScannerWorker::init);
     connect(thread, &QThread::finished, worker, &ScannerWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
@@ -270,7 +272,6 @@ void DeviceCenter::scannerGotoNormal(DeviceScanner *scanner, DeviceLineNo line, 
         if (plcWorkers[keys[var]]->allowLine(line))
             plcWorkers[keys[var]]->scaned(line, true);
 
-
     emit barcodeGotoNormal(scanner->getDId(), barcode);
 }
 
@@ -313,6 +314,11 @@ void DeviceCenter::scannerApproveOut(DeviceScanner *scanner, DeviceLineNo line)
 void DeviceCenter::scannerRejectOut(DeviceScanner *scanner, DeviceLineNo line)
 {
     emit barcodeRejectOut(scanner->getDId());
+}
+
+void DeviceCenter::scannerSendedKeep(DeviceScanner *scanner, QString cmd)
+{
+    emit barcodeSendedKeep(scanner->getDId(), cmd);
 }
 
 void DeviceCenter::plcConnected(DevicePLC *plc)
@@ -396,6 +402,18 @@ DeviceCenter::~DeviceCenter()
     dIds = robotList.keys();
     for (int i = 0; i < dIds.size(); ++i)
         robotList.remove(dIds[i]);
+
+    dIds = scannerWorkers.keys();
+    for (int i = 0; i < dIds.size(); ++i)
+        scannerWorkers.remove(dIds[i]);
+
+    dIds = plcWorkers.keys();
+    for (int i = 0; i < dIds.size(); ++i)
+        plcWorkers.remove(dIds[i]);
+
+    dIds = robotWorkers.keys();
+    for (int i = 0; i < dIds.size(); ++i)
+        robotWorkers.remove(dIds[i]);
 
     dIds = workerThreads.keys();
     for (int i = 0; i < dIds.size(); ++i)

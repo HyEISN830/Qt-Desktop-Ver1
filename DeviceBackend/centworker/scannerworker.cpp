@@ -1,9 +1,19 @@
 #include "scannerworker.h"
 
-ScannerWorker::ScannerWorker(QObject *parent)
-    : QObject{parent}
+ScannerWorker::ScannerWorker(DeviceScanner *scanner) : scanner(scanner)
 {
+    keepaliveTimmer = new QTimer;
+    keepaliveTimmer->setInterval(5000);
+    connect(keepaliveTimmer, &QTimer::timeout, this, [=] { emit sendKeepalive(keepaliveCmd); emit sendedKeep(scanner, keepaliveCmd); });
+    keepaliveTimmer->start();
+}
 
+ScannerWorker::~ScannerWorker()
+{
+    if (keepaliveTimmer)
+        keepaliveTimmer->stop();
+
+    delete keepaliveTimmer;
 }
 
 void ScannerWorker::init()
@@ -72,7 +82,6 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
                     emit gotoError(scanner, scanner->getLine(), barcode);
                 }
             }
-//            emit gotoNormal(scanner, scanner->getLine(), barcode);
         }
         else if (u == uploadMatlURL)
         {
@@ -118,9 +127,10 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         {
             QJsonObject curStack = result["result"].toObject()["curStack"].toObject();
             QJsonObject response = result["result"].toObject()["wmsresp"].toObject()["response"].toObject();
+            bool offline = result["result"].toObject()["offline"].toBool();
 
             emit querySuccess(scanner, "API:/CommitStacksURL", result);
-            if (response["return"].toObject()["returnFlag"].toString() == "1")
+            if (offline || response["return"].toObject()["returnFlag"].toString() == "1")
                 emit approveOut(scanner, scanner->getLine());
             else
                 emit rejectOut(scanner, scanner->getLine());
@@ -133,6 +143,12 @@ void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
     QUrl url(settings.value("barcodeInfoURL").toString());
     QUrlQuery query;
     QNetworkRequest request;
+
+    // HACK: 托管开关设置
+    if ((settings.value(DC::DC_TOSTRING(scanner->getLine()) + "Auto").toString()) != "true") return;
+
+    // 扫码枪心跳
+    if (barcode.length() && !barcode.indexOf("OK,KEYENCE")) return;
 
     barcode = barcode.trimmed().replace("\r\n", "");
     if (barcode == "NG")
@@ -170,6 +186,9 @@ void ScannerWorker::requestUploadMatl(DeviceLineNo line, QString order, QString 
 
 void ScannerWorker::requestPullUpMatl(DeviceLineNo line)
 {
+    // HACK: 托管开关设置
+    if ((settings.value(DC::DC_TOSTRING(line) + "Auto").toString()) != "true") return;
+
     QUrl url(settings.value("pullUpMatlURL").toString());
 
     if (url.toString().trimmed().length())
@@ -201,13 +220,14 @@ void ScannerWorker::requestRobotParams(DeviceLineNo line, int len, int wide, int
 
 void ScannerWorker::requestCommitStack(DeviceLineNo line)
 {
+    // HACK: 交收开关设置
+    bool uncommit = (settings.value(DC::DC_TOSTRING(line) + "Commit").toString()) != "true";
     QUrl url(settings.value("commitStacksURL").toString());
 
     if (url.toString().trimmed().length())
     {
         QUrlQuery query;
-
-        query.addQueryItem("url",  settings.value("stackUploadURL").toString());
+        query.addQueryItem("url",  uncommit ? "API:/CommitLocal" : settings.value("stackUploadURL").toString());
         query.addQueryItem("line", QString::number((int)line));
         url.setQuery(query);
         manager->get(QNetworkRequest(url));

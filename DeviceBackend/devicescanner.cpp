@@ -15,6 +15,7 @@ void DeviceScanner::start()
         connect(worker, &TcpWorker::disconnected, this, [=] { emit disconnected(this); });
         connect(worker, &TcpWorker::connectFailed, this, [=] { emit connectFailed(this); });
         connect(worker, &TcpWorker::received, this, [=] (QByteArray data) { emit barcodeReceived(this, data); });
+        connect(this, &DeviceScanner::_send, worker, &TcpWorker::write);
         worker->start();
     }
 }
@@ -28,6 +29,12 @@ void DeviceScanner::apply(QString ip, int port)
         worker->apply(ip, port);
         emit applied(dId, ip, port);
     }
+}
+
+void DeviceScanner::send(QString content)
+{
+    if (worker && worker->getConnected())
+        emit _send(content);
 }
 
 DeviceScanner::~DeviceScanner()

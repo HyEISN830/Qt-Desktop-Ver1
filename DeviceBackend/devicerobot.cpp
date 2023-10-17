@@ -37,8 +37,8 @@ void DeviceRobot::writeParams(int len, int wide, int height, int row, int col, i
     % QString::number(len) % "#"
     % QString::number(wide) % "#"
     % QString::number(height) % "#"
-    % QString::number(row) % "#"
     % QString::number(col) % "#"
+    % QString::number(row) % "#"
     % QString::number(layer);
     write(params);
 }
