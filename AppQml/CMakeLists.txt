@@ -25,6 +25,7 @@ list(APPEND MODULE_QML_FILES
     PageWatching.qml
     PageTLogs.qml
     PageSets.qml
+    PageLineState.qml
     T_PageTests.qml
 )
 

@@ -120,6 +120,10 @@ Item {
                     log: tlogsPage
                     deviceCenter: deviceCenter
                 }
+                PageLineState {
+                    id: lineStatePage
+                    view: stackView
+                }
                 PageTLogs {
                     id: tlogsPage
                     view: stackView

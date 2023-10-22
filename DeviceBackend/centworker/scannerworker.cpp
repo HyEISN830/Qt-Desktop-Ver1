@@ -130,10 +130,18 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             bool offline = result["result"].toObject()["offline"].toBool();
 
             emit querySuccess(scanner, "API:/CommitStacksURL", result);
-            if (offline || response["return"].toObject()["returnFlag"].toString() == "1")
+
+            if (!result["result"].toObject()["curStack"].isObject())    // 出空板默认允许
+            {
                 emit approveOut(scanner, scanner->getLine());
+            }
             else
-                emit rejectOut(scanner, scanner->getLine());
+            {
+                if (offline || response["return"].toObject()["returnFlag"].toString() == "1")
+                    emit approveOut(scanner, scanner->getLine());
+                else
+                    emit rejectOut(scanner, scanner->getLine());
+            }
         }
     }
 }
