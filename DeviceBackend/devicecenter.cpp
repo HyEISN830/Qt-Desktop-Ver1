@@ -16,7 +16,9 @@ void DeviceCenter::start()
     RobotWorker *w1rw = findRobotWorker(DeviceLineNo::W1);
     connect(w1pw, &PlcWorker::pullUp, w1sw, &ScannerWorker::pullUp);
     connect(w1pw, &PlcWorker::commitReq, w1sw, &ScannerWorker::commitReq);
+    connect(w1pw, &PlcWorker::cleanReq, w1sw, &ScannerWorker::cleanReq);
     connect(w1sw, &ScannerWorker::gotoChange, w1pw, &PlcWorker::gotoChange);
+    connect(w1sw, &ScannerWorker::gotoChangeReady, w1pw, &PlcWorker::gotoChangeReady);
     connect(w1sw, &ScannerWorker::txRobotParams, w1rw, &RobotWorker::writeParams);
     connect(w1sw, &ScannerWorker::approveOut, w1pw, &PlcWorker::approveOut);
     connect(w1sw, &ScannerWorker::rejectOut, w1pw, &PlcWorker::rejectOut);
@@ -27,7 +29,9 @@ void DeviceCenter::start()
     RobotWorker *w2rw = findRobotWorker(DeviceLineNo::W2);
     connect(w2pw, &PlcWorker::pullUp, w2sw, &ScannerWorker::pullUp);
     connect(w2pw, &PlcWorker::commitReq, w2sw, &ScannerWorker::commitReq);
+    connect(w2pw, &PlcWorker::cleanReq, w2sw, &ScannerWorker::cleanReq);
     connect(w2sw, &ScannerWorker::gotoChange, w2pw, &PlcWorker::gotoChange);
+    connect(w2sw, &ScannerWorker::gotoChangeReady, w2pw, &PlcWorker::gotoChangeReady);
     connect(w2sw, &ScannerWorker::txRobotParams, w2rw, &RobotWorker::writeParams);
     connect(w2sw, &ScannerWorker::approveOut, w2pw, &PlcWorker::approveOut);
     connect(w2sw, &ScannerWorker::rejectOut, w2pw, &PlcWorker::rejectOut);
@@ -38,7 +42,9 @@ void DeviceCenter::start()
     RobotWorker *w3rw = findRobotWorker(DeviceLineNo::W3);
     connect(w3pw, &PlcWorker::pullUp, w3sw, &ScannerWorker::pullUp);
     connect(w3pw, &PlcWorker::commitReq, w3sw, &ScannerWorker::commitReq);
+    connect(w3pw, &PlcWorker::cleanReq, w3sw, &ScannerWorker::cleanReq);
     connect(w3sw, &ScannerWorker::gotoChange, w3pw, &PlcWorker::gotoChange);
+    connect(w3sw, &ScannerWorker::gotoChangeReady, w3pw, &PlcWorker::gotoChangeReady);
     connect(w3sw, &ScannerWorker::txRobotParams, w3rw, &RobotWorker::writeParams);
     connect(w3sw, &ScannerWorker::approveOut, w3pw, &PlcWorker::approveOut);
     connect(w3sw, &ScannerWorker::rejectOut, w3pw, &PlcWorker::rejectOut);
@@ -49,7 +55,9 @@ void DeviceCenter::start()
     RobotWorker *n3rw = findRobotWorker(DeviceLineNo::N3);
     connect(n3pw, &PlcWorker::pullUp, n3sw, &ScannerWorker::pullUp);
     connect(n3pw, &PlcWorker::commitReq, n3sw, &ScannerWorker::commitReq);
+    connect(n3pw, &PlcWorker::cleanReq, n3sw, &ScannerWorker::cleanReq);
     connect(n3sw, &ScannerWorker::gotoChange, n3pw, &PlcWorker::gotoChange);
+    connect(n3sw, &ScannerWorker::gotoChangeReady, n3pw, &PlcWorker::gotoChangeReady);
     connect(n3sw, &ScannerWorker::txRobotParams, n3rw, &RobotWorker::writeParams);
     connect(n3sw, &ScannerWorker::approveOut, n3pw, &PlcWorker::approveOut);
     connect(n3sw, &ScannerWorker::rejectOut, n3pw, &PlcWorker::rejectOut);
@@ -60,7 +68,9 @@ void DeviceCenter::start()
     RobotWorker *n2rw = findRobotWorker(DeviceLineNo::N2);
     connect(n2pw, &PlcWorker::pullUp, n2sw, &ScannerWorker::pullUp);
     connect(n2pw, &PlcWorker::commitReq, n2sw, &ScannerWorker::commitReq);
+    connect(n2pw, &PlcWorker::cleanReq, n2sw, &ScannerWorker::cleanReq);
     connect(n2sw, &ScannerWorker::gotoChange, n2pw, &PlcWorker::gotoChange);
+    connect(n2sw, &ScannerWorker::gotoChangeReady, n2pw, &PlcWorker::gotoChangeReady);
     connect(n2sw, &ScannerWorker::txRobotParams, n2rw, &RobotWorker::writeParams);
     connect(n2sw, &ScannerWorker::approveOut, n2pw, &PlcWorker::approveOut);
     connect(n2sw, &ScannerWorker::rejectOut, n2pw, &PlcWorker::rejectOut);
@@ -71,7 +81,9 @@ void DeviceCenter::start()
     RobotWorker *n1rw = findRobotWorker(DeviceLineNo::N1);
     connect(n1pw, &PlcWorker::pullUp, n1sw, &ScannerWorker::pullUp);
     connect(n1pw, &PlcWorker::commitReq, n1sw, &ScannerWorker::commitReq);
+    connect(n1pw, &PlcWorker::cleanReq, n1sw, &ScannerWorker::cleanReq);
     connect(n1sw, &ScannerWorker::gotoChange, n1pw, &PlcWorker::gotoChange);
+    connect(n1sw, &ScannerWorker::gotoChangeReady, n1pw, &PlcWorker::gotoChangeReady);
     connect(n1sw, &ScannerWorker::txRobotParams, n1rw, &RobotWorker::writeParams);
     connect(n1sw, &ScannerWorker::approveOut, n1pw, &PlcWorker::approveOut);
     connect(n1sw, &ScannerWorker::rejectOut, n1pw, &PlcWorker::rejectOut);
@@ -158,6 +170,7 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
     connect(worker, &ScannerWorker::rejectOut, this, &DeviceCenter::scannerRejectOut);
     connect(worker, &ScannerWorker::sendKeepalive, scanner, &DeviceScanner::send);
     connect(worker, &ScannerWorker::sendedKeep, this, &DeviceCenter::scannerSendedKeep);
+    connect(worker, &ScannerWorker::gotoChangeReady, this, &DeviceCenter::scannerChangeReady);
     connect(thread, &QThread::started, worker, &ScannerWorker::init);
     connect(thread, &QThread::finished, worker, &ScannerWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
@@ -319,6 +332,11 @@ void DeviceCenter::scannerRejectOut(DeviceScanner *scanner, DeviceLineNo line)
 void DeviceCenter::scannerSendedKeep(DeviceScanner *scanner, QString cmd)
 {
     emit barcodeSendedKeep(scanner->getDId(), cmd);
+}
+
+void DeviceCenter::scannerChangeReady(DeviceScanner *scanner, DeviceLineNo line)
+{
+    emit barcodeChangeReady(scanner->getDId());
 }
 
 void DeviceCenter::plcConnected(DevicePLC *plc)

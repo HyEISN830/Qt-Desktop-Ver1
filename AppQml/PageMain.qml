@@ -205,6 +205,9 @@ Item {
         onBarcodeSendedKeep: (dId, cmd) => {
             GlobalVariable.deviceMap[dId].tx()
         }
+        onBarcodeChangeReady: (dId) => {
+            tlogsPage.appendNormalLog(dId, `即将换产.`)
+        }
         onPlcTx: (dId) => {
             GlobalVariable.deviceMap[dId].tx()
         }

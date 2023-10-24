@@ -30,12 +30,31 @@ void PlcWorker::received(int type, QList<ushort> result)
 
             processPullUp();
             processCommit();
+            processClean();
         }
         break;
     }
 
     case DevicePLC::WriteSingleRegister:
         qDebug() << "write single register ok.";
+        break;
+
+    case DevicePLC::WriteW1CleanReaded:
+    case DevicePLC::WriteW2CleanReaded:
+    case DevicePLC::WriteW3CleanReaded:
+    case DevicePLC::WriteN3CleanReaded:
+    case DevicePLC::WriteN2CleanReaded:
+    case DevicePLC::WriteN1CleanReaded:
+        emit writed(plc, cleanPlcRegisters[DeviceLineNo(type - 52)], _cleanRst);
+        break;
+
+    case DevicePLC::WriteW1ChangeReady:
+    case DevicePLC::WriteW2ChangeReady:
+    case DevicePLC::WriteW3ChangeReady:
+    case DevicePLC::WriteN3ChangeReady:
+    case DevicePLC::WriteN2ChangeReady:
+    case DevicePLC::WriteN1ChangeReady:
+        emit writed(plc, cnotifyPlcRegisters[DeviceLineNo(type - 46)], _neworderOK);
         break;
 
     case DevicePLC::WriteW1CommitReject:
@@ -68,7 +87,7 @@ void PlcWorker::received(int type, QList<ushort> result)
     case DevicePLC::WriteW1Wide:
     case DevicePLC::WriteW2Wide:
     case DevicePLC::WriteW3Wide:
-        emit writed(plc, widePlcRegisters[DeviceLineNo(type - 25)], wide);
+        emit writed(plc, widePlcRegisters[DeviceLineNo(type - 25)], wideLog[DeviceLineNo(type - 25)]);
         break;
 
     case DevicePLC::WriteW1Change:
@@ -77,7 +96,7 @@ void PlcWorker::received(int type, QList<ushort> result)
     case DevicePLC::WriteN3Change:
     case DevicePLC::WriteN2Change:
     case DevicePLC::WriteN1Change:
-        emit writed(plc, changePlcRegisters[DeviceLineNo(type - 19)], _changeT);
+        emit writed(plc, changePlcRegisters[DeviceLineNo(type - 19)], bottomLog[DeviceLineNo(type - 19)] ? _changeB : _changeT);
         break;
 
     case DevicePLC::WriteW1PullUp:
@@ -147,6 +166,21 @@ void PlcWorker::processCommit()
     }
 }
 
+void PlcWorker::processClean()
+{
+    for (int var = 0; var < lines.size(); ++var)
+    {
+        int addr = cleanPlcRegisters[lines[var]];
+
+        if (registers[addr] == _cleanOk)
+        {
+            registers[addr] = 0;
+            emit writeRegister(DevicePLC::PacketType(lines[var] + 52), plc->getDId(), addr, _cleanRst);
+            emit cleanReq(plc, lines[var]);
+        }
+    }
+}
+
 void PlcWorker::approveOut(DeviceScanner* scanner, DeviceLineNo line)
 {
     emit writeRegister(DevicePLC::PacketType(line + 34), id, commitPlcRegisters[line], _commitOK);
@@ -163,15 +197,19 @@ void PlcWorker::scaned(DeviceLineNo line, bool ok)
     emit writeRegister(type, id, scanPlcRegisters[line], ok ? _scanOK : _scanNG);
 }
 
-void PlcWorker::gotoChange(DeviceScanner *scanner, DeviceLineNo line, QString orderNo, int len, int wide, int height)
+void PlcWorker::gotoChangeReady(DeviceScanner *scanner, DeviceLineNo line)
 {
-    this->len = len;
-    this->wide = wide;
-    this->height = height;
+    emit writeRegister(DevicePLC::PacketType(line + 46), id, cnotifyPlcRegisters[line], _neworderOK);
+}
+
+void PlcWorker::gotoChange(DeviceScanner *scanner, DeviceLineNo line, QString orderNo, int len, int wide, int height, bool bottom)
+{
+    bottomLog[line] = bottom;
+    wideLog[line] = wide;
 
     if (widePlcRegisters.contains(line))
         emit writeRegister(DevicePLC::PacketType(line + 25), id, widePlcRegisters[line], wide);
-    emit writeRegister(DevicePLC::PacketType(line + 19), id, changePlcRegisters[line], _changeT);
+    emit writeRegister(DevicePLC::PacketType(line + 19), id, changePlcRegisters[line], bottom ? _changeB : _changeT);
 }
 
 PlcWorker::~PlcWorker()

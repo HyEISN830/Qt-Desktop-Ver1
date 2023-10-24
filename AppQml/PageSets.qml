@@ -739,6 +739,111 @@ Item {
             ComExpand {
                 anchors.left: parent.left
                 anchors.right: parent.right
+                title: `CStack - Setting`
+                body: Component {
+                    Rectangle {
+                        height: 100
+                        color: "#f1f2f6"
+
+                        Column {
+                            anchors.fill: parent
+                            anchors.topMargin: 6
+                            anchors.leftMargin: 8
+                            spacing: 8
+
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 10
+
+                                Rectangle {
+                                    color: "transparent"
+                                    width: lblLength.width + txtLength.width
+                                    height: txtLength.height
+
+                                    ComLabel {
+                                        id: lblLength
+                                        anchors.verticalCenter: txtLength.verticalCenter
+                                        text: "URL: "
+                                    }
+
+                                    ComTextField {
+                                        id: txtLength
+                                        anchors.left: lblLength.right
+                                        placeholderText: "URL"
+                                        width: 900
+                                    }
+                                }
+                            }
+
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 8
+
+                                ComButton {
+                                    text: "重置"
+                                    onClicked: loadUSets(txtLength, "cstackURL")
+                                }
+
+                                Rectangle {
+                                    color: "transparent"
+                                    width: btnSave.width
+                                    height: btnSave.height
+
+                                    ComButton {
+                                        id: btnSave
+                                        text: "保存"
+                                        onClicked: {
+                                            saveUSets(txtLength, "cstackURL")
+                                            btnSaveIconShowAni.start()
+                                        }
+                                        opacity: 1
+                                    }
+
+                                    Image {
+                                        id: btnSaveIcon
+                                        anchors.centerIn: btnSave
+                                        source: "resources/icon-success-green.svg"
+                                        width: 40
+                                        height: 40
+                                        mipmap: true
+                                        opacity: 0
+
+                                        SequentialAnimation {
+                                            id: btnSaveIconShowAni
+                                            onStarted: btnSave.opacity = 0
+                                            onFinished: btnSave.opacity = 1
+
+                                            OpacityAnimator {
+                                                target: btnSaveIcon
+                                                from: 0
+                                                to: 1
+                                                duration: 700
+                                                easing.type: Easing.InOutCubic
+                                            }
+
+                                            OpacityAnimator {
+                                                target: btnSaveIcon
+                                                from: 1
+                                                to: 0
+                                                duration: 500
+                                                easing.type: Easing.OutCubic
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Component.onCompleted: loadUSets(txtLength, "cstackURL")
+                    }
+                }
+            }
+
+            ComExpand {
+                anchors.left: parent.left
+                anchors.right: parent.right
                 title: `条码信息接口 设置项`
                 body: Component {
                     Rectangle {

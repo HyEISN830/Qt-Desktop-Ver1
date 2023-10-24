@@ -45,6 +45,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         QString pullUpMatlURL = settings.value("pullUpMatlURL").toString();     // 指定线体机器人已码好一个物料
         QString robotParamsURL = settings.value("robotParamsURL").toString();   // 机器人参数接口
         QString commitStacksURL = settings.value("commitStacksURL").toString();   // 上转线体码垛接口
+        QString cstackURL = settings.value("cstackURL").toString();    // 根据工单获取工单下首个物料信息以及机器人参数
 
         QUrl surl = url.toString();
         surl.setQuery(QUrlQuery());
@@ -69,12 +70,12 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
 
                     if (size.size() == 3)
                     {
-                        emit gotoNormal(scanner, scanner->getLine(), barcode);
+//                        emit gotoNormal(scanner, scanner->getLine(), barcode);
                         requestUploadMatl(scanner->getLine(), modelData["OrderNo"].toString(), barcode, size[0].toInt(), size[1].toInt(), size[2].toInt());
                     }
                     else
                     {
-                        emit gotoNormal(scanner, scanner->getLine(), barcode);
+//                        emit gotoNormal(scanner, scanner->getLine(), barcode);
                     }
                 }
                 else
@@ -92,9 +93,12 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             emit uploaded(scanner, scanner->getLine(), query.queryItemValue("SN").trimmed());
             if (rr["change"].toBool())
             {
-                emit gotoChange(scanner, scanner->getLine(), rrnew["orderNo"].toString(), rrnew["len"].toInt(), rrnew["wide"].toInt(), rrnew["height"].toInt());
-                requestRobotParams(scanner->getLine(), rrnew["len"].toInt(), rrnew["wide"].toInt(), rrnew["height"].toInt());
+                emit gotoChangeReady(scanner, scanner->getLine());
+                QThread::msleep(1000);  // 发送新工单时, 保证先写入新工单, 在写入扫码ok
             }
+
+            // 扫码处不发送判断, 扫码成功一定上传, 因此上传后可以控制产品流入正常线; 否则异常在扫码结果后直接拦截
+            emit gotoNormal(scanner, scanner->getLine(), rrnew["sn"].toString());
         }
         else if (u == pullUpMatlURL)
         {
@@ -104,12 +108,6 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             if (rr["curstack"].isObject())
             {
                 emit pullUped(scanner, scanner->getLine(), rr["curstack"].toObject()["sn"].toString());
-                if (rr["change"].toBool() && rr["nextstack"].isObject())
-                {
-                    QJsonObject next = rr["nextstack"].toObject();
-                    emit gotoChange(scanner, scanner->getLine(), rr["curstack"].toObject()["orderNo"].toString(), next["len"].toInt(), next["wide"].toInt(), next["height"].toInt());
-                    requestRobotParams(scanner->getLine(), next["len"].toInt(), next["wide"].toInt(), next["height"].toInt());
-                }
             }
             else
             {
@@ -125,13 +123,12 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         }
         else if (u == commitStacksURL)
         {
-            QJsonObject curStack = result["result"].toObject()["curStack"].toObject();
             QJsonObject response = result["result"].toObject()["wmsresp"].toObject()["response"].toObject();
             bool offline = result["result"].toObject()["offline"].toBool();
 
             emit querySuccess(scanner, "API:/CommitStacksURL", result);
 
-            if (!result["result"].toObject()["curStack"].isObject())    // 出空板默认允许
+            if (!result["result"].toObject()["children"].toArray().size())    // 出空板默认允许
             {
                 emit approveOut(scanner, scanner->getLine());
             }
@@ -142,6 +139,16 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
                 else
                     emit rejectOut(scanner, scanner->getLine());
             }
+        }
+        else if (u == cstackURL)
+        {
+            QJsonObject rr = result["result"].toObject();
+            QJsonObject curstack = rr["curstack"].toObject();
+            QJsonObject robotparams = rr["robotparams"].toObject();
+
+            emit querySuccess(scanner, "API:/CStackURL", result);
+            emit gotoChange(scanner, scanner->getLine(), curstack["orderNo"].toString(), curstack["len"].toInt(), curstack["wide"].toInt(), curstack["height"].toInt(), robotparams["bottom"].toBool());
+            emit txRobotParams(robotparams["len"].toInt(), robotparams["wide"].toInt(), robotparams["height"].toInt(), robotparams["row"].toInt(), robotparams["col"].toInt(), robotparams["layer"].toInt());
         }
     }
 }
@@ -242,6 +249,19 @@ void ScannerWorker::requestCommitStack(DeviceLineNo line)
     }
 }
 
+void ScannerWorker::requestCStack(DeviceLineNo line)
+{
+    QUrl url(settings.value("cstackURL").toString());
+
+    if (url.toString().trimmed().length())
+    {
+        QUrlQuery query;
+        query.addQueryItem("line", QString::number((int)line));
+        url.setQuery(query);
+        manager->get(QNetworkRequest(url));
+    }
+}
+
 void ScannerWorker::pullUp(DevicePLC *plc, DeviceLineNo line)
 {
     if (line == scanner->getLine())
@@ -250,6 +270,14 @@ void ScannerWorker::pullUp(DevicePLC *plc, DeviceLineNo line)
 
 void ScannerWorker::commitReq(DevicePLC *plc, DeviceLineNo line)
 {
+    QThread::msleep(300);
     if (line == scanner->getLine())
         requestCommitStack(line);
+}
+
+void ScannerWorker::cleanReq(DevicePLC *plc, DeviceLineNo line)
+{
+    QThread::msleep(300);
+    if (line == scanner->getLine())
+        requestCStack(line);
 }

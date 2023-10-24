@@ -71,6 +71,20 @@ public:
         WriteN3CommitReject,
         WriteN2CommitReject,
         WriteN1CommitReject,
+
+        WriteW1ChangeReady,
+        WriteW2ChangeReady,
+        WriteW3ChangeReady,
+        WriteN3ChangeReady,
+        WriteN2ChangeReady,
+        WriteN1ChangeReady,
+
+        WriteW1CleanReaded,
+        WriteW2CleanReaded,
+        WriteW3CleanReaded,
+        WriteN3CleanReaded,
+        WriteN2CleanReaded,
+        WriteN1CleanReaded,
     };
 
     explicit DevicePLC(QObject *parent = nullptr);
