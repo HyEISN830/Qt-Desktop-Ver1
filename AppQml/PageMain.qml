@@ -55,6 +55,18 @@ Item {
                     }
                 }
                 TabButton {
+                    text: qsTr("码垛状态")
+                    width: 110
+                    icon.source: "resources/icon-camera.svg"
+                    icon.height: Consts.icon_h
+                    icon.width: Consts.icon_w
+                    onClicked: {
+                        if (stackView.currentItem == lineStatePage)
+                            return
+                        stackView.replace(null, lineStatePage)
+                    }
+                }
+                TabButton {
                     text: qsTr("TLogs")
                     width: 100
                     icon.source: "resources/icon-document.svg"
@@ -264,6 +276,7 @@ Item {
         }
         stackView.replace(setsPage, null)
         stackView.replace(tlogsPage, null)
+        stackView.replace(lineStatePage, null)
         stackView.replace(watchingPage, null)
         stackView.replace(homePage, null)
     }

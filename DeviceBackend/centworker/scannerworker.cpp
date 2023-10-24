@@ -134,10 +134,16 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             }
             else
             {
-                if (offline || response["return"].toObject()["returnFlag"].toString() == "1")
-                    emit approveOut(scanner, scanner->getLine());
-                else
-                    emit rejectOut(scanner, scanner->getLine());
+//                if (offline || response["return"].toObject()["returnFlag"].toString() == "1")
+//                    emit approveOut(scanner, scanner->getLine());
+//                else
+//                    emit rejectOut(scanner, scanner->getLine());
+
+                // TODO: 发送为何wms出板错误
+//                if (!(offline || response["return"].toObject()["returnFlag"].toString() == "1"))
+
+                // 不管怎样, 准许出板
+                emit approveOut(scanner, scanner->getLine());
             }
         }
         else if (u == cstackURL)
