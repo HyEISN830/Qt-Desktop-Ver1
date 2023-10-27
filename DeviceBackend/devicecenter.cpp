@@ -172,6 +172,7 @@ void DeviceCenter::addscanner(int dId, QString ip, int port, DeviceLineNo lineNo
     connect(worker, &ScannerWorker::sendedKeep, this, &DeviceCenter::scannerSendedKeep);
     connect(worker, &ScannerWorker::gotoChangeReady, this, &DeviceCenter::scannerChangeReady);
     connect(thread, &QThread::started, worker, &ScannerWorker::init);
+    connect(thread, &QThread::finished, worker, &ScannerWorker::timerDeleteLater);
     connect(thread, &QThread::finished, worker, &ScannerWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     worker->moveToThread(thread);

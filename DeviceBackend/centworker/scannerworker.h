@@ -45,8 +45,11 @@ signals:
     void sendedKeep(DeviceScanner*, QString);
     void gotoChangeReady(DeviceScanner *scanner, DeviceLineNo line);    // 在上传物料后, 发现需要换产时, 发送信号到plc, 准备换产
 
+    void deleteTimer();
+
 public slots:
     void init();
+    void timerDeleteLater();
     void querydone(bool error, QUrl url, QJsonObject result);
     void analysis(DeviceScanner *scanner, QString barcode);
     void requestUploadMatl(DeviceLineNo line, QString order, QString barcode, int len, int wide, int height);

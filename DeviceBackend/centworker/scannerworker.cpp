@@ -5,15 +5,13 @@ ScannerWorker::ScannerWorker(DeviceScanner *scanner) : scanner(scanner)
     keepaliveTimmer = new QTimer;
     keepaliveTimmer->setInterval(5000);
     connect(keepaliveTimmer, &QTimer::timeout, this, [=] { emit sendKeepalive(keepaliveCmd); emit sendedKeep(scanner, keepaliveCmd); });
+    connect(this, &ScannerWorker::deleteTimer, keepaliveTimmer, &QTimer::deleteLater);
     keepaliveTimmer->start();
 }
 
 ScannerWorker::~ScannerWorker()
 {
-    if (keepaliveTimmer)
-        keepaliveTimmer->stop();
 
-    delete keepaliveTimmer;
 }
 
 void ScannerWorker::init()
@@ -32,6 +30,11 @@ void ScannerWorker::init()
     });
 }
 
+void ScannerWorker::timerDeleteLater()
+{
+    emit deleteTimer();
+}
+
 void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
 {
     if (error)
@@ -46,12 +49,13 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         QString robotParamsURL = settings.value("robotParamsURL").toString();   // 机器人参数接口
         QString commitStacksURL = settings.value("commitStacksURL").toString();   // 上转线体码垛接口
         QString cstackURL = settings.value("cstackURL").toString();    // 根据工单获取工单下首个物料信息以及机器人参数
+        QString fbarcodeURL = settings.value("fbarcodeURL").toString();    // 为了防止未知错误, 在堡垒机上发送https延迟的问题, 因此由server代理请求
 
         QUrl surl = url.toString();
         surl.setQuery(QUrlQuery());
         QString u = surl.toString();
 
-        if (u == barcodeInfoURL)
+        if (u == fbarcodeURL)
         {
             if (result["IsSucess"].toString() != "true" || !(result.contains("ModelData") && result.value("ModelData").isObject()) && result.value("ModelData").toObject().contains("isWmsSuccess"))
             {
@@ -162,6 +166,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
 void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
 {
     QUrl url(settings.value("barcodeInfoURL").toString());
+    QUrl furl(settings.value("fbarcodeURL").toString());
     QUrlQuery query;
     QNetworkRequest request;
 
@@ -179,9 +184,10 @@ void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
     }
 
     this->barcode = barcode;
+    query.addQueryItem("url", url.toString());
     query.addQueryItem("barcode", barcode);
-    url.setQuery(query);
-    request.setUrl(url);
+    furl.setQuery(query);
+    request.setUrl(furl);
     manager->get(request);
 }
 
