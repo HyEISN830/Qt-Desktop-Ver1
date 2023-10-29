@@ -85,6 +85,8 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/icon-document.svg
     resources/icon-play.svg
     resources/icon-pause.svg
+    resources/icon-boxes.svg
+    resources/icon-close.svg
 
     resources/home.jpg
     resources/logo.png

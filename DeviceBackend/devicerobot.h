@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QStringBuilder>
+#include <QJsonObject>
 
 #include "devicelineno.h"
 #include "worker/tcpworker.h"
@@ -44,7 +45,7 @@ signals:
 public slots:
     void write(QString content) { emit tx(this); emit sended(this, content); emit _write(content); }
     // @brief 向机器人发送参数: 长宽高行列层
-    void writeParams(int len, int wide, int height, int row, int col, int layer);
+    void writeParams(QJsonObject);
 
 private:
     int dId = 0;

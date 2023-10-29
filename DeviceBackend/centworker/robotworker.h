@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QTimer>
+#include <QJsonObject>
 
 #include "devicerobot.h"
 #include "devicescanner.h"
@@ -29,10 +30,10 @@ public:
     DeviceLineNo getLineNo() { return robot->getLine(); }
 
 signals:
-    void writeParams(int len, int wide, int height, int row, int col, int layer);
+    void writeParams(QJsonObject);
 
 public slots:
-    void _writeParams(DeviceScanner*, DeviceLineNo, int len, int wide, int height, int row, int col, int layer) { emit writeParams(len, wide, height, row, col, layer); }
+    void _writeParams(DeviceScanner*, DeviceLineNo, QJsonObject jobj) { emit writeParams(jobj); }
 
 private:
     DeviceRobot *robot = nullptr;

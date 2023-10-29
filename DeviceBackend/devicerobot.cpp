@@ -31,15 +31,15 @@ void DeviceRobot::apply(QString ip, int port)
     }
 }
 
-void DeviceRobot::writeParams(int len, int wide, int height, int row, int col, int layer)
+void DeviceRobot::writeParams(QJsonObject jobj)
 {
     QString params = ""
-    % QString::number(len) % "#"
-    % QString::number(wide) % "#"
-    % QString::number(height) % "#"
-    % QString::number(col) % "#"
-    % QString::number(row) % "#"
-    % QString::number(layer);
+    % jobj["sType"].toString() % "#"
+    % QString::number(jobj["len"].toInt()) % "#"
+    % QString::number(jobj["wide"].toInt()) % "#"
+    % QString::number(jobj["height"].toInt()) % "#"
+    % (jobj["bType"].toBool() ? "1" : "0")
+    ;
     write(params);
 }
 

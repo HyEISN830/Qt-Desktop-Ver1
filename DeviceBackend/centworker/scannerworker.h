@@ -38,7 +38,7 @@ signals:
     void pullUped(DeviceScanner*, DeviceLineNo, QString barcode);   // 物料已上传且加入到码垛中
     void noAvailableStack(DeviceScanner*);    // 发起了机器人已码垛请求, 但是未找到当前线体已扫码的物料
     void uploaded(DeviceScanner*, DeviceLineNo, QString barcode);   // 物料已扫码确认
-    void txRobotParams(int len, int wide, int height, int row, int col, int layer);   // 在查询后发送机器人参数
+    void txRobotParams(QJsonObject);   // 在查询后发送机器人参数
     void approveOut(DeviceScanner*, DeviceLineNo);  // 同意指定线体出板
     void rejectOut(DeviceScanner*, DeviceLineNo);   // 拒绝指定线体出板
     void sendKeepalive(QString);

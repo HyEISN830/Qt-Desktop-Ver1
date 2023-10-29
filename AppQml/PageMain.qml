@@ -57,7 +57,7 @@ Item {
                 TabButton {
                     text: qsTr("码垛状态")
                     width: 110
-                    icon.source: "resources/icon-camera.svg"
+                    icon.source: "resources/icon-boxes.svg"
                     icon.height: Consts.icon_h
                     icon.width: Consts.icon_w
                     onClicked: {

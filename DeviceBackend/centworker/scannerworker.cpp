@@ -123,7 +123,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             QJsonObject rr = result["result"].toObject();
 
             emit querySuccess(scanner, "API:/RobotParamsURL", result);
-            emit txRobotParams(rr["len"].toInt(), rr["wide"].toInt(), rr["height"].toInt(), rr["row"].toInt(), rr["col"].toInt(), rr["layer"].toInt());
+            emit txRobotParams(rr);
         }
         else if (u == commitStacksURL)
         {
@@ -158,7 +158,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
 
             emit querySuccess(scanner, "API:/CStackURL", result);
             emit gotoChange(scanner, scanner->getLine(), curstack["orderNo"].toString(), curstack["len"].toInt(), curstack["wide"].toInt(), curstack["height"].toInt(), robotparams["bottom"].toBool());
-            emit txRobotParams(robotparams["len"].toInt(), robotparams["wide"].toInt(), robotparams["height"].toInt(), robotparams["row"].toInt(), robotparams["col"].toInt(), robotparams["layer"].toInt());
+            emit txRobotParams(robotparams);
         }
     }
 }
