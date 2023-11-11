@@ -22,6 +22,7 @@ void DeviceCenter::start()
     connect(w1sw, &ScannerWorker::txRobotParams, w1rw, &RobotWorker::writeParams);
     connect(w1sw, &ScannerWorker::approveOut, w1pw, &PlcWorker::approveOut);
     connect(w1sw, &ScannerWorker::rejectOut, w1pw, &PlcWorker::rejectOut);
+    connect(w1rw, &RobotWorker::requestStartUpParams, w1sw, &ScannerWorker::requestStartUpParams);
 
     // W2
     ScannerWorker *w2sw = findScannerWorker(DeviceLineNo::W2);
@@ -35,6 +36,7 @@ void DeviceCenter::start()
     connect(w2sw, &ScannerWorker::txRobotParams, w2rw, &RobotWorker::writeParams);
     connect(w2sw, &ScannerWorker::approveOut, w2pw, &PlcWorker::approveOut);
     connect(w2sw, &ScannerWorker::rejectOut, w2pw, &PlcWorker::rejectOut);
+    connect(w2rw, &RobotWorker::requestStartUpParams, w2sw, &ScannerWorker::requestStartUpParams);
 
     // W3
     ScannerWorker *w3sw = findScannerWorker(DeviceLineNo::W3);
@@ -48,6 +50,7 @@ void DeviceCenter::start()
     connect(w3sw, &ScannerWorker::txRobotParams, w3rw, &RobotWorker::writeParams);
     connect(w3sw, &ScannerWorker::approveOut, w3pw, &PlcWorker::approveOut);
     connect(w3sw, &ScannerWorker::rejectOut, w3pw, &PlcWorker::rejectOut);
+    connect(w3rw, &RobotWorker::requestStartUpParams, w3sw, &ScannerWorker::requestStartUpParams);
 
     // N3
     ScannerWorker *n3sw = findScannerWorker(DeviceLineNo::N3);
@@ -61,6 +64,7 @@ void DeviceCenter::start()
     connect(n3sw, &ScannerWorker::txRobotParams, n3rw, &RobotWorker::writeParams);
     connect(n3sw, &ScannerWorker::approveOut, n3pw, &PlcWorker::approveOut);
     connect(n3sw, &ScannerWorker::rejectOut, n3pw, &PlcWorker::rejectOut);
+    connect(n3rw, &RobotWorker::requestStartUpParams, n3sw, &ScannerWorker::requestStartUpParams);
 
     // N2
     ScannerWorker *n2sw = findScannerWorker(DeviceLineNo::N2);
@@ -74,6 +78,7 @@ void DeviceCenter::start()
     connect(n2sw, &ScannerWorker::txRobotParams, n2rw, &RobotWorker::writeParams);
     connect(n2sw, &ScannerWorker::approveOut, n2pw, &PlcWorker::approveOut);
     connect(n2sw, &ScannerWorker::rejectOut, n2pw, &PlcWorker::rejectOut);
+    connect(n2rw, &RobotWorker::requestStartUpParams, n2sw, &ScannerWorker::requestStartUpParams);
 
     // N1
     ScannerWorker *n1sw = findScannerWorker(DeviceLineNo::N1);
@@ -87,6 +92,7 @@ void DeviceCenter::start()
     connect(n1sw, &ScannerWorker::txRobotParams, n1rw, &RobotWorker::writeParams);
     connect(n1sw, &ScannerWorker::approveOut, n1pw, &PlcWorker::approveOut);
     connect(n1sw, &ScannerWorker::rejectOut, n1pw, &PlcWorker::rejectOut);
+    connect(n1rw, &RobotWorker::requestStartUpParams, n1sw, &ScannerWorker::requestStartUpParams);
 }
 
 void DeviceCenter::stop()
@@ -201,6 +207,11 @@ void DeviceCenter::addrobot(int dId, QString ip, int port, DeviceLineNo lineNo)
     workerThreads[dId] = thread;
     robotWorkers[dId] = worker;
     connect(worker, &RobotWorker::writeParams, robot, &DeviceRobot::writeParams);
+    connect(worker, &RobotWorker::robotHeartStopped, this, &DeviceCenter::_robotHeartStopped);
+    connect(robot, &DeviceRobot::received, worker, &RobotWorker::robotReceived);
+    connect(robot, &DeviceRobot::connected, worker, &RobotWorker::robotConnected);
+    connect(robot, &DeviceRobot::disconnected, worker, &RobotWorker::robotDisconnected);
+    connect(thread, &QThread::finished, worker, &RobotWorker::timerDeleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     worker->moveToThread(thread);
     thread->start();
@@ -377,7 +388,17 @@ void DeviceCenter::_robotSended(DeviceRobot *robot, QString content)
 
 void DeviceCenter::_robotReceived(DeviceRobot *robot, QString content)
 {
-    emit robotReceived(robot->getDId(), content);
+    if (!content.contains(robot->keepaliveStr))
+        emit robotReceived(robot->getDId(), content);
+}
+
+void DeviceCenter::_robotHeartStopped(DeviceRobot *robot)
+{
+    if (robot->getConnected())
+    {
+        emit robotHeartStopped(robot->getDId());
+        robot->apply(robot->getIp(), robot->getPort());
+    }
 }
 
 void DeviceCenter::robotConnected(DeviceRobot *robot)

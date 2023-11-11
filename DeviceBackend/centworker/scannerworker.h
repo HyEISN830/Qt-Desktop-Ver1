@@ -57,6 +57,7 @@ public slots:
     void requestRobotParams(DeviceLineNo line, int len, int wide, int height);
     void requestCommitStack(DeviceLineNo);
     void requestCStack(DeviceLineNo);
+    void requestStartUpParams(DeviceLineNo);
 
     // @brief 由PlcWorker触发, 当指定线体机器人码好一个物料时
     void pullUp(DevicePLC*, DeviceLineNo);

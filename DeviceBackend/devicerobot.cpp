@@ -31,10 +31,15 @@ void DeviceRobot::apply(QString ip, int port)
     }
 }
 
+bool DeviceRobot::getConnected()
+{
+    return worker && worker->getConnected();
+}
+
 void DeviceRobot::writeParams(QJsonObject jobj)
 {
     QString params = ""
-    % jobj["sType"].toString() % "#"
+    % (jobj["bType"].toBool() ? (jobj["sType"].toString().size() ? jobj["sType"].toString() : "0") : (jobj["sType1"].toString().size() ? jobj["sType1"].toString() : "0")) % "#"
     % QString::number(jobj["len"].toInt()) % "#"
     % QString::number(jobj["wide"].toInt()) % "#"
     % QString::number(jobj["height"].toInt()) % "#"

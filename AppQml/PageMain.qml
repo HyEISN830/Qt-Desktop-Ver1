@@ -194,7 +194,7 @@ Item {
             tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品将流向 <font color="#2ecc71">-正常-</font> 线.`)
         }
         onBarcodeGotoError: (dId, barcode) => {
-            tlogsPage.appendNormalLog(dId, `条码 <font color="${(barcode + '') == 'NG' ? '#e74c3c' : '#f1c40f'}">${barcode}</font> 产品将流向 <font color="#e74c3c">-异常-</font> 线.`)
+            tlogsPage.appendErrorLog(dId, `条码 <font color="${(barcode + '') == 'NG' ? '#e74c3c' : '#f1c40f'}">${barcode}</font> 产品将流向 <font color="#e74c3c">-异常-</font> 线.`)
         }
         onBarcodeGotoChange: (dId, line, orderNo, len, wide, height) => {
             tlogsPage.appendNormalLog(dId, `已换产为 => <font color="#f1c40f">${orderNo}</font> 产品.`)
@@ -237,6 +237,9 @@ Item {
         }
         onRobotReceived: (dId, content) => {
             tlogsPage.appendNormalLog(dId, `接收到机器人内容 => <font color="#f1c40f">${content}</font>`)
+        }
+        onRobotHeartStopped: (dId) => {
+            tlogsPage.appendErrorLog(dId, "由于机器人长时间未传送心跳数据, 判定为已死亡, 即将重连.")
         }
         onRobotTx: (dId) => {
             GlobalVariable.deviceMap[dId].tx()

@@ -123,6 +123,8 @@ public slots:
     void _robotSended(DeviceRobot*, QString content);
     // @brief 收到来自机器人的响应
     void _robotReceived(DeviceRobot*, QString content);
+    // @brief 长时间未收到机器人心跳数据, 应当重新连接
+    void _robotHeartStopped(DeviceRobot*);
     // @brief 机器人已连接
     void robotConnected(DeviceRobot*);
     // @brief 机器人连接失败
@@ -187,6 +189,8 @@ signals:
     void robotSended(int dId, QString content);
     // @breif 当机器人返回内容时
     void robotReceived(int dId, QString content);
+    // @brief 当长时间未收到机器人心跳数据, 应当重新连接
+    void robotHeartStopped(int dId);
     // @brief on Robot TX
     void robotTx(int dId);
     // @brief on Robot RX

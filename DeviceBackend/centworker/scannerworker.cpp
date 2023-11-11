@@ -27,6 +27,9 @@ void ScannerWorker::init()
         {
             querydone(true, QUrl(), QJsonObject());
         }
+
+        if (reply)
+            reply->deleteLater();
     });
 }
 
@@ -50,6 +53,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         QString commitStacksURL = settings.value("commitStacksURL").toString();   // 上转线体码垛接口
         QString cstackURL = settings.value("cstackURL").toString();    // 根据工单获取工单下首个物料信息以及机器人参数
         QString fbarcodeURL = settings.value("fbarcodeURL").toString();    // 为了防止未知错误, 在堡垒机上发送https延迟的问题, 因此由server代理请求
+        QString startUpParamsURL = settings.value("startUpParamsURL").toString();    // 根据线体获取机器人开机启动产品参数
 
         QUrl surl = url.toString();
         surl.setQuery(QUrlQuery());
@@ -160,6 +164,15 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             emit gotoChange(scanner, scanner->getLine(), curstack["orderNo"].toString(), curstack["len"].toInt(), curstack["wide"].toInt(), curstack["height"].toInt(), robotparams["bottom"].toBool());
             emit txRobotParams(robotparams);
         }
+        else if (u == startUpParamsURL)
+        {
+            QJsonObject rr = result["result"].toObject();
+            QJsonObject curstack = rr["curstack"].toObject();
+            QJsonObject robotparams = rr["robotparams"].toObject();
+
+            emit querySuccess(scanner, "API:/StartUpParamsURL", result);
+            emit txRobotParams(robotparams);
+        }
     }
 }
 
@@ -264,6 +277,19 @@ void ScannerWorker::requestCommitStack(DeviceLineNo line)
 void ScannerWorker::requestCStack(DeviceLineNo line)
 {
     QUrl url(settings.value("cstackURL").toString());
+
+    if (url.toString().trimmed().length())
+    {
+        QUrlQuery query;
+        query.addQueryItem("line", QString::number((int)line));
+        url.setQuery(query);
+        manager->get(QNetworkRequest(url));
+    }
+}
+
+void ScannerWorker::requestStartUpParams(DeviceLineNo line)
+{
+    QUrl url(settings.value("startUpParamsURL").toString());
 
     if (url.toString().trimmed().length())
     {

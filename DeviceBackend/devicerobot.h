@@ -29,6 +29,7 @@ public:
 
     void start();
     void apply(QString ip, int port);   // modify ip and port and reconnect
+    bool getConnected();
 
 signals:
     void connected(DeviceRobot*);
@@ -46,6 +47,14 @@ public slots:
     void write(QString content) { emit tx(this); emit sended(this, content); emit _write(content); }
     // @brief 向机器人发送参数: 长宽高行列层
     void writeParams(QJsonObject);
+
+public:
+    // @breif 心跳数据
+    const QString keepaliveStr = "ONLINE";
+    // @brief 川崎机器人请求参数时, 发送内容
+    const QString kawasakiReq = "KAWASAKI";
+    // @breif 发那科机器人请求参数时, 发送内容
+    const QString fanucReq = "FANUC";
 
 private:
     int dId = 0;
