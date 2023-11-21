@@ -136,7 +136,8 @@ void PlcWorker::processPullUp()
 
     for (int var = 0; var < lines.size(); ++var)
     {
-        int addr = pullPlcRegisters[lines[var]];
+        DeviceLineNo line = lines[var];
+        int addr = pullPlcRegisters[line];
 
         if (registers[addr] == _pullUpR)
         {
@@ -144,7 +145,17 @@ void PlcWorker::processPullUp()
             if (settings.value(DC::DC_TOSTRING(lines[var]) + "Auto").toString() != "true") continue;
             registers[addr] = 0;
             emit writeRegister(DevicePLC::PacketType(lines[var] + 13), plc->getDId(), addr, _pullUpT);
-            emit pullUp(plc, lines[var]);
+
+            // HACK: PLC 3秒内重复夹起无效
+            if ((QDateTime::currentSecsSinceEpoch() - pullLog[line]) >= 3)
+            {
+                pullLog[line] = QDateTime::currentSecsSinceEpoch();
+                emit pullUp(plc, lines[var]);
+            }
+            else
+            {
+                emit clampedRepeated(plc, line);
+            }
         }
     }
 }
@@ -209,6 +220,8 @@ void PlcWorker::gotoChange(DeviceScanner *scanner, DeviceLineNo line, QString or
 
     if (widePlcRegisters.contains(line))
         emit writeRegister(DevicePLC::PacketType(line + 25), id, widePlcRegisters[line], wide);
+
+    QThread::msleep(200);
     emit writeRegister(DevicePLC::PacketType(line + 19), id, changePlcRegisters[line], bottom ? _changeB : _changeT);
 }
 

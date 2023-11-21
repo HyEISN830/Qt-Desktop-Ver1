@@ -20,7 +20,6 @@ public:
         heartcheckTimer = new QTimer;
         heartcheckTimer->setInterval(3000);
         connect(heartcheckTimer, &QTimer::timeout, this, [=]{
-            qDebug() << robotconn << QDateTime::currentSecsSinceEpoch() << heartcheckDate;
             if (robotconn && ((QDateTime::currentSecsSinceEpoch() - heartcheckDate) >= 15))
             {
                 heartcheckDate = QDateTime::currentSecsSinceEpoch();

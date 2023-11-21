@@ -13,6 +13,7 @@
 #include <QUrlQuery>
 #include <QStringBuilder>
 #include <QTimer>
+#include <QMap>
 
 #include "devicescanner.h"
 #include "deviceplc.h"
@@ -63,8 +64,13 @@ public slots:
     void pullUp(DevicePLC*, DeviceLineNo);
     // @breif 由PlcWorker触发, 当指定线体PLC发起请求出板时
     void commitReq(DevicePLC*, DeviceLineNo);
-    // @bbrief 由PlcWorker触发, 当指定线体PLC发起清线完成时
+    // @brief 由PlcWorker触发, 当指定线体PLC发起清线完成时
     void cleanReq(DevicePLC*, DeviceLineNo);
+
+// functions
+private:
+    void requestLog(QUrl);
+    long requestCost(QUrl);
 
 private:
     QNetworkAccessManager *manager = nullptr;
@@ -77,6 +83,8 @@ private:
     QJsonObject barcodeInfoResult;
     QJsonObject uploadMatlResult;
     QJsonObject robotParamsResult;
+
+    QMap<QUrl, long> apiCostLog; // 接口访问耗时(ms)记录
 };
 
 #endif // SCANNERWORKER_H

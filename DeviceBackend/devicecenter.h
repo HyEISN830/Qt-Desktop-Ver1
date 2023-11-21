@@ -119,6 +119,8 @@ public slots:
     void _plcWrited(DevicePLC*, int addr, ushort value);
     // @brief 指定线体机器人已码好
     void _plcPullUp(DevicePLC*, DeviceLineNo);
+    // @brief 指定线体PLC在一定秒数内重复发起夹料完成
+    void _plcClampedRepeated(DevicePLC*, DeviceLineNo);
     // @brief 发送内容到机器人
     void _robotSended(DeviceRobot*, QString content);
     // @brief 收到来自机器人的响应
@@ -185,6 +187,8 @@ signals:
     void plcWrited(int dId, int addr, int value);
     // @breif 指定线体机器人已码好
     void plcPullUp(int dId, int line);
+    // @brief 指定线体PLC在一定秒数内重复发起夹料完成
+    void plcClampedRepeated(int dId, int line);
     // @breif 当向机器人发送内容时
     void robotSended(int dId, QString content);
     // @breif 当机器人返回内容时

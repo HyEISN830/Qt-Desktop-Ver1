@@ -238,6 +238,7 @@ void DeviceCenter::addplc(int dId, QString ip, int port, DeviceLineNo lineNo, QL
     connect(worker, &PlcWorker::writeRegister, plc, &DevicePLC::writeRegister);
     connect(worker, &PlcWorker::readRegisters, plc, &DevicePLC::readRegisters);
     connect(worker, &PlcWorker::writed, this, &DeviceCenter::_plcWrited);
+    connect(worker, &PlcWorker::clampedRepeated, this, &DeviceCenter::_plcClampedRepeated);
     connect(plc, &DevicePLC::received, worker, &PlcWorker::received);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     worker->moveToThread(thread);
@@ -379,6 +380,11 @@ void DeviceCenter::_plcWrited(DevicePLC *plc, int addr, ushort value)
 void DeviceCenter::_plcPullUp(DevicePLC *plc, DeviceLineNo line)
 {
     emit plcPullUp(plc->getDId(), line);
+}
+
+void DeviceCenter::_plcClampedRepeated(DevicePLC *plc, DeviceLineNo line)
+{
+    emit plcClampedRepeated(plc->getDId(), line);
 }
 
 void DeviceCenter::_robotSended(DeviceRobot *robot, QString content)

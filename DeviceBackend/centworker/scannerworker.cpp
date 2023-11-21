@@ -319,3 +319,16 @@ void ScannerWorker::cleanReq(DevicePLC *plc, DeviceLineNo line)
     if (line == scanner->getLine())
         requestCStack(line);
 }
+
+void ScannerWorker::requestLog(QUrl url)
+{
+    apiCostLog[url] = QDateTime::currentMSecsSinceEpoch();
+}
+
+long ScannerWorker::requestCost(QUrl url)
+{
+    if (apiCostLog.contains(url))
+        return QDateTime::currentMSecsSinceEpoch() - apiCostLog[url];
+
+    return 0;
+}

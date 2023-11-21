@@ -27,6 +27,7 @@ signals:
     void pullUp(DevicePLC*, DeviceLineNo);
     void commitReq(DevicePLC*, DeviceLineNo);
     void cleanReq(DevicePLC*, DeviceLineNo);
+    void clampedRepeated(DevicePLC*, DeviceLineNo);
 
 public slots:
     void received(int type, QList<ushort> result);
@@ -159,6 +160,14 @@ private:
         { DeviceLineNo::W1, 0 },
         { DeviceLineNo::W2, 0 },
         { DeviceLineNo::W3, 0 },
+    };
+    QMap<DeviceLineNo, long> pullLog {  // 对应线体 PLC 夹料完成记录
+        { DeviceLineNo::W1, 0 },
+        { DeviceLineNo::W2, 0 },
+        { DeviceLineNo::W3, 0 },
+        { DeviceLineNo::N3, 0 },
+        { DeviceLineNo::N2, 0 },
+        { DeviceLineNo::N1, 0 },
     };
     QList<DeviceLineNo> allowLines;
 };
