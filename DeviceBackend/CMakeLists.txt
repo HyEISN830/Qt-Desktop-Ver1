@@ -40,4 +40,6 @@ qt_add_qml_module(devicebackend
         centworker/plcworker.cpp
         centworker/robotworker.h
         centworker/robotworker.cpp
+        centworker/schedulingworker.h
+        centworker/schedulingworker.cpp
 )

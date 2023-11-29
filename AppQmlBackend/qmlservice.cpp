@@ -75,6 +75,6 @@ void QmlService::addAppLog(QString content, int level)
         QNetworkReply *reply = manager->get(QNetworkRequest(url));
 
         if (reply)
-            connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+            reply->deleteLater();
     }
 }

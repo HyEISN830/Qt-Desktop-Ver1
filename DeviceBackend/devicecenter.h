@@ -20,6 +20,7 @@
 #include "centworker/scannerworker.h"
 #include "centworker/plcworker.h"
 #include "centworker/robotworker.h"
+#include "centworker/schedulingworker.h"
 
 
 /*
@@ -54,6 +55,9 @@ public:
     // @brief 连接PLC
     Q_INVOKABLE void addplc(int dId, QString ip, int port, DeviceLineNo lineNo, QList<int> allowLines);
 
+    // @brief 订阅调度服务
+    Q_INVOKABLE void addscheduling(int dId, QString ip, int port, DeviceLineNo lineNo);
+
     /*
         @brief 基于指定设备一个新的连接参数
         @param deviceType - GlobalEnums.DeviceType
@@ -68,6 +72,7 @@ private:
     QMap<int, PlcWorker*> plcWorkers;   // worker is automatically deleted after use
     QMap<int, DeviceRobot*> robotList;
     QMap<int, RobotWorker*> robotWorkers;   // worker is automatically deleted after use
+    QMap<int, SchedulingWorker*> schedulingWorkers;
     QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
     bool running = false;
 
@@ -120,7 +125,7 @@ public slots:
     // @brief 指定线体机器人已码好
     void _plcPullUp(DevicePLC*, DeviceLineNo);
     // @brief 指定线体PLC在一定秒数内重复发起夹料完成
-    void _plcClampedRepeated(DevicePLC*, DeviceLineNo);
+    void _plcDuplicateClamped(DevicePLC*, DeviceLineNo, long);
     // @brief 发送内容到机器人
     void _robotSended(DeviceRobot*, QString content);
     // @brief 收到来自机器人的响应
@@ -137,6 +142,14 @@ public slots:
     void _robotTx(DeviceRobot*);
     // @brief on Robot RX
     void _robotRx(DeviceRobot*);
+    // @breif on Scheduling Connected
+    void _schedulingConnected(SchedulingWorker*);
+    // @breif on Scheduling Disconnected
+    void _schedulingDisconnected(SchedulingWorker*);
+    // @brief on Scheduling Task Tx
+    void _schedulingTx(SchedulingWorker*);
+    // @breif on Scheduling Task Rx
+    void _schedulingRx(SchedulingWorker*);
 
     void received() { qDebug() << "received"; }
 
@@ -188,7 +201,7 @@ signals:
     // @breif 指定线体机器人已码好
     void plcPullUp(int dId, int line);
     // @brief 指定线体PLC在一定秒数内重复发起夹料完成
-    void plcClampedRepeated(int dId, int line);
+    void plcDuplicateClamped(int dId, int line, long diff);
     // @breif 当向机器人发送内容时
     void robotSended(int dId, QString content);
     // @breif 当机器人返回内容时
@@ -199,6 +212,10 @@ signals:
     void robotTx(int dId);
     // @brief on Robot RX
     void robotRx(int dId);
+    // @brief on Scheduling Task Tx
+    void schedulingTx(int dId);
+    // @brief on Scheduling Task Rx
+    void schedulingRx(int dId);
 };
 
 #endif // DEVICECENTER_H

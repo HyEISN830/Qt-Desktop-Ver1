@@ -93,6 +93,15 @@ void DeviceCenter::start()
     connect(n1sw, &ScannerWorker::approveOut, n1pw, &PlcWorker::approveOut);
     connect(n1sw, &ScannerWorker::rejectOut, n1pw, &PlcWorker::rejectOut);
     connect(n1rw, &RobotWorker::requestStartUpParams, n1sw, &ScannerWorker::requestStartUpParams);
+
+    // Scheduling Worker
+    SchedulingWorker *sworker = schedulingWorkers.first();
+    connect(sworker, &SchedulingWorker::exWriteRobotParams, w1rw, &RobotWorker::exWriteParams);
+    connect(sworker, &SchedulingWorker::exWriteRobotParams, w2rw, &RobotWorker::exWriteParams);
+    connect(sworker, &SchedulingWorker::exWriteRobotParams, w3rw, &RobotWorker::exWriteParams);
+    connect(sworker, &SchedulingWorker::exWriteRobotParams, n3rw, &RobotWorker::exWriteParams);
+    connect(sworker, &SchedulingWorker::exWriteRobotParams, n2rw, &RobotWorker::exWriteParams);
+    connect(sworker, &SchedulingWorker::exWriteRobotParams, n1rw, &RobotWorker::exWriteParams);
 }
 
 void DeviceCenter::stop()
@@ -238,23 +247,58 @@ void DeviceCenter::addplc(int dId, QString ip, int port, DeviceLineNo lineNo, QL
     connect(worker, &PlcWorker::writeRegister, plc, &DevicePLC::writeRegister);
     connect(worker, &PlcWorker::readRegisters, plc, &DevicePLC::readRegisters);
     connect(worker, &PlcWorker::writed, this, &DeviceCenter::_plcWrited);
-    connect(worker, &PlcWorker::clampedRepeated, this, &DeviceCenter::_plcClampedRepeated);
+    connect(worker, &PlcWorker::duplicateClamped, this, &DeviceCenter::_plcDuplicateClamped);
     connect(plc, &DevicePLC::received, worker, &PlcWorker::received);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     worker->moveToThread(thread);
     thread->start();
 }
 
+void DeviceCenter::addscheduling(int dId, QString ip, int port, DeviceLineNo lineNo)
+{
+    SchedulingWorker *worker = new SchedulingWorker(dId, ip, port, lineNo);
+    QThread *thread = new QThread;
+
+    workerThreads[dId] = thread;
+    schedulingWorkers[dId] = worker;
+    connect(worker, &SchedulingWorker::connected, this, &DeviceCenter::_schedulingConnected);
+    connect(worker, &SchedulingWorker::disconnected, this, &DeviceCenter::_schedulingDisconnected);
+    connect(worker, &SchedulingWorker::tx, this, &DeviceCenter::_schedulingTx);
+    connect(worker, &SchedulingWorker::rx, this, &DeviceCenter::_schedulingRx);
+    connect(worker, &SchedulingWorker::applied, this, &DeviceCenter::deviceApplied);
+    connect(thread, &QThread::finished, worker, &SchedulingWorker::timerDeleteLater);
+    connect(thread, &QThread::finished, worker, &SchedulingWorker::deleteLater);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    worker->moveToThread(thread);
+    worker->start();
+    thread->start();
+}
+
 void DeviceCenter::reconnect(int dId, QString ip, int port)
 {
     if (scannerList.contains(dId))
+    {
         scannerList[dId]->apply(ip, port);
+        return;
+    }
 
     if (plcList.contains(dId))
+    {
         plcList[dId]->apply(ip, port);
+        return;
+    }
 
     if (robotList.contains(dId))
+    {
         robotList[dId]->apply(ip, port);
+        return;
+    }
+
+    if (schedulingWorkers.contains(dId))
+    {
+        schedulingWorkers[dId]->apply(ip, port);
+        return;
+    }
 }
 #pragma endregion }
 
@@ -382,9 +426,9 @@ void DeviceCenter::_plcPullUp(DevicePLC *plc, DeviceLineNo line)
     emit plcPullUp(plc->getDId(), line);
 }
 
-void DeviceCenter::_plcClampedRepeated(DevicePLC *plc, DeviceLineNo line)
+void DeviceCenter::_plcDuplicateClamped(DevicePLC *plc, DeviceLineNo line, long diff)
 {
-    emit plcClampedRepeated(plc->getDId(), line);
+    emit plcDuplicateClamped(plc->getDId(), line, diff);
 }
 
 void DeviceCenter::_robotSended(DeviceRobot *robot, QString content)
@@ -401,10 +445,7 @@ void DeviceCenter::_robotReceived(DeviceRobot *robot, QString content)
 void DeviceCenter::_robotHeartStopped(DeviceRobot *robot)
 {
     if (robot->getConnected())
-    {
         emit robotHeartStopped(robot->getDId());
-        robot->apply(robot->getIp(), robot->getPort());
-    }
 }
 
 void DeviceCenter::robotConnected(DeviceRobot *robot)
@@ -430,6 +471,26 @@ void DeviceCenter::_robotTx(DeviceRobot *robot)
 void DeviceCenter::_robotRx(DeviceRobot *robot)
 {
     emit robotRx(robot->getDId());
+}
+
+void DeviceCenter::_schedulingConnected(SchedulingWorker *worker)
+{
+    emit deviceConnected(worker->getDId());
+}
+
+void DeviceCenter::_schedulingDisconnected(SchedulingWorker *worker)
+{
+    emit deviceDisconnect(worker->getDId());
+}
+
+void DeviceCenter::_schedulingTx(SchedulingWorker *worker)
+{
+    emit schedulingTx(worker->getDId());
+}
+
+void DeviceCenter::_schedulingRx(SchedulingWorker *worker)
+{
+    emit schedulingRx(worker->getDId());
 }
 #pragma endregion }
 
@@ -460,6 +521,10 @@ DeviceCenter::~DeviceCenter()
     dIds = robotWorkers.keys();
     for (int i = 0; i < dIds.size(); ++i)
         robotWorkers.remove(dIds[i]);
+
+    dIds = schedulingWorkers.keys();
+    for (int i = 0; i < dIds.size(); ++i)
+        schedulingWorkers.remove(dIds[i]);
 
     dIds = workerThreads.keys();
     for (int i = 0; i < dIds.size(); ++i)

@@ -188,6 +188,7 @@ void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
 
     // 扫码枪心跳
     if (barcode.length() && !barcode.indexOf("OK,KEYENCE")) return;
+//    if (barcode.contains("OK,KEYENCE")) return;
 
     barcode = barcode.trimmed().replace("\r\n", "");
     if (barcode == "NG")

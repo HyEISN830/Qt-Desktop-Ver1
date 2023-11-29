@@ -95,6 +95,7 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/barcode-scan.png
     resources/agv-robot.png
     resources/robotic-arm.png
+    resources/task.png
 )
 
 set_source_files_properties(

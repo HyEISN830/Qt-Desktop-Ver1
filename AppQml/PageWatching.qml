@@ -14,7 +14,7 @@ Item {
     property bool isCurPage: view.currentItem == page
     property list<ComDevice> deviceList: [
         plc,
-//        plc1,
+        scheduling,
         cam,
         cam1,
         cam2,
@@ -84,51 +84,52 @@ Item {
                 to: 18
                 easing.type: Easing.InOutQuad
                 running: view.currentItem == page
-//                onFinished: plc1YAni.start()
+                onFinished: schedulingYAni.start()
             }
         }
 
-//        ComDevice {
-//            id: plc1
-//            x: plc.x + plc.width + 30
-//            y: 18
-//            dId: 2
-//            title: GlobalVariable[`device${dId}Ip`]
-//            opacity: 0
-//            content: "线体PLC2"
-//            iconPath: "resources/plc.png"
-//            connected: GlobalVariable[`device${dId}Connected`]
+        ComDevice {
+            id: scheduling
+            x: plc.x + plc.width + 30
+            y: 18
+            dId: 2
+            title: GlobalVariable[`device${dId}Ip`]
+            opacity: 0
+            content: "调度任务订阅"
+            iconPath: "resources/task.png"
+            iconColor: "#A8DBA8"
+            connected: GlobalVariable[`device${dId}Connected`]
 
-//            OpacityAnimator {
-//                id: plc1SAni
-//                target: plc1
-//                from: 0
-//                to: 1
-//                duration: 500
-//                easing.type: Easing.InOutQuad
-//            }
+            OpacityAnimator {
+                id: schedulingSAni
+                target: scheduling
+                from: 0
+                to: 1
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
 
-//            OpacityAnimator {
-//                id: plc1HAni
-//                target: plc1
-//                from: 1
-//                to: 0
-//                duration: 10
-//                running: view.currentItem != page
-//                easing.type: Easing.InOutQuad
-//            }
+            OpacityAnimator {
+                id: schedulingHAni
+                target: scheduling
+                from: 1
+                to: 0
+                duration: 10
+                running: view.currentItem != page
+                easing.type: Easing.InOutQuad
+            }
 
-//            NumberAnimation {
-//                id: plc1YAni
-//                target: plc1
-//                property: "y"
-//                duration: 200
-//                from: 50
-//                to: 18
-//                easing.type: Easing.InOutQuad
-//                onStarted: plc1SAni.start()
-//            }
-//        }
+            NumberAnimation {
+                id: schedulingYAni
+                target: scheduling
+                property: "y"
+                duration: 200
+                from: 50
+                to: 18
+                easing.type: Easing.InOutQuad
+                onStarted: schedulingSAni.start()
+            }
+        }
 
         ComDevice {
             x: 35
@@ -824,6 +825,7 @@ Item {
 
         delay.delay(1000, () => {
             deviceCenter.addplc(1, GlobalVariable["device1Ip"], GlobalVariable["device1Port"], GlobalEnums.LineNo.All, [GlobalEnums.LineNo.All])
+            deviceCenter.addscheduling(2, GlobalVariable["device2Ip"], GlobalVariable["device2Port"], GlobalEnums.LineNo.All)
 
             // W1 line devices
             deviceCenter.addscanner(3, GlobalVariable["device3Ip"], GlobalVariable["device3Port"], GlobalEnums.LineNo.W1)

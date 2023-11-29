@@ -147,14 +147,15 @@ void PlcWorker::processPullUp()
             emit writeRegister(DevicePLC::PacketType(lines[var] + 13), plc->getDId(), addr, _pullUpT);
 
             // HACK: PLC 3秒内重复夹起无效
-            if ((QDateTime::currentSecsSinceEpoch() - pullLog[line]) >= 3)
+            long diff = 0;
+            if ((diff = (QDateTime::currentSecsSinceEpoch() - pullLog[line])) >= 3)
             {
                 pullLog[line] = QDateTime::currentSecsSinceEpoch();
                 emit pullUp(plc, lines[var]);
             }
             else
             {
-                emit clampedRepeated(plc, line);
+                emit duplicateClamped(plc, line, diff);
             }
         }
     }

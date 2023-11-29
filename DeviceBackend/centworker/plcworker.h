@@ -27,7 +27,7 @@ signals:
     void pullUp(DevicePLC*, DeviceLineNo);
     void commitReq(DevicePLC*, DeviceLineNo);
     void cleanReq(DevicePLC*, DeviceLineNo);
-    void clampedRepeated(DevicePLC*, DeviceLineNo);
+    void duplicateClamped(DevicePLC*, DeviceLineNo, long);
 
 public slots:
     void received(int type, QList<ushort> result);
