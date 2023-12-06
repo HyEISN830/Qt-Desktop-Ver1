@@ -188,7 +188,13 @@ Item {
             tlogsPage.appendErrorLog(dId, `响应条码/接口信息 <font color="#f1c40f">${barcode}</font> 失败, 返回结果 => <font color="#f1c40f">${JSON.stringify(result)}</font>`)
         }
         onBarcodeQuerySuccess: (dId, barcode, result) => {
-            tlogsPage.appendNormalLog(dId, `响应条码接口/条码信息 <font color="#f1c40f">${barcode}</font> 成功, 返回结果 => <font color="#f1c40f">${JSON.stringify(result)}</font>`)
+            let resultstr = JSON.stringify(result)
+            let logcontent = `响应条码接口/条码信息 <font color="#f1c40f">${barcode}</font> 成功, 返回结果 => <font color="#f1c40f">${resultstr}</font>`
+
+            if (resultstr.indexOf("已入库") > -1 || resultstr.indexOf("未下线") > -1)
+                tlogsPage.appendErrorLog(dId, logcontent)
+            else
+                tlogsPage.appendNormalLog(dId, logcontent)
         }
         onBarcodeGotoNormal: (dId, barcode) => {
             tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品将流向 <font color="#2ecc71">-正常-</font> 线.`)

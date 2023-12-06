@@ -47,6 +47,8 @@ public slots:
     void approveOut(DeviceScanner*, DeviceLineNo);
     // @brief 拒绝指定线体出板
     void rejectOut(DeviceScanner*, DeviceLineNo);
+    // @breif 当机器人发送OK时
+    void robotSendOk(DeviceLineNo);
 
 private:
     QSettings settings;
@@ -82,6 +84,8 @@ private:
     const ushort _cleanOk = 1;
     // @breif 当读取到PLC发送清线完成时, 写入该值到PLC复位
     const ushort _cleanRst = 0;
+    // @breif 当机器人返回OK时写入寄存器的值
+    const ushort _robotOk = 1;
 
     DevicePLC *plc = nullptr;
     QTimer *pollingTimer = nullptr;
@@ -147,6 +151,9 @@ private:
         { DeviceLineNo::N3, 310 },
         { DeviceLineNo::N2, 308 },
         { DeviceLineNo::N1, 306 },
+    };
+    QMap<DeviceLineNo, ushort> robotOkRegisters {   // 对应线体 机械手发送了 OK, 写入此寄存器为 1
+        { DeviceLineNo::W2, 380 },
     };
     QMap<DeviceLineNo, bool> bottomLog {   // 对应线体 是否带有木底托记录,
         { DeviceLineNo::W1, 0 },

@@ -55,6 +55,8 @@ public:
     const QString kawasakiReq = "KAWASAKI";
     // @breif 发那科机器人请求参数时, 发送内容
     const QString fanucReq = "FANUC";
+    // @breif 机器人发送OK
+    const QString okStr = "OK";
 
 private:
     int dId = 0;

@@ -85,6 +85,13 @@ public:
         WriteN3CleanReaded,
         WriteN2CleanReaded,
         WriteN1CleanReaded,
+
+        WriteW1RobotOk,
+        WriteW2RobotOk,
+        WriteW3RobotOk,
+        WriteN3RobotOk,
+        WriteN2RobotOk,
+        WriteN1RobotOk,
     };
 
     explicit DevicePLC(QObject *parent = nullptr);

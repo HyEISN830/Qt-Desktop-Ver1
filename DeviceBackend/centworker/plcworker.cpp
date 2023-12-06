@@ -39,6 +39,15 @@ void PlcWorker::received(int type, QList<ushort> result)
         qDebug() << "write single register ok.";
         break;
 
+    case DevicePLC::WriteW1RobotOk:
+    case DevicePLC::WriteW2RobotOk:
+    case DevicePLC::WriteW3RobotOk:
+    case DevicePLC::WriteN3RobotOk:
+    case DevicePLC::WriteN2RobotOk:
+    case DevicePLC::WriteN1RobotOk:
+        emit writed(plc, robotOkRegisters[DeviceLineNo(type - 58)], _robotOk);
+        break;
+
     case DevicePLC::WriteW1CleanReaded:
     case DevicePLC::WriteW2CleanReaded:
     case DevicePLC::WriteW3CleanReaded:
@@ -201,6 +210,12 @@ void PlcWorker::approveOut(DeviceScanner* scanner, DeviceLineNo line)
 void PlcWorker::rejectOut(DeviceScanner* scanner, DeviceLineNo line)
 {
     emit writeRegister(DevicePLC::PacketType(line + 40), id, commitPlcRegisters[line], _commitNG);
+}
+
+void PlcWorker::robotSendOk(DeviceLineNo line)
+{
+    if (robotOkRegisters.contains(line))
+        emit writeRegister(DevicePLC::PacketType(line + 58), id, robotOkRegisters[line], _robotOk);
 }
 
 void PlcWorker::scaned(DeviceLineNo line, bool ok)

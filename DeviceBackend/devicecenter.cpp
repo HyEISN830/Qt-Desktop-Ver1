@@ -19,7 +19,7 @@ void DeviceCenter::start()
     connect(w1pw, &PlcWorker::cleanReq, w1sw, &ScannerWorker::cleanReq);
     connect(w1sw, &ScannerWorker::gotoChange, w1pw, &PlcWorker::gotoChange);
     connect(w1sw, &ScannerWorker::gotoChangeReady, w1pw, &PlcWorker::gotoChangeReady);
-    connect(w1sw, &ScannerWorker::txRobotParams, w1rw, &RobotWorker::writeParams);
+    connect(w1sw, &ScannerWorker::txRobotParams, w1rw, &RobotWorker::_writeParams);
     connect(w1sw, &ScannerWorker::approveOut, w1pw, &PlcWorker::approveOut);
     connect(w1sw, &ScannerWorker::rejectOut, w1pw, &PlcWorker::rejectOut);
     connect(w1rw, &RobotWorker::requestStartUpParams, w1sw, &ScannerWorker::requestStartUpParams);
@@ -33,10 +33,11 @@ void DeviceCenter::start()
     connect(w2pw, &PlcWorker::cleanReq, w2sw, &ScannerWorker::cleanReq);
     connect(w2sw, &ScannerWorker::gotoChange, w2pw, &PlcWorker::gotoChange);
     connect(w2sw, &ScannerWorker::gotoChangeReady, w2pw, &PlcWorker::gotoChangeReady);
-    connect(w2sw, &ScannerWorker::txRobotParams, w2rw, &RobotWorker::writeParams);
+    connect(w2sw, &ScannerWorker::txRobotParams, w2rw, &RobotWorker::_writeParams);
     connect(w2sw, &ScannerWorker::approveOut, w2pw, &PlcWorker::approveOut);
     connect(w2sw, &ScannerWorker::rejectOut, w2pw, &PlcWorker::rejectOut);
     connect(w2rw, &RobotWorker::requestStartUpParams, w2sw, &ScannerWorker::requestStartUpParams);
+    connect(w2rw, &RobotWorker::robotSendOk, w2pw, &PlcWorker::robotSendOk);
 
     // W3
     ScannerWorker *w3sw = findScannerWorker(DeviceLineNo::W3);
@@ -47,7 +48,7 @@ void DeviceCenter::start()
     connect(w3pw, &PlcWorker::cleanReq, w3sw, &ScannerWorker::cleanReq);
     connect(w3sw, &ScannerWorker::gotoChange, w3pw, &PlcWorker::gotoChange);
     connect(w3sw, &ScannerWorker::gotoChangeReady, w3pw, &PlcWorker::gotoChangeReady);
-    connect(w3sw, &ScannerWorker::txRobotParams, w3rw, &RobotWorker::writeParams);
+    connect(w3sw, &ScannerWorker::txRobotParams, w3rw, &RobotWorker::_writeParams);
     connect(w3sw, &ScannerWorker::approveOut, w3pw, &PlcWorker::approveOut);
     connect(w3sw, &ScannerWorker::rejectOut, w3pw, &PlcWorker::rejectOut);
     connect(w3rw, &RobotWorker::requestStartUpParams, w3sw, &ScannerWorker::requestStartUpParams);
@@ -61,7 +62,7 @@ void DeviceCenter::start()
     connect(n3pw, &PlcWorker::cleanReq, n3sw, &ScannerWorker::cleanReq);
     connect(n3sw, &ScannerWorker::gotoChange, n3pw, &PlcWorker::gotoChange);
     connect(n3sw, &ScannerWorker::gotoChangeReady, n3pw, &PlcWorker::gotoChangeReady);
-    connect(n3sw, &ScannerWorker::txRobotParams, n3rw, &RobotWorker::writeParams);
+    connect(n3sw, &ScannerWorker::txRobotParams, n3rw, &RobotWorker::_writeParams);
     connect(n3sw, &ScannerWorker::approveOut, n3pw, &PlcWorker::approveOut);
     connect(n3sw, &ScannerWorker::rejectOut, n3pw, &PlcWorker::rejectOut);
     connect(n3rw, &RobotWorker::requestStartUpParams, n3sw, &ScannerWorker::requestStartUpParams);
@@ -75,7 +76,7 @@ void DeviceCenter::start()
     connect(n2pw, &PlcWorker::cleanReq, n2sw, &ScannerWorker::cleanReq);
     connect(n2sw, &ScannerWorker::gotoChange, n2pw, &PlcWorker::gotoChange);
     connect(n2sw, &ScannerWorker::gotoChangeReady, n2pw, &PlcWorker::gotoChangeReady);
-    connect(n2sw, &ScannerWorker::txRobotParams, n2rw, &RobotWorker::writeParams);
+    connect(n2sw, &ScannerWorker::txRobotParams, n2rw, &RobotWorker::_writeParams);
     connect(n2sw, &ScannerWorker::approveOut, n2pw, &PlcWorker::approveOut);
     connect(n2sw, &ScannerWorker::rejectOut, n2pw, &PlcWorker::rejectOut);
     connect(n2rw, &RobotWorker::requestStartUpParams, n2sw, &ScannerWorker::requestStartUpParams);
@@ -89,7 +90,7 @@ void DeviceCenter::start()
     connect(n1pw, &PlcWorker::cleanReq, n1sw, &ScannerWorker::cleanReq);
     connect(n1sw, &ScannerWorker::gotoChange, n1pw, &PlcWorker::gotoChange);
     connect(n1sw, &ScannerWorker::gotoChangeReady, n1pw, &PlcWorker::gotoChangeReady);
-    connect(n1sw, &ScannerWorker::txRobotParams, n1rw, &RobotWorker::writeParams);
+    connect(n1sw, &ScannerWorker::txRobotParams, n1rw, &RobotWorker::_writeParams);
     connect(n1sw, &ScannerWorker::approveOut, n1pw, &PlcWorker::approveOut);
     connect(n1sw, &ScannerWorker::rejectOut, n1pw, &PlcWorker::rejectOut);
     connect(n1rw, &RobotWorker::requestStartUpParams, n1sw, &ScannerWorker::requestStartUpParams);
