@@ -54,18 +54,18 @@ Item {
                         stackView.replace(null, watchingPage)
                     }
                 }
-                TabButton {
-                    text: qsTr("码垛状态")
-                    width: 110
-                    icon.source: "resources/icon-boxes.svg"
-                    icon.height: Consts.icon_h
-                    icon.width: Consts.icon_w
-                    onClicked: {
-                        if (stackView.currentItem == lineStatePage)
-                            return
-                        stackView.replace(null, lineStatePage)
-                    }
-                }
+//                TabButton {
+//                    text: qsTr("码垛状态")
+//                    width: 110
+//                    icon.source: "resources/icon-boxes.svg"
+//                    icon.height: Consts.icon_h
+//                    icon.width: Consts.icon_w
+//                    onClicked: {
+//                        if (stackView.currentItem == lineStatePage)
+//                            return
+//                        stackView.replace(null, lineStatePage)
+//                    }
+//                }
                 TabButton {
                     text: qsTr("TLogs")
                     width: 100
@@ -132,10 +132,10 @@ Item {
                     log: tlogsPage
                     deviceCenter: deviceCenter
                 }
-                PageLineState {
-                    id: lineStatePage
-                    view: stackView
-                }
+//                PageLineState {
+//                    id: lineStatePage
+//                    view: stackView
+//                }
                 PageTLogs {
                     id: tlogsPage
                     view: stackView
@@ -184,11 +184,18 @@ Item {
                 tlogsPage.appendNormalLog(dId, `接收到条码内容 => <font color="${(barcode + '') == 'NG' ? '#e74c3c' : '#f1c40f'}">${barcode}</font>`)
             GlobalVariable.deviceMap[dId].rx()
         }
-        onBarcodeQueryFailed: (dId, barcode, result) => {
-            tlogsPage.appendErrorLog(dId, `响应条码/接口信息 <font color="#f1c40f">${barcode}</font> 失败, 返回结果 => <font color="#f1c40f">${JSON.stringify(result)}</font>`)
+        onBarcodeQueryFailed: (dId, barcode, result, cost) => {
+            tlogsPage.appendErrorLog(dId, `响应条码/接口信息 <font color="#f1c40f">${barcode} (耗时#${cost}ms)</font> 失败, 返回结果 => <font color="#f1c40f">${JSON.stringify(result)}</font>`)
         }
-        onBarcodeQuerySuccess: (dId, barcode, result) => {
+        onBarcodeQuerySuccess: (dId, barcode, result, cost) => {
             let resultstr = JSON.stringify(result)
+
+            if (barcode.indexOf("API:/CommitStacksURL") >= 0)
+                barcode += `(交收Api^耗时#${cost}ms)`
+
+            if (barcode !== "" && barcode.indexOf("API:/") === -1 && barcode.indexOf("NG") === -1)
+                barcode += `(条码Api^耗时#${cost}ms)`
+
             let logcontent = `响应条码接口/条码信息 <font color="#f1c40f">${barcode}</font> 成功, 返回结果 => <font color="#f1c40f">${resultstr}</font>`
 
             if (resultstr.indexOf("已入库") > -1 || resultstr.indexOf("未下线") > -1)
@@ -294,7 +301,7 @@ Item {
         }
         stackView.replace(setsPage, null)
         stackView.replace(tlogsPage, null)
-        stackView.replace(lineStatePage, null)
+//        stackView.replace(lineStatePage, null)
         stackView.replace(watchingPage, null)
         stackView.replace(homePage, null)
     }

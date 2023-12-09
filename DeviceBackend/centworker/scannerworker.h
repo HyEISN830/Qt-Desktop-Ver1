@@ -31,8 +31,8 @@ public:
     DeviceLineNo getLineNo() { return scanner->getLine(); }
 
 signals:
-    void queryFailed(DeviceScanner *scanner, QString barcode, QJsonObject result);
-    void querySuccess(DeviceScanner *scanner, QString barcode, QJsonObject result);
+    void queryFailed(DeviceScanner *scanner, QString barcode, QJsonObject result, long cost);
+    void querySuccess(DeviceScanner *scanner, QString barcode, QJsonObject result, long cost);
     void gotoNormal(DeviceScanner*, DeviceLineNo, QString barcode);  // 走正常线
     void gotoError(DeviceScanner*, DeviceLineNo, QString barcode);   // 走异常线
     void gotoChange(DeviceScanner*, DeviceLineNo, QString orderNo, int len, int wide, int height, bool bottom);  // 换产
@@ -69,7 +69,7 @@ public slots:
 
 // functions
 private:
-    void requestLog(QUrl);
+    void requestLogCost(QUrl);
     long requestCost(QUrl);
 
 private:

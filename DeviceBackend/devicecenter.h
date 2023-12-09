@@ -89,9 +89,9 @@ public slots:
     // @brief 扫码枪已断开连接
     void scannerDisconnected(DeviceScanner*);
     // @brief 扫码枪查询条码失败
-    void scannerQueryFailed(DeviceScanner*, QString barcode, QJsonObject result);
+    void scannerQueryFailed(DeviceScanner*, QString barcode, QJsonObject result, long cost);
     // @brief 扫码枪查询条码成功
-    void scannerQuerySuccess(DeviceScanner*, QString barcode, QJsonObject result);
+    void scannerQuerySuccess(DeviceScanner*, QString barcode, QJsonObject result, long cost);
     // @brief 扫码结果产品流向正常线
     void scannerGotoNormal(DeviceScanner*, DeviceLineNo, QString barcode);
     // @brief 扫码结果产品流向异常线
@@ -169,9 +169,9 @@ signals:
     // @breif 当扫码枪接收到条码时
     void barcodeReceived(int dId, QString barcode);
     // @brief 当条码查询失败时
-    void barcodeQueryFailed(int dId, QString barcode, QJsonObject);
+    void barcodeQueryFailed(int dId, QString barcode, QJsonObject result, long cost);
     // @brief 当条码查询成功时
-    void barcodeQuerySuccess(int dId, QString barcode, QJsonObject);
+    void barcodeQuerySuccess(int dId, QString barcode, QJsonObject result, long cost);
     // @brief 扫码结果产品流向正常线
     void barcodeGotoNormal(int dId, QString barcode);
     // @brief 扫码结果产品流向异常线

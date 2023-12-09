@@ -79,7 +79,7 @@ Item {
 
     function _clearIfMax() {
         let set = bgservice.takeSetting("logLength")
-        if (textEdit.length > (set ? parseInt(set) : 65535))
+        if (textEdit.length > (set ? parseInt(set) : 10000))
             textEdit.clear()
     }
 

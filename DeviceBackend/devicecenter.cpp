@@ -325,14 +325,14 @@ void DeviceCenter::scannerDisconnected(DeviceScanner *scanner)
     emit deviceDisconnect(scanner->getDId());
 }
 
-void DeviceCenter::scannerQueryFailed(DeviceScanner *scanner, QString barcode, QJsonObject result)
+void DeviceCenter::scannerQueryFailed(DeviceScanner *scanner, QString barcode, QJsonObject result, long cost)
 {
-    emit barcodeQueryFailed(scanner->getDId(), barcode, result);
+    emit barcodeQueryFailed(scanner->getDId(), barcode, result, cost);
 }
 
-void DeviceCenter::scannerQuerySuccess(DeviceScanner *scanner, QString barcode, QJsonObject result)
+void DeviceCenter::scannerQuerySuccess(DeviceScanner *scanner, QString barcode, QJsonObject result, long cost)
 {
-    emit barcodeQuerySuccess(scanner->getDId(), barcode, result);
+    emit barcodeQuerySuccess(scanner->getDId(), barcode, result, cost);
 }
 
 void DeviceCenter::scannerGotoNormal(DeviceScanner *scanner, DeviceLineNo line, QString barcode)

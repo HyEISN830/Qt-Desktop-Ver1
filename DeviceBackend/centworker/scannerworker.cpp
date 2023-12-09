@@ -42,7 +42,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
 {
     if (error)
     {
-        emit queryFailed(scanner, barcode.trimmed().length() ? barcode : url.toString(), result);
+        emit queryFailed(scanner, barcode.trimmed().length() ? barcode : url.toString(), result, -1);
     }
     else
     {
@@ -63,13 +63,13 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         {
             if (result["IsSucess"].toString() != "true" || !(result.contains("ModelData") && result.value("ModelData").isObject()) && result.value("ModelData").toObject().contains("isWmsSuccess"))
             {
-                emit queryFailed(scanner, barcode, result);
+                emit queryFailed(scanner, barcode, result, requestCost(fbarcodeURL));
                 emit gotoError(scanner, scanner->getLine(), barcode);
             }
             else
             {
                 barcodeInfoResult = result;
-                emit querySuccess(scanner, barcode, result);
+                emit querySuccess(scanner, barcode, result, requestCost(fbarcodeURL));
 
                 QJsonObject modelData = result["ModelData"].toObject();
                 if (modelData["isWmsSuccess"] == "Y")
@@ -112,7 +112,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         {
             QJsonObject rr = result["result"].toObject();
 
-            emit querySuccess(scanner, "API:/PullUpMatlURL", result);
+            emit querySuccess(scanner, "API:/PullUpMatlURL", result, -1);
             if (rr["curstack"].isObject())
             {
                 emit pullUped(scanner, scanner->getLine(), rr["curstack"].toObject()["sn"].toString());
@@ -126,7 +126,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         {
             QJsonObject rr = result["result"].toObject();
 
-            emit querySuccess(scanner, "API:/RobotParamsURL", result);
+            emit querySuccess(scanner, "API:/RobotParamsURL", result, -1);
             emit txRobotParams(rr);
         }
         else if (u == commitStacksURL)
@@ -134,7 +134,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             QJsonObject response = result["result"].toObject()["wmsresp"].toObject()["response"].toObject();
             bool offline = result["result"].toObject()["offline"].toBool();
 
-            emit querySuccess(scanner, "API:/CommitStacksURL", result);
+            emit querySuccess(scanner, "API:/CommitStacksURL", result, requestCost(commitStacksURL));
 
             if (!result["result"].toObject()["children"].toArray().size())    // 出空板默认允许
             {
@@ -160,7 +160,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             QJsonObject curstack = rr["curstack"].toObject();
             QJsonObject robotparams = rr["robotparams"].toObject();
 
-            emit querySuccess(scanner, "API:/CStackURL", result);
+            emit querySuccess(scanner, "API:/CStackURL", result, -1);
             emit gotoChange(scanner, scanner->getLine(), curstack["orderNo"].toString(), curstack["len"].toInt(), curstack["wide"].toInt(), curstack["height"].toInt(), robotparams["bottom"].toBool());
             emit txRobotParams(robotparams);
         }
@@ -170,7 +170,7 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
             QJsonObject curstack = rr["curstack"].toObject();
             QJsonObject robotparams = rr["robotparams"].toObject();
 
-            emit querySuccess(scanner, "API:/StartUpParamsURL", result);
+            emit querySuccess(scanner, "API:/StartUpParamsURL", result, -1);
             emit txRobotParams(robotparams);
         }
     }
@@ -197,6 +197,7 @@ void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
         return;
     }
 
+    requestLogCost(furl);
     this->barcode = barcode;
     query.addQueryItem("url", url.toString());
     query.addQueryItem("barcode", barcode);
@@ -204,7 +205,6 @@ void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
     request.setUrl(furl);
     manager->get(request);
 }
-
 
 void ScannerWorker::requestUploadMatl(DeviceLineNo line, QString order, QString barcode, int len, int wide, int height)
 {
@@ -267,6 +267,8 @@ void ScannerWorker::requestCommitStack(DeviceLineNo line)
 
     if (url.toString().trimmed().length())
     {
+        requestLogCost(url);
+
         QUrlQuery query;
         query.addQueryItem("url",  uncommit ? "API:/CommitLocal" : settings.value("stackUploadURL").toString());
         query.addQueryItem("line", QString::number((int)line));
@@ -321,7 +323,7 @@ void ScannerWorker::cleanReq(DevicePLC *plc, DeviceLineNo line)
         requestCStack(line);
 }
 
-void ScannerWorker::requestLog(QUrl url)
+void ScannerWorker::requestLogCost(QUrl url)
 {
     apiCostLog[url] = QDateTime::currentMSecsSinceEpoch();
 }
