@@ -191,10 +191,10 @@ Item {
             let resultstr = JSON.stringify(result)
 
             if (barcode.indexOf("API:/CommitStacksURL") >= 0)
-                barcode += `(交收Api^耗时#${cost}ms)`
+                barcode += ` (交收Api^耗时#${cost}ms)`
 
             if (barcode !== "" && barcode.indexOf("API:/") === -1 && barcode.indexOf("NG") === -1)
-                barcode += `(条码Api^耗时#${cost}ms)`
+                barcode += ` (条码Api^耗时#${cost}ms)`
 
             let logcontent = `响应条码接口/条码信息 <font color="#f1c40f">${barcode}</font> 成功, 返回结果 => <font color="#f1c40f">${resultstr}</font>`
 
