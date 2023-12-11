@@ -31,6 +31,7 @@ void ScannerWorker::init()
         if (reply)
             reply->deleteLater();
     });
+    connect(this, &ScannerWorker::deleteTimer, manager, &QNetworkAccessManager::deleteLater);
 }
 
 void ScannerWorker::timerDeleteLater()
