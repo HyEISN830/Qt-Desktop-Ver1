@@ -246,7 +246,7 @@ Item {
             tlogsPage.appendNormalLog(dId, `<font color="#f1c40f">${resolveLine(line)}</font> 线机械臂已码好一个物料.`)
         }
         onPlcDuplicateClamped: (dId, line, diff) => {
-            tlogsPage.appendErrorLog(dId, `由于PLC在${resolveLine(line)}线上, 一定秒数内重复发起夹料完成, 本次夹料完成已忽略. 相隔 +${diff}s`)
+            tlogsPage.appendErrorLog(dId, `由于PLC在${resolveLine(line)}线上, 一定秒数内重复发起夹料完成, 本次夹料完成已忽略. 相隔 +${diff}ms`)
         }
         onRobotSended: (dId, content) => {
             tlogsPage.appendNormalLog(dId, `发送到机械臂内容 => <font color="#f1c40f">${content}</font>`)
