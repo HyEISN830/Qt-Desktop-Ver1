@@ -157,7 +157,7 @@ void PlcWorker::processPullUp()
 
             // HACK: PLC 3秒内重复夹起无效
             long diff = 0;
-            if ((diff = (QDateTime::currentMSecsSinceEpoch() - pullLog[line])) >= 3)
+            if ((diff = (QDateTime::currentMSecsSinceEpoch() - pullLog[line])) >= 3000)
             {
                 pullLog[line] = QDateTime::currentMSecsSinceEpoch();
                 emit pullUp(plc, lines[var]);
