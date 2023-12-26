@@ -143,12 +143,4 @@ Item {
         if (!ex)
             contentLAni.start()
     }
-
-    function expandF() {
-        expandItem.expand = true
-    }
-
-    function unexpandF() {
-        expandItem.expand = false
-    }
 }
