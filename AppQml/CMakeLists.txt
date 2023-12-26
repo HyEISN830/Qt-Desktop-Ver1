@@ -96,6 +96,9 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/agv-robot.png
     resources/robotic-arm.png
     resources/task.png
+    resources/home.jpg
+    resources/logo.png
+    resources/device.png
 )
 
 set_source_files_properties(

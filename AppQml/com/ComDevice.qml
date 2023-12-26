@@ -209,4 +209,9 @@ Item {
     function tx() {
         txLedHAni.start()
     }
+
+    function conn(c) {
+        connLed.color = c ? "#2ecc71" : "#ff4757"
+        txtConn.text = c ? "已连接" : "未连接"
+    }
 }

@@ -8,6 +8,7 @@ Item {
 
     id: item
     height: expandItem.height + contentLoader.height
+    width: 200
 
     Rectangle {
         property bool expand: false
@@ -141,5 +142,13 @@ Item {
 
         if (!ex)
             contentLAni.start()
+    }
+
+    function expandF() {
+        expandItem.expand = true
+    }
+
+    function unexpandF() {
+        expandItem.expand = false
     }
 }

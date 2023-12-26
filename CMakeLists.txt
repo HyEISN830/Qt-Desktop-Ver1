@@ -22,12 +22,12 @@ list(APPEND MODULE_MAIN_QML_COMPONENT_FILES
     maincom/ComHelpDialog.qml
 )
 
-qt_add_executable(appQt-Desktop-Ver1-TCL-NT
+qt_add_executable(appQt-Desktop-Ver1
     main.cpp
     ${app_icon_resource_windows}
 )
 
-qt_add_qml_module(appQt-Desktop-Ver1-TCL-NT
+qt_add_qml_module(appQt-Desktop-Ver1
     URI AC_OU_CMS
     VERSION 1.0
     QML_FILES
@@ -37,13 +37,13 @@ qt_add_qml_module(appQt-Desktop-Ver1-TCL-NT
         ${RESOURCE_FILES}
 )
 
-qt_add_resources(appQt-Desktop-Ver1-TCL-NT "configuration"
+qt_add_resources(appQt-Desktop-Ver1 "configuration"
     PREFIX "/"
     FILES
         qtquickcontrols2.conf
 )
 
-set_target_properties(appQt-Desktop-Ver1-TCL-NT PROPERTIES
+set_target_properties(appQt-Desktop-Ver1 PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER hyeisn.cn
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -67,7 +67,7 @@ add_subdirectory(AppQmlBackend)
 add_subdirectory(QmlFontLoader)
 add_subdirectory(DeviceBackend)
 
-target_link_libraries(appQt-Desktop-Ver1-TCL-NT
+target_link_libraries(appQt-Desktop-Ver1
     PRIVATE Qt${QT_VERSION_MAJOR}::Core
     PRIVATE Qt${QT_VERSION_MAJOR}::Gui
     PRIVATE Qt${QT_VERSION_MAJOR}::Quick
@@ -76,7 +76,7 @@ target_link_libraries(appQt-Desktop-Ver1-TCL-NT
     ${PROJECT_MODULES}
 )
 
-install(TARGETS appQt-Desktop-Ver1-TCL-NT
+install(TARGETS appQt-Desktop-Ver1
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
