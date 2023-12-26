@@ -1,4 +1,5 @@
 import QtQuick
+import Qt5Compat.GraphicalEffects
 
 Item {
     property string iconPath: ""    // = "../" + iconPath
@@ -6,6 +7,7 @@ Item {
     property int dId: -1
     property string title: "Title"
     property string content: "Content"
+    property bool connected: false
 
     id: comDevice
     width: 300
@@ -43,7 +45,7 @@ Item {
                         property: "color"
                         from: "#ff4757"
                         to: "#2ecc71"
-                        duration: 70
+                        duration: 35
                         easing.type: Easing.InOutQuad
                         onFinished: rxLedLAni.start()
                     }
@@ -54,7 +56,7 @@ Item {
                         property: "color"
                         from: "#2ecc71"
                         to: "#ff4757"
-                        duration: 100
+                        duration: 50
                         easing.type: Easing.InOutQuad
                     }
                 }
@@ -82,7 +84,7 @@ Item {
                         property: "color"
                         from: "#ff4757"
                         to: "#2ecc71"
-                        duration: 10
+                        duration: 5
                         easing.type: Easing.InOutQuad
                         onFinished: txLedLAni.start()
                     }
@@ -93,7 +95,7 @@ Item {
                         property: "color"
                         from: "#2ecc71"
                         to: "#ff4757"
-                        duration: 100
+                        duration: 50
                         easing.type: Easing.InOutQuad
                     }
                 }
@@ -112,13 +114,13 @@ Item {
                     y: 1.5
                     width: height
                     height: txtConn.height - 3
-                    color: "#ff4757"
+                    color: connected ? "#2ecc71" : "#ff4757"
                     radius: height
                 }
 
                 ComTextEdit {
                     id: txtConn
-                    text: "未连接"
+                    text: connected ? "已连接" : "未连接"
                 }
             }
         }

@@ -17,12 +17,15 @@ target_link_libraries(appqml
 )
 
 list(APPEND MODULE_QML_FILES
+    GlobalVariable.qml
+    GlobalEnums.qml
     Consts.qml
     PageMain.qml
     PageHome.qml
     PageWatching.qml
     PageTLogs.qml
     PageSets.qml
+    PageLineState.qml
     T_PageTests.qml
 )
 
@@ -43,6 +46,7 @@ list(APPEND MODULE_QML_COMPONENT_FILES
     com/ComToolTip.qml
     com/ComDevice.qml
     com/ComExpand.qml
+    com/ComSwitch.qml
 )
 
 list(APPEND MODULE_APPQML_JS_FILES
@@ -78,13 +82,28 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/icon-location.svg
     resources/icon-camera.svg
     resources/icon-arrow-right-fill.svg
+    resources/icon-document.svg
+    resources/icon-play.svg
+    resources/icon-pause.svg
+    resources/icon-boxes.svg
+    resources/icon-close.svg
 
+    resources/home.jpg
+    resources/logo.png
+    resources/plc.png
+    resources/device.png
+    resources/barcode-scan.png
+    resources/agv-robot.png
+    resources/robotic-arm.png
+    resources/task.png
     resources/home.jpg
     resources/logo.png
     resources/device.png
 )
 
-set_source_files_properties(Consts.qml
+set_source_files_properties(
+    Consts.qml
+    GlobalVariable.qml
     PROPERTIES
         QT_QML_SINGLETON_TYPE true
 )

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 Item {
+    property string title: "Title Settings"
     property Component body: null   // content item, Component type required
     property bool ex: false // default expand status
 
@@ -64,7 +65,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: arrow.right
             anchors.leftMargin: 3
-            text: "Title Settings"
+            text: title
         }
 
         MouseArea {
@@ -125,6 +126,14 @@ Item {
         property: "height"
         duration: 200
         easing.type: Easing.InOutQuad
+    }
+
+    function expandF() {
+        expandItem.expand = true
+    }
+
+    function unexpandF() {
+        expandItem.expand = false
     }
 
     Component.onCompleted: {
