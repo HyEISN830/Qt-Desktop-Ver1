@@ -13,12 +13,10 @@ ApplicationWindow {
     id: appWindow
     height: Consts.globalresolution_h
     width: Consts.globalresolution_w
-//    minimumHeight: 900
-//    minimumWidth: 1200
     minimumHeight: Consts.globalresolution_h
     minimumWidth: Consts.globalresolution_w
     visible: true
-    title: qsTr("MFS")
+    title: qsTr("HTG - (HyEISN-TCPGateway) :for Ten-Iron")
     background: Rectangle {
         color: "White"
     }
@@ -28,8 +26,8 @@ ApplicationWindow {
         }
         Menu {
             title: qsTr("&File")
-            Action { text: qsTr("&New...") }
-            MenuSeparator { }
+            // Action { text: qsTr("&New...") }
+            // MenuSeparator { }
             Action {
                 text: qsTr("&Quit")
                 onTriggered: {

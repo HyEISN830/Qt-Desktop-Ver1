@@ -34,6 +34,10 @@ qt_add_qml_module(devicebackend
         worker/modbustcpworker.cpp
         worker/modbustcpworkersender.h
         worker/modbustcpworkersender.cpp
+        worker/tcpserverworker.h
+        worker/tcpserverworker.cpp
+        worker/tcpserverworkersender.h
+        worker/tcpserverworkersender.cpp
         centworker/scannerworker.h
         centworker/scannerworker.cpp
         centworker/plcworker.h
@@ -42,4 +46,8 @@ qt_add_qml_module(devicebackend
         centworker/robotworker.cpp
         centworker/schedulingworker.h
         centworker/schedulingworker.cpp
+        centworker/sysworker.h
+        centworker/sysworker.cpp
+        centworker/pointworker.h
+        centworker/pointworker.cpp
 )

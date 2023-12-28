@@ -21,6 +21,8 @@
 #include "centworker/plcworker.h"
 #include "centworker/robotworker.h"
 #include "centworker/schedulingworker.h"
+#include "centworker/sysworker.h"
+#include "centworker/pointworker.h"
 
 
 /*
@@ -58,6 +60,12 @@ public:
     // @brief 订阅调度服务
     Q_INVOKABLE void addscheduling(int dId, QString ip, int port, DeviceLineNo lineNo);
 
+    // @breif 添加本地TCPServer
+    Q_INVOKABLE void addserver(int dId, int port, int maxclients);
+
+    // @breif 添加光通讯点位
+    Q_INVOKABLE void addpoint(int dId, QString ip, int port);
+
     /*
         @brief 基于指定设备一个新的连接参数
         @param deviceType - GlobalEnums.DeviceType
@@ -73,11 +81,15 @@ private:
     QMap<int, DeviceRobot*> robotList;
     QMap<int, RobotWorker*> robotWorkers;   // worker is automatically deleted after use
     QMap<int, SchedulingWorker*> schedulingWorkers;
+    QMap<int, SysWorker*> sysWorkers;
+    QMap<int, PointWorker*> pointWorkers;
     QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
     bool running = false;
 
     void main();    // 主函数, 用于启动各类设置
     void loop();    // 任务主循环
+    QList<quint8> toU8List(QByteArray); // 将 QByteArray 抓换位 QList<quint8> , 方便展示
+    QByteArray toBytes(QList<quint8>);  // 将 QList<quint8> 转换为 QByteArray, 方便发送
 
 public slots:
     // @brief 收到来自扫码枪的条码
@@ -216,6 +228,18 @@ signals:
     void schedulingTx(int dId);
     // @brief on Scheduling Task Rx
     void schedulingRx(int dId);
+    // @breif when tcpsocket connected on socketserver
+    void clientConnectIn(int dId, QString ip, int port);
+    // @breif when tcpsocket disconnected on socketserver
+    void clientConnectOut(int did, QString ip, int port);
+    // @breif 当tcpclient 发送数据到 tcpserver时
+    void clientReceived(int did, QList<quint8> data);
+    // @breif 当发送数据到 tcplient 时
+    void clientSended(int did, QList<quint8> data);
+    // @brief 当接收到来自光通讯点位的数据时
+    void pointReceived(int did, QList<quint8> data);
+    // @breif 发送到光通讯呆腻味数据时
+    void pointSended(int did, QList<quint8> data);
 };
 
 #endif // DEVICECENTER_H

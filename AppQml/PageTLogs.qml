@@ -11,6 +11,7 @@ Item {
     property StackView view
     property QmlService bgservice
     property bool loading: false
+    property bool uploadlog: false
 
     id: page
     opacity: 0
@@ -88,7 +89,7 @@ Item {
         let str = `<b><font font-size=15 color="#3498db">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
         let start = textEdit.length
         textEdit.append(str)
-        bgservice.addAppLog(textEdit.getText(start, textEdit.length), 3)
+        if (uploadlog) bgservice.addAppLog(textEdit.getText(start, textEdit.length), 3)
     }
 
     function appendSuccessLog(dId, msg) {
@@ -96,7 +97,7 @@ Item {
         let str = `<b><font font-size=15 color="#2ecc71">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
         let start = textEdit.length
         textEdit.append(str)
-        bgservice.addAppLog(textEdit.getText(start, textEdit.length), 1)
+        if (uploadlog) bgservice.addAppLog(textEdit.getText(start, textEdit.length), 1)
     }
 
     function appendErrorLog(dId, msg) {
@@ -104,7 +105,7 @@ Item {
         let str = `<b><font font-size=15 color="#e74c3c">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
         let start = textEdit.length
         textEdit.append(str)
-        bgservice.addAppLog(textEdit.getText(start, textEdit.length), 2)
+        if (uploadlog) bgservice.addAppLog(textEdit.getText(start, textEdit.length), 2)
     }
 
     OpacityAnimator {

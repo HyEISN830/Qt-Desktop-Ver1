@@ -78,7 +78,7 @@ Dialog {
                 anchors.top: parent.bottom
                 anchors.topMargin: 8
                 anchors.left: parent.left
-                text: "联系我们"
+                text: "联系我"
                 height: Consts.button_h
 
                 Connections {

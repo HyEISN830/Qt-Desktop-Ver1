@@ -43,7 +43,7 @@ Item {
                     }
                 }
                 TabButton {
-                    text: qsTr("设备监控")
+                    text: qsTr("Monitor")
                     width: 110
                     icon.source: "resources/icon-camera.svg"
                     icon.height: Consts.icon_h
@@ -54,18 +54,6 @@ Item {
                         stackView.replace(null, watchingPage)
                     }
                 }
-//                TabButton {
-//                    text: qsTr("码垛状态")
-//                    width: 110
-//                    icon.source: "resources/icon-boxes.svg"
-//                    icon.height: Consts.icon_h
-//                    icon.width: Consts.icon_w
-//                    onClicked: {
-//                        if (stackView.currentItem == lineStatePage)
-//                            return
-//                        stackView.replace(null, lineStatePage)
-//                    }
-//                }
                 TabButton {
                     text: qsTr("TLogs")
                     width: 100
@@ -165,14 +153,14 @@ Item {
 
     DeviceCenter {
         id: deviceCenter
-        onDeviceConnected: (dId) => {
-            GlobalVariable[`device${dId}Connected`] = true
-            tlogsPage.appendSuccessLog(dId, "已建立连接.")
-        }
-        onDeviceDisconnect: (dId) => {
-            GlobalVariable[`device${dId}Connected`] = false
-            tlogsPage.appendErrorLog(dId, "已断开连接.")
-        }
+        // onDeviceConnected: (dId) => {
+        //     GlobalVariable[`device${dId}Connected`] = true
+        //     tlogsPage.appendSuccessLog(dId, "已建立连接.")
+        // }
+        // onDeviceDisconnect: (dId) => {
+        //     GlobalVariable[`device${dId}Connected`] = false
+        //     tlogsPage.appendErrorLog(dId, "已断开连接.")
+        // }
         onDeviceConnectFailed: (dId) => {
             tlogsPage.appendErrorLog(dId, "连接失败或连接已断开.")
         }
