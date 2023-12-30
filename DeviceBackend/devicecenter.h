@@ -61,7 +61,7 @@ public:
     Q_INVOKABLE void addscheduling(int dId, QString ip, int port, DeviceLineNo lineNo);
 
     // @breif 添加本地TCPServer
-    Q_INVOKABLE void addserver(int dId, int port, int maxclients);
+    Q_INVOKABLE void addserver(int dId, int port, int maxclients, quint8 agvCode);
 
     // @breif 添加光通讯点位
     Q_INVOKABLE void addpoint(int dId, QString ip, int port);

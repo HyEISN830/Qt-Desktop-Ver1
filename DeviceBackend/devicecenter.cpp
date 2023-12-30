@@ -197,9 +197,9 @@ void DeviceCenter::addscheduling(int dId, QString ip, int port, DeviceLineNo lin
     thread->start();
 }
 
-void DeviceCenter::addserver(int dId, int port, int maxclients)
+void DeviceCenter::addserver(int dId, int port, int maxclients, quint8 agvCode)
 {
-    SysWorker *sysWorker = new SysWorker(dId, port, maxclients);
+    SysWorker *sysWorker = new SysWorker(dId, port, maxclients, agvCode);
     QThread *thread = new QThread;
 
     sysWorkers[dId] = sysWorker;
@@ -207,13 +207,15 @@ void DeviceCenter::addserver(int dId, int port, int maxclients)
     connect(sysWorker, &SysWorker::clientConnected, this, &DeviceCenter::clientConnectIn);
     connect(sysWorker, &SysWorker::clientDisconnected, this, &DeviceCenter::clientConnectOut);
     connect(sysWorker, &SysWorker::clientReceived, this, [=] (int dId, QByteArray data) {
+        data[19] = sysWorker->getAgvCode();
         emit clientReceived(dId, toU8List(data));
     });
     connect(sysWorker, &SysWorker::clientSended, this, [=] (int dId, QByteArray data) {
         emit clientSended(dId, toU8List(data));
     });
     connect(this, &DeviceCenter::pointReceived, sysWorker, [=] (int dId, QList<quint8> data) {
-        sysWorker->_clientWrite(toBytes(data));
+        if (data[19] == sysWorker->getAgvCode())
+            sysWorker->_clientWrite(toBytes(data));
     });
     connect(thread, &QThread::finished, sysWorker, &SysWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
@@ -239,6 +241,7 @@ void DeviceCenter::addpoint(int dId, QString ip, int port)
         emit pointSended(dId, toU8List(data));
     });
     connect(this, &DeviceCenter::clientReceived, worker, [=] (int dId, QList<quint8> data) {
+        thread->msleep(900);
         worker->write(toBytes(data));
     });
     connect(thread, &QThread::finished, worker, &SysWorker::deleteLater);

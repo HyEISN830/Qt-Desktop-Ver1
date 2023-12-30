@@ -12,8 +12,10 @@ class SysWorker : public QObject
     Q_OBJECT
 public:
     explicit SysWorker(QObject *parent = nullptr);
-    SysWorker(int did, int port, int maxclients) : did(did), port(port), maxclients(maxclients) {}
+    SysWorker(int did, int port, int maxclients, quint8 agvCode) : did(did), port(port), maxclients(maxclients), agvCode(agvCode) {}
     ~SysWorker() { server->quit(); server->wait(); }
+
+    quint8 getAgvCode() { return agvCode; }
 
 signals:
     void clientConnected(int dId, QString ip, int port);
@@ -70,6 +72,7 @@ private:
     int maxclients;
     QString clientIp;
     int clientPort;
+    quint16 agvCode;
 
     TcpServerWorker *server = nullptr;
     QTcpSocket *client = nullptr;
