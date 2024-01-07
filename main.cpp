@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QByteArray>
+#include <QDebug>
+
 
 int main(int argc, char *argv[])
 {

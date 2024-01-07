@@ -24,8 +24,6 @@ Item {
         [
             { id: 2, name: "光通讯点位1", ip: "192.168.81.135", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
             { id: 3, name: "光通讯点位2", ip: "192.168.81.134", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
-            // { id: 2, name: "测试光通讯点位1", ip: "127.0.0.1", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
-            // { id: 3, name: "测试光通讯点位2", ip: "127.0.0.1", port: "8081", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
             { id: 4, name: "光通讯点位3", ip: "192.168.81.103", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
             { id: 5, name: "光通讯点位4", ip: "192.168.81.104", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
         ],
@@ -71,6 +69,10 @@ Item {
             { id: 32, name: "光通讯点位31", ip: "192.168.81.131", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
             { id: 33, name: "光通讯点位32", ip: "192.168.81.132", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
         ],
+        [
+            { id: 98, name: "测试光通讯点位1", ip: "127.0.0.1", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
+            { id: 99, name: "测试光通讯点位2", ip: "127.0.0.1", port: "8081", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
+        ]
     ]
 
     id: page

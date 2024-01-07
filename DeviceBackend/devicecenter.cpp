@@ -207,14 +207,17 @@ void DeviceCenter::addserver(int dId, int port, int maxclients, quint8 agvCode)
     connect(sysWorker, &SysWorker::clientConnected, this, &DeviceCenter::clientConnectIn);
     connect(sysWorker, &SysWorker::clientDisconnected, this, &DeviceCenter::clientConnectOut);
     connect(sysWorker, &SysWorker::clientReceived, this, [=] (int dId, QByteArray data) {
-        data[19] = sysWorker->getAgvCode();
-        emit clientReceived(dId, toU8List(data));
+        if (data.size() > 20)
+        {
+            data[19] = sysWorker->getAgvCode();
+            emit clientReceived(dId, toU8List(data));
+        }
     });
     connect(sysWorker, &SysWorker::clientSended, this, [=] (int dId, QByteArray data) {
         emit clientSended(dId, toU8List(data));
     });
     connect(this, &DeviceCenter::pointReceived, sysWorker, [=] (int dId, QList<quint8> data) {
-        if (data[19] == sysWorker->getAgvCode())
+        if (data.size() > 20 && data[19] == sysWorker->getAgvCode())
             sysWorker->_clientWrite(toBytes(data));
     });
     connect(thread, &QThread::finished, sysWorker, &SysWorker::deleteLater);

@@ -42,7 +42,7 @@ public slots:
             this->client = client;
             clientIp = client->localAddress().toString();
             clientPort = client->localPort();
-            connect(this, &SysWorker::_write, client, [=] (QByteArray data) { client->write(data); });
+            connect(this, &SysWorker::_write, client, [=] (QByteArray data) { if (client) client->write(data); });
             emit clientConnected(did, clientIp, clientPort);
         }
     }
@@ -59,7 +59,7 @@ public slots:
 
     void _clientWrite(QByteArray data)
     {
-        if (client && client->isOpen())
+        if (client)
         {
             emit _write(data);
             emit clientSended(did, data);
