@@ -80,8 +80,10 @@ Item {
 
     function _clearIfMax() {
         let set = bgservice.takeSetting("logLength")
-        if (textEdit.length > (set ? parseInt(set) : 10000))
+        if (textEdit.length > (set ? parseInt(set) : 10000)) {
+            bgservice.saveContent2Log(`${JSLib.now()}.txt`, textEdit.getText(0, textEdit.length))
             textEdit.clear()
+        }
     }
 
     function appendNormalLog(dId, msg) {
