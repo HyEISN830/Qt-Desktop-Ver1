@@ -73,9 +73,9 @@ signals:
     void disconnected();
 
 public slots:
-    void write(QString content) { emit send(tcp, content); }
-    void writeb(QByteArray data) { emit sendb(tcp, data); }
-    void rx() { emit received(tcp->read(1024)); }
+    void write(QString content) { if (tcp && conn) emit send(tcp, content); }
+    void writeb(QByteArray data) { if (tcp && conn) emit sendb(tcp, data); }
+    void rx() { if (tcp && conn) { QByteArray data = tcp->read(1024); if (data.size()) emit received(data); } }
     void serr(QString reason) { emit sendError(reason); }
     void connd() { emit connected(); conn = true; }
     void connf() { emit connectFailed(); conn = false; }

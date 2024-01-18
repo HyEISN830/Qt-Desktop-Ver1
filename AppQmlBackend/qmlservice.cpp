@@ -78,3 +78,10 @@ void QmlService::addAppLog(QString content, int level)
             reply->deleteLater();
     }
 }
+
+QString QmlService::html2PlainText(QString content)
+{
+    QTextDocument textDocument;
+    textDocument.setHtml(content);
+    return textDocument.toPlainText();
+}
