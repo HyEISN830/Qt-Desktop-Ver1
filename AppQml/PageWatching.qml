@@ -70,8 +70,9 @@ Item {
             { id: 33, name: "光通讯点位32", ip: "192.168.81.132", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
         ],
         [
-            { id: 98, name: "测试光通讯点位1", ip: "127.0.0.1", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
-            { id: 99, name: "测试光通讯点位2", ip: "127.0.0.1", port: "8081", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
+            { id: 35, name: "光通讯点位33", ip: "192.168.81.102", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
+            // { id: 98, name: "测试光通讯点位1", ip: "127.0.0.1", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
+            // { id: 99, name: "测试光通讯点位2", ip: "127.0.0.1", port: "8081", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
         ]
     ]
 
@@ -96,7 +97,7 @@ Item {
             Column {
                 spacing: 13
 
-                Rectangle {
+                Rectangle { // placeholder
                     width: 1
                     height: 10
                     color: "transparent"
@@ -108,9 +109,10 @@ Item {
                     Row {
                         spacing: 25
 
-                        Rectangle {
+                        Rectangle { // placeholder
                             height: 1
                             width: 10
+                            color: "transparent"
                         }
 
                         Repeater {

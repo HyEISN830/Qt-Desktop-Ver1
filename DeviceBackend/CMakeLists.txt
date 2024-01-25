@@ -50,4 +50,6 @@ qt_add_qml_module(devicebackend
         centworker/sysworker.cpp
         centworker/pointworker.h
         centworker/pointworker.cpp
+        centworker/iomoduleworker.h
+        centworker/iomoduleworker.cpp
 )

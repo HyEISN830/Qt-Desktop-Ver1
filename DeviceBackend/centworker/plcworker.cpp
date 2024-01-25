@@ -150,9 +150,9 @@ void PlcWorker::processPullUp()
 
         if (registers[addr] == _pullUpR)
         {
+            registers[addr] = 0;
             // HACK: 托管开关设置
             if (settings.value(DC::DC_TOSTRING(lines[var]) + "Auto").toString() != "true") continue;
-            registers[addr] = 0;
             emit writeRegister(DevicePLC::PacketType(lines[var] + 13), plc->getDId(), addr, _pullUpT);
 
             // HACK: PLC 3秒内重复夹起无效
