@@ -21,6 +21,7 @@
 #include "centworker/plcworker.h"
 #include "centworker/robotworker.h"
 #include "centworker/schedulingworker.h"
+#include "worker/httpaddlogworker.h"
 
 
 /*
@@ -65,6 +66,10 @@ public:
     Q_INVOKABLE void reconnect(int dId, QString ip, int port);
 #pragma endregion }
 
+#pragma region "其他实用函数 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
+    Q_INVOKABLE void appendLog(QString url, QString content, int level);
+#pragma endregion }
+
 private:
     QMap<int, DeviceScanner*> scannerList;
     QMap<int, ScannerWorker*> scannerWorkers;   // worker is automatically deleted after use
@@ -75,6 +80,7 @@ private:
     QMap<int, SchedulingWorker*> schedulingWorkers;
     QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
     bool running = false;
+    HttpAddLogWorker *logWorker = nullptr;
 
     void main();    // 主函数, 用于启动各类设置
     void loop();    // 任务主循环
@@ -158,6 +164,8 @@ signals:
     void started();
     // @brief 当 DeviceCenter 停止时
     void stoped();
+    // @breif
+    void _appendLog(QString url, QString content, int level);
     // @brief 当某个设备连接成功时
     void deviceConnected(int dId);
     // @brief 当某个设备断开连接时

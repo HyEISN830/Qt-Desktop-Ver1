@@ -73,14 +73,16 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
                 emit querySuccess(scanner, barcode, result, requestCost(fbarcodeURL));
 
                 QJsonObject modelData = result["ModelData"].toObject();
-                if (modelData["isWmsSuccess"] == "Y")
+                bool isLocal = result["ErrorMessage"].toString().contains("已入库");
+
+                if (modelData["isWmsSuccess"] == "Y" || isLocal)
                 {
                     QStringList size = modelData["box"].toString().split("*");
 
                     if (size.size() == 3)
                     {
 //                        emit gotoNormal(scanner, scanner->getLine(), barcode);
-                        requestUploadMatl(scanner->getLine(), modelData["OrderNo"].toString(), barcode, size[0].toInt(), size[1].toInt(), size[2].toInt());
+                        requestUploadMatl(scanner->getLine(), modelData["OrderNo"].toString(), barcode, size[0].toInt(), size[1].toInt(), size[2].toInt(), isLocal);
                     }
                     else
                     {
@@ -132,28 +134,30 @@ void ScannerWorker::querydone(bool error, QUrl url, QJsonObject result)
         }
         else if (u == commitStacksURL)
         {
-            QJsonObject response = result["result"].toObject()["wmsresp"].toObject()["response"].toObject();
-            bool offline = result["result"].toObject()["offline"].toBool();
+            // QJsonObject response = result["result"].toObject()["wmsresp"].toObject()["response"].toObject();
+            // bool offline = result["result"].toObject()["offline"].toBool();
 
             emit querySuccess(scanner, "API:/CommitStacksURL", result, requestCost(commitStacksURL));
+            // 不管怎样, 准许出板
+            emit approveOut(scanner, scanner->getLine());
 
-            if (!result["result"].toObject()["children"].toArray().size())    // 出空板默认允许
-            {
-                emit approveOut(scanner, scanner->getLine());
-            }
-            else
-            {
-//                if (offline || response["return"].toObject()["returnFlag"].toString() == "1")
-//                    emit approveOut(scanner, scanner->getLine());
-//                else
-//                    emit rejectOut(scanner, scanner->getLine());
+//             if (!result["result"].toObject()["children"].toArray().size())    // 出空板默认允许
+//             {
+//                 emit approveOut(scanner, scanner->getLine());
+//             }
+//             else
+//             {
+// //                if (offline || response["return"].toObject()["returnFlag"].toString() == "1")
+// //                    emit approveOut(scanner, scanner->getLine());
+// //                else
+// //                    emit rejectOut(scanner, scanner->getLine());
 
-                // TODO: 发送为何wms出板错误
-//                if (!(offline || response["return"].toObject()["returnFlag"].toString() == "1"))
+//                 // TODO: 发送为何wms出板错误
+// //                if (!(offline || response["return"].toObject()["returnFlag"].toString() == "1"))
 
-                // 不管怎样, 准许出板
-                emit approveOut(scanner, scanner->getLine());
-            }
+//                 // 不管怎样, 准许出板
+//                 emit approveOut(scanner, scanner->getLine());
+//             }
         }
         else if (u == cstackURL)
         {
@@ -210,7 +214,7 @@ void ScannerWorker::analysis(DeviceScanner *scanner, QString barcode)
     manager->get(request);
 }
 
-void ScannerWorker::requestUploadMatl(DeviceLineNo line, QString order, QString barcode, int len, int wide, int height)
+void ScannerWorker::requestUploadMatl(DeviceLineNo line, QString order, QString barcode, int len, int wide, int height, bool isLocal)
 {
     QUrl url(settings.value("uploadMatlURL").toString());
 
@@ -224,6 +228,7 @@ void ScannerWorker::requestUploadMatl(DeviceLineNo line, QString order, QString 
         query.addQueryItem("Len", QString::number((int)len));
         query.addQueryItem("Wide", QString::number((int)wide));
         query.addQueryItem("Height", QString::number((int)height));
+        query.addQueryItem("IsLocal", isLocal ? "true" : "false");
         url.setQuery(query);
         manager->get(QNetworkRequest(url));
     }

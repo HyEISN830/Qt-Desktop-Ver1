@@ -26,6 +26,8 @@ qt_add_qml_module(devicebackend
         deviceplc.cpp
         devicerobot.h
         devicerobot.cpp
+        struct/logstruct.h
+        struct/logstruct.cpp
         worker/tcpworker.h
         worker/tcpworker.cpp
         worker/tcpworkersender.h
@@ -34,6 +36,8 @@ qt_add_qml_module(devicebackend
         worker/modbustcpworker.cpp
         worker/modbustcpworkersender.h
         worker/modbustcpworkersender.cpp
+        worker/httpaddlogworker.h
+        worker/httpaddlogworker.cpp
         centworker/scannerworker.h
         centworker/scannerworker.cpp
         centworker/plcworker.h
