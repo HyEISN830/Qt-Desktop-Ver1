@@ -166,6 +166,9 @@ void PlcWorker::processPullUp()
             {
                 emit duplicateClamped(plc, line, diff);
             }
+
+            if (diff < 0)
+                pullLog[line] = QDateTime::currentMSecsSinceEpoch();
         }
     }
 }
