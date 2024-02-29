@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QTime>
+#include <QDateTime>
+
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +19,10 @@ int main(int argc, char *argv[])
     engine.addImportPath(QCoreApplication::applicationDirPath() + "/qml");
     engine.addImportPath(":/");
     engine.loadFromModule("AC_OU_CMS", "Main");
+
+    QDateTime dt = QDateTime::fromMSecsSinceEpoch(0);
+
+    qDebug() << dt.toMSecsSinceEpoch();
 
     return app.exec();
 }

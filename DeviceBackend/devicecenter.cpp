@@ -3,7 +3,6 @@
 
 DeviceCenter::DeviceCenter()
 {
-
 }
 
 #pragma region "设备启动以及生命周期相关相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
@@ -109,6 +108,10 @@ void DeviceCenter::start()
     workerThreads[222] = logWorker;
     connect(this, &DeviceCenter::_appendLog, logWorker, &HttpAddLogWorker::appendLog);
     logWorker->start();
+
+    utcThread = new HDateTimeWorker;
+    connect(utcThread, &HDateTimeWorker::finished, utcThread, &HDateTimeWorker::deleteLater);
+    utcThread->start();
 }
 
 void DeviceCenter::stop()
@@ -547,5 +550,11 @@ DeviceCenter::~DeviceCenter()
         workerThreads[dIds[i]]->quit();
         workerThreads[dIds[i]]->wait();
         workerThreads.remove(dIds[i]);
+    }
+
+    if (utcThread)
+    {
+        utcThread->quit();
+        utcThread->wait();
     }
 }

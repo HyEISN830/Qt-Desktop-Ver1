@@ -8,6 +8,7 @@
 
 #include "../deviceplc.h"
 #include "../devicescanner.h"
+#include "../struct/hdatetime.h"
 
 
 class PlcWorker : public QObject
@@ -168,7 +169,7 @@ private:
         { DeviceLineNo::W2, 0 },
         { DeviceLineNo::W3, 0 },
     };
-    QMap<DeviceLineNo, long> pullLog {  // 对应线体 PLC 夹料完成记录
+    QMap<DeviceLineNo, qint64> pullLog {  // 对应线体 PLC 夹料完成记录
         { DeviceLineNo::W1, 0 },
         { DeviceLineNo::W2, 0 },
         { DeviceLineNo::W3, 0 },

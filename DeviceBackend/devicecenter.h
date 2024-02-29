@@ -22,6 +22,8 @@
 #include "centworker/robotworker.h"
 #include "centworker/schedulingworker.h"
 #include "worker/httpaddlogworker.h"
+#include "worker/hdatetimeworker.h"
+#include "struct/hdatetime.h"
 
 
 /*
@@ -68,6 +70,8 @@ public:
 
 #pragma region "其他实用函数 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
     Q_INVOKABLE void appendLog(QString url, QString content, int level);
+    // TODO: implement
+    // Q_INVOKABLE QDateTime progTime();
 #pragma endregion }
 
 private:
@@ -81,6 +85,7 @@ private:
     QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
     bool running = false;
     HttpAddLogWorker *logWorker = nullptr;
+    HDateTimeWorker *utcThread = nullptr;
 
     void main();    // 主函数, 用于启动各类设置
     void loop();    // 任务主循环
