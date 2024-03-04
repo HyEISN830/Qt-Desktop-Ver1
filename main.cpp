@@ -20,9 +20,5 @@ int main(int argc, char *argv[])
     engine.addImportPath(":/");
     engine.loadFromModule("AC_OU_CMS", "Main");
 
-    QDateTime dt = QDateTime::fromMSecsSinceEpoch(0);
-
-    qDebug() << dt.toMSecsSinceEpoch();
-
     return app.exec();
 }
