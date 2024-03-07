@@ -11,7 +11,7 @@ QtObject {
     property int icon_h: 16
     property int button_h: 38
     property string tipFontColor: "White"
-    property string versionStr: "1.1.1"
+    property string versionStr: "1.0.1"
 
     // debug =========================================
     property bool debug: false

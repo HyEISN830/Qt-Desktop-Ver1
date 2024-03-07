@@ -73,7 +73,7 @@ Item {
 
     ComTextEditBold {
         id: lblTxt1
-        text: "光通讯"
+        text: "自动门"
         font.pixelSize: 30
         color: "#000000"
         anchors.left: rectBg2.left
@@ -84,7 +84,7 @@ Item {
 
     ComTextEditBold {
         id: lblTxt2
-        text: "网关"
+        text: "控制"
         color: "#000000"
         font.pixelSize: 50
         anchors.top: parent.top
@@ -94,7 +94,7 @@ Item {
 
     ComTextEditBold {
         id: lblTxt3
-        text: "适配器"
+        text: "系统"
         color: "#000000"
         font.pixelSize: 30
         anchors.top: parent.top

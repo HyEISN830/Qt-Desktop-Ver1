@@ -143,10 +143,6 @@ Item {
         }
     }
 
-    ProgmService {
-        id: progservice
-    }
-
     QmlService {
         id: bgservice
     }

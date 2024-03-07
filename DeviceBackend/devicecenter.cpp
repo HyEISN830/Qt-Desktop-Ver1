@@ -199,59 +199,114 @@ void DeviceCenter::addscheduling(int dId, QString ip, int port, DeviceLineNo lin
 
 void DeviceCenter::addserver(int dId, int port, int maxclients, quint8 agvCode)
 {
-    SysWorker *sysWorker = new SysWorker(dId, port, maxclients, agvCode);
-    QThread *thread = new QThread;
+    // SysWorker *sysWorker = new SysWorker(dId, port, maxclients, agvCode);
+    // QThread *thread = new QThread;
 
-    sysWorkers[dId] = sysWorker;
-    workerThreads[dId] = thread;
-    connect(sysWorker, &SysWorker::clientConnected, this, &DeviceCenter::clientConnectIn);
-    connect(sysWorker, &SysWorker::clientDisconnected, this, &DeviceCenter::clientConnectOut);
-    connect(sysWorker, &SysWorker::clientReceived, this, [=] (int dId, QByteArray data) {
-        if (data.size() > 20)
-        {
-            data[19] = sysWorker->getAgvCode();
-            emit clientReceived(dId, toU8List(data));
-        }
-    });
-    connect(sysWorker, &SysWorker::clientSended, this, [=] (int dId, QByteArray data) {
-        emit clientSended(dId, toU8List(data));
-    });
-    connect(this, &DeviceCenter::pointReceived, sysWorker, [=] (int dId, QList<quint8> data) {
-        if (data.size() > 20 && data[19] == sysWorker->getAgvCode())
-            sysWorker->_clientWrite(toBytes(data));
-    });
-    connect(thread, &QThread::finished, sysWorker, &SysWorker::deleteLater);
-    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    // sysWorkers[dId] = sysWorker;
+    // workerThreads[dId] = thread;
+    // connect(sysWorker, &SysWorker::clientConnected, this, &DeviceCenter::clientConnectIn);
+    // connect(sysWorker, &SysWorker::clientDisconnected, this, &DeviceCenter::clientConnectOut);
+    // connect(sysWorker, &SysWorker::clientReceived, this, [=] (int dId, QByteArray data) {
+    //     if (data.size() > 20)
+    //     {
+    //         data[19] = sysWorker->getAgvCode();
+    //         emit clientReceived(dId, toU8List(data));
+    //     }
+    // });
+    // connect(sysWorker, &SysWorker::clientSended, this, [=] (int dId, QByteArray data) {
+    //     emit sendCMD2(dId, data);
+    // });
+    // connect(this, &DeviceCenter::pointReceived, sysWorker, [=] (int dId, QList<quint8> data) {
+    //     if (data.size() > 20 && data[19] == sysWorker->getAgvCode())
+    //         sysWorker->_clientWrite(toBytes(data));
+    // });
+    // connect(thread, &QThread::finished, sysWorker, &SysWorker::deleteLater);
+    // connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
-    sysWorker->moveToThread(thread);
-    sysWorker->start();
-    thread->start();
+    // sysWorker->moveToThread(thread);
+    // sysWorker->start();
+    // thread->start();
 }
 
 void DeviceCenter::addpoint(int dId, QString ip, int port)
 {
-    PointWorker *worker = new PointWorker(dId, ip, port);
+    // PointWorker *worker = new PointWorker(dId, ip, port);
+    // QThread *thread = new QThread;
+
+    // pointWorkers[dId] = worker;
+    // workerThreads[dId] = thread;
+    // connect(worker, &PointWorker::connected, this, &DeviceCenter::deviceConnected);
+    // connect(worker, &PointWorker::disconnected, this, &DeviceCenter::deviceDisconnect);
+    // connect(worker, &PointWorker::received, this, [=] (int dId, QByteArray data) {
+    //     emit pointReceived(dId, toU8List(data));
+    // });
+    // connect(worker, &PointWorker::sended, this, [=] (int dId, QByteArray data) {
+    //     emit pointSended(dId, toU8List(data));
+    // });
+    // connect(this, &DeviceCenter::clientReceived, worker, [=] (int dId, QList<quint8> data) {
+    //     thread->msleep(900);
+    //     worker->write(toBytes(data));
+    // });
+    // connect(thread, &QThread::finished, worker, &SysWorker::deleteLater);
+    // connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+
+    // worker->moveToThread(thread);
+    // worker->start();
+    // thread->start();
+}
+
+void DeviceCenter::addgateserver(int dId, int port)
+{
+    IOGateway *gateWorker = new IOGateway(dId, port);
     QThread *thread = new QThread;
 
-    pointWorkers[dId] = worker;
+    iogateWorkers[dId] = gateWorker;
     workerThreads[dId] = thread;
-    connect(worker, &PointWorker::connected, this, &DeviceCenter::deviceConnected);
-    connect(worker, &PointWorker::disconnected, this, &DeviceCenter::deviceDisconnect);
-    connect(worker, &PointWorker::received, this, [=] (int dId, QByteArray data) {
-        emit pointReceived(dId, toU8List(data));
+    connect(gateWorker, &IOGateway::clientConnected, this, &DeviceCenter::clientConnectIn);
+    connect(gateWorker, &IOGateway::clientDisconnected, this, &DeviceCenter::clientConnectOut);
+    connect(gateWorker, &IOGateway::clientReceived, this, [=] (int dId, QByteArray data) {
+        if (data.size())
+        {
+            QString cmd = data;
+            QStringList strs;
+
+            if (data.size() && (strs = cmd.split(",")).size() > 1)
+            {
+                int no = strs[1].toInt();
+                emit sendCMD2(dId, no, data);
+            }
+
+            emit deviceReceived(gateWorker->getDId(), data);
+        }
     });
-    connect(worker, &PointWorker::sended, this, [=] (int dId, QByteArray data) {
-        emit pointSended(dId, toU8List(data));
-    });
-    connect(this, &DeviceCenter::clientReceived, worker, [=] (int dId, QList<quint8> data) {
-        thread->msleep(900);
-        worker->write(toBytes(data));
-    });
-    connect(thread, &QThread::finished, worker, &SysWorker::deleteLater);
+    connect(gateWorker, &IOGateway::clientSended, this, [=] (int dId, QByteArray data) { emit deviceSended(dId, data); });
+    connect(this, &DeviceCenter::ioModuleResult, gateWorker, &IOGateway::_clientWrite);
+    connect(thread, &QThread::finished, gateWorker, &IOGateway::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
-    worker->moveToThread(thread);
-    worker->start();
+    gateWorker->moveToThread(thread);
+    gateWorker->start();
+    thread->start();
+}
+
+void DeviceCenter::addgateclient(int dId, int no, QString ip, int port)
+{
+    IOModuleWorker *ioWorker = new IOModuleWorker(dId, no, ip, port);
+    QThread *thread = new QThread;
+
+    ioWorkers[dId] = ioWorker;
+    workerThreads[dId] = thread;
+    connect(ioWorker, &IOModuleWorker::clientConnected, this, &DeviceCenter::deviceConnected);
+    connect(ioWorker, &IOModuleWorker::clientDisconnected, this, &DeviceCenter::deviceDisconnect);
+    connect(this, &DeviceCenter::sendCMD2, ioWorker, &IOModuleWorker::receiveCMD);
+    connect(ioWorker, &IOModuleWorker::received, this, [=] (QByteArray data) { emit deviceReceived(ioWorker->getDId(), data); });
+    connect(ioWorker, &IOModuleWorker::sended, this, &DeviceCenter::deviceSended);
+    connect(ioWorker, &IOModuleWorker::result, this, &DeviceCenter::ioModuleResult);
+    connect(thread, &QThread::finished, ioWorker, &IOModuleWorker::deleteLater);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+
+    ioWorker->moveToThread(thread);
+    ioWorker->start();
     thread->start();
 }
 
@@ -514,6 +569,14 @@ DeviceCenter::~DeviceCenter()
     dIds = pointWorkers.keys();
     for (int i = 0; i < dIds.size(); ++i)
         pointWorkers.remove(dIds[i]);
+
+    dIds = iogateWorkers.keys();
+    for (int i = 0; i < dIds.size(); ++i)
+        iogateWorkers.remove(dIds[i]);
+
+    dIds = ioWorkers.keys();
+    for (int i = 0; i < dIds.size(); ++i)
+        ioWorkers.remove(dIds[i]);
 
     dIds = workerThreads.keys();
     for (int i = 0; i < dIds.size(); ++i)

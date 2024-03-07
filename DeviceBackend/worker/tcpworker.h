@@ -74,7 +74,7 @@ signals:
 
 public slots:
     void write(QString content) { emit send(tcp, content); }
-    void writeb(QByteArray data) { emit sendb(tcp, data); }
+    void writeb(QByteArray data) { if (tcp && conn && data.size()) emit sendb(tcp, data); }
     void rx() { emit received(tcp->read(1024)); }
     void serr(QString reason) { emit sendError(reason); }
     void connd() { emit connected(); conn = true; }

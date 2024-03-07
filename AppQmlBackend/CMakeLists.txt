@@ -12,8 +12,6 @@ target_link_libraries(appqmlbackend
 )
 
 list(APPEND MODULE_APPQMLBACKEND_CPP_FILES
-    progmservice.h
-    progmservice.cpp
     qmlservice.h
     qmlservice.cpp
 )

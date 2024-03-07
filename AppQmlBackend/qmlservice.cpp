@@ -2,7 +2,7 @@
 
 QmlService::QmlService()
 {
-    settings = new QSettings("HTG", "settings");
+    settings = new QSettings("QGATE", "settings");
     manager = new QNetworkAccessManager;
 }
 

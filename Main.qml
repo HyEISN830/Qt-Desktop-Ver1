@@ -16,7 +16,7 @@ ApplicationWindow {
     minimumHeight: Consts.globalresolution_h
     minimumWidth: Consts.globalresolution_w
     visible: true
-    title: qsTr("HTG - (HyEISN-TCPGateway) :for Ten-Iron")
+    title: qsTr("HCG - (HyEISN-AutoGate) :for Ten-Iron")
     background: Rectangle {
         color: "White"
     }

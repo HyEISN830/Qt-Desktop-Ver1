@@ -52,4 +52,8 @@ qt_add_qml_module(devicebackend
         centworker/pointworker.cpp
         centworker/iomoduleworker.h
         centworker/iomoduleworker.cpp
+        centworker/iogateway.h
+        centworker/iogateway.cpp
+        centworker/struct/cmdpacket.h
+        centworker/struct/cmdpacket.cpp
 )

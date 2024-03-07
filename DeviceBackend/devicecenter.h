@@ -23,6 +23,8 @@
 #include "centworker/schedulingworker.h"
 #include "centworker/sysworker.h"
 #include "centworker/pointworker.h"
+#include "centworker/iogateway.h"
+#include "centworker/iomoduleworker.h"
 
 
 /*
@@ -66,6 +68,12 @@ public:
     // @breif 添加光通讯点位
     Q_INVOKABLE void addpoint(int dId, QString ip, int port);
 
+    // @breif 添加自动门控制网关
+    Q_INVOKABLE void addgateserver(int dId, int port);
+
+    // @breif 添加自动门IO模块
+    Q_INVOKABLE void addgateclient(int dId, int no, QString ip, int port);
+
     /*
         @brief 基于指定设备一个新的连接参数
         @param deviceType - GlobalEnums.DeviceType
@@ -83,6 +91,8 @@ private:
     QMap<int, SchedulingWorker*> schedulingWorkers;
     QMap<int, SysWorker*> sysWorkers;
     QMap<int, PointWorker*> pointWorkers;
+    QMap<int, IOGateway*> iogateWorkers;
+    QMap<int, IOModuleWorker*> ioWorkers;
     QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
     bool running = false;
 
@@ -174,6 +184,10 @@ signals:
     void deviceConnected(int dId);
     // @brief 当某个设备断开连接时
     void deviceDisconnect(int dId);
+    // @breif 当某个设备接收到数据时
+    void deviceReceived(int dId, QByteArray data);
+    // @brief 当某个设备发送数据时
+    void deviceSended(int dId, QByteArray data);
     // @brief 当某个设备重新应用了新的连接参数时
     void deviceApplied(int dId, QString ip, int port);
     // @biref 当某个设备连接失败时
@@ -234,12 +248,16 @@ signals:
     void clientConnectOut(int did, QString ip, int port);
     // @breif 当tcpclient 发送数据到 tcpserver时
     void clientReceived(int did, QList<quint8> data);
-    // @breif 当发送数据到 tcplient 时
-    void clientSended(int did, QList<quint8> data);
+    // @breif 当需要发送指令到模块时
+    void sendCMD2(int dId, int no, QByteArray data);
     // @brief 当接收到来自光通讯点位的数据时
     void pointReceived(int did, QList<quint8> data);
     // @breif 发送到光通讯呆腻味数据时
     void pointSended(int did, QList<quint8> data);
+    // @brief 当自动门网关接收到指令时, 自动门模块应当connect此signal, 当gno与gateclient.dId相等时, 则执行指令, 否则忽略
+    void gatesReceived(int gno, QString cmd);
+    // @breif 当自动门返回指令执行结果时
+    void ioModuleResult(QByteArray);
 };
 
 #endif // DEVICECENTER_H

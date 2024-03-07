@@ -102,6 +102,7 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/57463585_p6.png
     resources/server.png
     resources/infrared.png
+    resources/icon-gate.png
 )
 
 set_source_files_properties(
