@@ -53,7 +53,7 @@ public slots:
     void timerDeleteLater();
     void querydone(bool error, QUrl url, QJsonObject result);
     void analysis(DeviceScanner *scanner, QString barcode);
-    void requestUploadMatl(DeviceLineNo line, QString order, QString barcode, int len, int wide, int height);
+    void requestUploadMatl(DeviceLineNo line, QString order, QString barcode, int len, int wide, int height, bool isLocal);
     void requestPullUpMatl(DeviceLineNo line);
     void requestRobotParams(DeviceLineNo line, int len, int wide, int height);
     void requestCommitStack(DeviceLineNo);

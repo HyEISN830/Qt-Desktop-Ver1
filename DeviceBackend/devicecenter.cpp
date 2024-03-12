@@ -3,7 +3,6 @@
 
 DeviceCenter::DeviceCenter()
 {
-
 }
 
 #pragma region "设备启动以及生命周期相关相关 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
@@ -103,6 +102,16 @@ void DeviceCenter::start()
     connect(sworker, &SchedulingWorker::exWriteRobotParams, n3rw, &RobotWorker::exWriteParams);
     connect(sworker, &SchedulingWorker::exWriteRobotParams, n2rw, &RobotWorker::exWriteParams);
     connect(sworker, &SchedulingWorker::exWriteRobotParams, n1rw, &RobotWorker::exWriteParams);
+
+    // Logger
+    logWorker = new HttpAddLogWorker;
+    workerThreads[222] = logWorker;
+    connect(this, &DeviceCenter::_appendLog, logWorker, &HttpAddLogWorker::appendLog);
+    logWorker->start();
+
+    utcThread = new HDateTimeWorker;
+    connect(utcThread, &HDateTimeWorker::finished, utcThread, &HDateTimeWorker::deleteLater);
+    utcThread->start();
 }
 
 void DeviceCenter::stop()
@@ -300,6 +309,14 @@ void DeviceCenter::reconnect(int dId, QString ip, int port)
         schedulingWorkers[dId]->apply(ip, port);
         return;
     }
+}
+#pragma endregion }
+
+
+#pragma region "其他实用函数 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
+void DeviceCenter::appendLog(QString url, QString content, int level)
+{
+    emit _appendLog(url, content, level);
 }
 #pragma endregion }
 
@@ -533,5 +550,11 @@ DeviceCenter::~DeviceCenter()
         workerThreads[dIds[i]]->quit();
         workerThreads[dIds[i]]->wait();
         workerThreads.remove(dIds[i]);
+    }
+
+    if (utcThread)
+    {
+        utcThread->quit();
+        utcThread->wait();
     }
 }

@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QTime>
+#include <QDateTime>
+
 
 int main(int argc, char *argv[])
 {

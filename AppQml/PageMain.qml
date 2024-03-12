@@ -140,12 +140,12 @@ Item {
                     id: tlogsPage
                     view: stackView
                     bgservice: bgservice
+                    deviceCenter: deviceCenter
                 }
                 PageSets {
                     id: setsPage
                     view: stackView
                     bgservice: bgservice
-                    deviceCenter: deviceCenter
                 }
                 T_PageTests {
                     id: testPage

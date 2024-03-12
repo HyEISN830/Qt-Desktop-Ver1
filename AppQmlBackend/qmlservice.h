@@ -13,6 +13,9 @@
 #include <QNetworkAccessManager>
 #include <QUrlQuery>
 #include <QNetworkReply>
+#include <QXmlStreamReader>
+#include <QTextDocument>
+#include <iostream>
 
 
 // qml 一般后台服务, 如append 到 剪贴板, 打开浏览器等..
@@ -31,6 +34,7 @@ public:
     Q_INVOKABLE bool testTcpConn(QString host, int port);
     Q_INVOKABLE bool saveContent2Log(QString name, QString content);
     Q_INVOKABLE void addAppLog(QString content, int level);
+    Q_INVOKABLE QString html2PlainText(QString);
 
 private:
     QSettings *settings = nullptr;

@@ -4,12 +4,14 @@ import QtQuick.Dialogs
 import Qt.labs.qmlmodels
 import AppQml
 import AppQmlBackend
+import DeviceBackend
 
 import "js/Common.js" as JSLib
 
 Item {
     property StackView view
     property QmlService bgservice
+    property DeviceCenter deviceCenter
     property bool loading: false
 
     id: page
@@ -84,27 +86,27 @@ Item {
     }
 
     function appendNormalLog(dId, msg) {
-        _clearIfMax()
+        // _clearIfMax()
         let str = `<b><font font-size=15 color="#3498db">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
-        let start = textEdit.length
-        textEdit.append(str)
-        bgservice.addAppLog(textEdit.getText(start, textEdit.length), 3)
+        // bgservice.addAppLog(bgservice.html2PlainText(str), 3)
+        deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 3)
+        // console.log(bgservice.html2PlainText(str))
     }
 
     function appendSuccessLog(dId, msg) {
-        _clearIfMax()
+        // _clearIfMax()
         let str = `<b><font font-size=15 color="#2ecc71">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
-        let start = textEdit.length
-        textEdit.append(str)
-        bgservice.addAppLog(textEdit.getText(start, textEdit.length), 1)
+        // bgservice.addAppLog(bgservice.html2PlainText(str), 1)
+        deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 1)
+        // console.log(bgservice.html2PlainText(str))
     }
 
     function appendErrorLog(dId, msg) {
-        _clearIfMax()
+        // _clearIfMax()
         let str = `<b><font font-size=15 color="#e74c3c">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
-        let start = textEdit.length
-        textEdit.append(str)
-        bgservice.addAppLog(textEdit.getText(start, textEdit.length), 2)
+        // bgservice.addAppLog(bgservice.html2PlainText(str), 2)
+        deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 2)
+        // console.log(bgservice.html2PlainText(str))
     }
 
     OpacityAnimator {

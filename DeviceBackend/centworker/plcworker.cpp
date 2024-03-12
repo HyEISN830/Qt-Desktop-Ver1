@@ -153,19 +153,21 @@ void PlcWorker::processPullUp()
             // HACK: 托管开关设置
             if (settings.value(DC::DC_TOSTRING(lines[var]) + "Auto").toString() != "true") continue;
             registers[addr] = 0;
-            emit writeRegister(DevicePLC::PacketType(lines[var] + 13), plc->getDId(), addr, _pullUpT);
 
             // HACK: PLC 3秒内重复夹起无效
-            long diff = 0;
-            if ((diff = (QDateTime::currentMSecsSinceEpoch() - pullLog[line])) >= 3000)
+            qint64 diff = 0;
+            if ((diff = (HDateTime::utc_ms - pullLog[line])) >= 3000)
             {
-                pullLog[line] = QDateTime::currentMSecsSinceEpoch();
+                emit writeRegister(DevicePLC::PacketType(lines[var] + 13), plc->getDId(), addr, _pullUpT);
+                QThread::msleep(100);
+                pullLog[line] = HDateTime::utc_ms;
                 emit pullUp(plc, lines[var]);
             }
             else
             {
                 emit duplicateClamped(plc, line, diff);
             }
+            // emit pullUp(plc, lines[var]);
         }
     }
 }
