@@ -25,7 +25,6 @@ list(APPEND MODULE_QML_FILES
     PageWatching.qml
     PageTLogs.qml
     PageSets.qml
-    PageLineState.qml
     T_PageTests.qml
 )
 
@@ -99,6 +98,7 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/home.jpg
     resources/logo.png
     resources/device.png
+    resources/coming-soon-banner.png
 )
 
 set_source_files_properties(

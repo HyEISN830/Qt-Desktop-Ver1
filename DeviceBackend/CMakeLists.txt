@@ -4,6 +4,7 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS
     Quick
     SerialBus
     Network
+    WebEngineCore
 )
 
 set_target_properties(devicebackend PROPERTIES AUTOMOC ON)
@@ -11,6 +12,7 @@ target_link_libraries(devicebackend
     PRIVATE Qt${QT_VERSION_MAJOR}::Quick
     PRIVATE Qt${QT_VERSION_MAJOR}::SerialBus
     PRIVATE Qt${QT_VERSION_MAJOR}::Network
+    PRIVATE Qt${QT_VERSION_MAJOR}::WebEngineCore
 )
 
 qt_add_qml_module(devicebackend

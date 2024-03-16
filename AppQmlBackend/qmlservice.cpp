@@ -2,7 +2,7 @@
 
 QmlService::QmlService()
 {
-    settings = new QSettings;
+    settings = new QSettings("TEN-IRON-Scheduling");
     manager = new QNetworkAccessManager;
 }
 
