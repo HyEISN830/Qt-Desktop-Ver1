@@ -17,6 +17,10 @@ void DeviceCenter::start()
     utcThread = new HDateTimeWorker;
     connect(utcThread, &HDateTimeWorker::finished, utcThread, &HDateTimeWorker::deleteLater);
     utcThread->start();
+
+    pf_web = new QWebEnginePage;
+    // init pathfinding lib script
+    pf_web->runJavaScript(easystar);
 }
 
 void DeviceCenter::stop()
@@ -222,6 +226,43 @@ void DeviceCenter::reconnect(int dId, QString ip, int port)
 void DeviceCenter::appendLog(QString url, QString content, int level)
 {
     emit _appendLog(url, content, level);
+}
+
+QJsonArray DeviceCenter::pathfinding_test(QJsonArray grid, int startX, int startY, int endX, int endY)
+{
+    if (!pf_web) return QJsonArray();
+
+    QString script = this->script;
+    QJsonArray paths = QJsonArray();
+    bool executed = false;
+
+    script = script
+                 .replace("{grid}", QJsonDocument(grid).toJson(QJsonDocument::Compact))
+                 .replace("{startX}", QString::number(startX))
+                 .replace("{startY}", QString::number(startY))
+                 .replace("{endX}", QString::number(endX))
+                 .replace("{endY}", QString::number(endY))
+    ;
+    pf_web->runJavaScript(script);
+    pf_web->runJavaScript("JSON.stringify(paths);", [&paths, &executed] (const QVariant &v) {
+        if (!v.isNull() && v.isValid())
+        {
+            QJsonDocument jdoc = QJsonDocument::fromJson(v.toByteArray());
+            QJsonArray jarr = jdoc.array();
+
+            // for (int var = 0; var < jarr.size(); ++var)
+            // {
+            //     QJsonObject obj = jarr[var].toObject();
+            //     qDebug() << QString::number((obj.value("x").toInt())).insert(0, "x:") << "," << QString::number(obj.value("y").toInt()).insert(0, "y:");
+            // }
+            paths = jarr;
+            executed = true;
+        }
+    });
+
+    while (!executed) QThread::msleep(10);
+
+    return paths;
 }
 #pragma endregion }
 
@@ -462,4 +503,6 @@ DeviceCenter::~DeviceCenter()
         utcThread->quit();
         utcThread->wait();
     }
+
+    delete pf_web;
 }

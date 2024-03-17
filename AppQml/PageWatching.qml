@@ -28,6 +28,21 @@ Item {
         background: Rectangle {
             color: "#ecf0f1"
         }
+
+        Column {
+            ComButton {
+                text: "PATH"
+                onClicked: {
+                    let grid = [[0,0,1,0,0],
+                                [0,0,1,0,0],
+                                [0,0,1,0,0],
+                                [0,0,1,0,0],
+                                [0,0,0,0,0]];
+                    let paths = deviceCenter.pathfinding_test(grid, 0, 0, 4, 4)
+                    console.log(paths)
+                }
+            }
+        }
     }
 
     // use only in line settings
