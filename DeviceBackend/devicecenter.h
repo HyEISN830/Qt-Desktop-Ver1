@@ -70,7 +70,7 @@ public:
 
 #pragma region "其他实用函数 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" {
     Q_INVOKABLE void appendLog(QString url, QString content, int level);
-    // TODO: implement
+    // TODO: implement this
     // Q_INVOKABLE QDateTime progTime();
 #pragma endregion }
 

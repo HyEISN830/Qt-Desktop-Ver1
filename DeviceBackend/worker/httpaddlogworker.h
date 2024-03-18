@@ -43,7 +43,7 @@ public:
                 quering = true;
                 LogStruct *s = logs.dequeue();
 
-                if (s && s->valid && s->url.length())
+                if (s && s->inc == 123 && s->url.length())
                 {
                     QUrl url = s->url;
                     QUrlQuery query;
@@ -53,13 +53,12 @@ public:
                     url.setQuery(query);
 
                     network->get(QNetworkRequest(url));
+                    delete s;
                 }
                 else
                 {
                     quering = false;
                 }
-
-                delete s;
             }
             mutex.unlock();
         });
@@ -74,16 +73,15 @@ signals:
 public slots:
     void appendLog(QString url, QString content, int level)
     {
-        enMutex.lock();
+        mutex.lock();
         logs.enqueue(new LogStruct(url, content, level));
         emit triggerPush();
-        enMutex.unlock();
+        mutex.unlock();
     }
 
 private:
     bool quering = false;
     QMutex mutex;
-    QMutex enMutex ;
 
     QNetworkAccessManager *network = nullptr;
     QQueue<LogStruct*> logs;
