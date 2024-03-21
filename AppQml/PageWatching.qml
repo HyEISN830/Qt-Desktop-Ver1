@@ -22,6 +22,13 @@ Item {
         id: delay
     }
 
+    Connections {
+        target: deviceCenter
+        function onPathCalculated(id, path) {
+            console.log(id, JSON.stringify(path))
+        }
+    }
+
     Pane {
         anchors.fill: parent
         padding: 0
@@ -33,13 +40,7 @@ Item {
             ComButton {
                 text: "PATH"
                 onClicked: {
-                    let grid = [[0,0,1,0,0],
-                                [0,0,1,0,0],
-                                [0,0,1,0,0],
-                                [0,0,1,0,0],
-                                [0,0,0,0,0]];
-                    let paths = deviceCenter.pathfinding_test(grid, 0, 0, 4, 4)
-                    console.log(paths)
+                    deviceCenter.pathfinding_test(951, 0, 0, 4, 4, true)
                 }
             }
         }

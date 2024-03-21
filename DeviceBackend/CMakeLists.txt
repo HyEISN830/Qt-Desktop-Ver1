@@ -52,4 +52,6 @@ qt_add_qml_module(devicebackend
         centworker/robotworker.cpp
         centworker/schedulingworker.h
         centworker/schedulingworker.cpp
+        centworker/pathfindingworker.h
+        centworker/pathfindingworker.cpp
 )

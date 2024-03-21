@@ -10,17 +10,35 @@ void DeviceCenter::start()
 {
     // Logger
     logWorker = new HttpAddLogWorker;
-    workerThreads[222] = logWorker;
+    workerThreads[gid()] = logWorker;
     connect(this, &DeviceCenter::_appendLog, logWorker, &HttpAddLogWorker::appendLog);
+    connect(logWorker, &HttpAddLogWorker::finished, logWorker, &HttpAddLogWorker::deleteLater);
     logWorker->start();
 
     utcThread = new HDateTimeWorker;
+    workerThreads[gid()] = utcThread;
     connect(utcThread, &HDateTimeWorker::finished, utcThread, &HDateTimeWorker::deleteLater);
     utcThread->start();
 
-    pf_web = new QWebEnginePage;
-    // init pathfinding lib script
-    pf_web->runJavaScript(easystar);
+    // TODO: 改为外部传入的地图大小或外部地图配置
+    QString mapfile_path = "./Configuration/map.json";
+    int width = 10;
+    int height = 10;
+    QJsonArray grid;
+    for (int var = 0; var < height; ++var) {
+        QJsonArray row;
+        for (int var1 = 0; var1 < width; ++var1) {
+            row.append(0);
+        }
+        grid.append(row);
+    }
+    pfWorker = new PathfindingWorker(grid);
+    workerThreads[gid()] = utcThread;
+    connect(this, &DeviceCenter::_pf_test, pfWorker, &PathfindingWorker::calcpaths);
+    connect(this, &DeviceCenter::_pf_wa, pfWorker, &PathfindingWorker::setwalkable);
+    connect(pfWorker, &PathfindingWorker::calculated, this, &DeviceCenter::pathCalculated);
+    connect(pfWorker, &PathfindingWorker::finished, pfWorker, &PathfindingWorker::deleteLater);
+    pfWorker->start();
 }
 
 void DeviceCenter::stop()
@@ -228,41 +246,14 @@ void DeviceCenter::appendLog(QString url, QString content, int level)
     emit _appendLog(url, content, level);
 }
 
-QJsonArray DeviceCenter::pathfinding_test(QJsonArray grid, int startX, int startY, int endX, int endY)
+void DeviceCenter::pathfinding_test(int id, int startX, int startY, int endX, int endY, bool block_it)
 {
-    if (!pf_web) return QJsonArray();
+    emit _pf_test(id, startX, startY, endX, endY, block_it);
+}
 
-    QString script = this->script;
-    QJsonArray paths = QJsonArray();
-    bool executed = false;
+void DeviceCenter::set_walkable(QJsonArray pointers, bool b)
+{
 
-    script = script
-                 .replace("{grid}", QJsonDocument(grid).toJson(QJsonDocument::Compact))
-                 .replace("{startX}", QString::number(startX))
-                 .replace("{startY}", QString::number(startY))
-                 .replace("{endX}", QString::number(endX))
-                 .replace("{endY}", QString::number(endY))
-    ;
-    pf_web->runJavaScript(script);
-    pf_web->runJavaScript("JSON.stringify(paths);", [&paths, &executed] (const QVariant &v) {
-        if (!v.isNull() && v.isValid())
-        {
-            QJsonDocument jdoc = QJsonDocument::fromJson(v.toByteArray());
-            QJsonArray jarr = jdoc.array();
-
-            // for (int var = 0; var < jarr.size(); ++var)
-            // {
-            //     QJsonObject obj = jarr[var].toObject();
-            //     qDebug() << QString::number((obj.value("x").toInt())).insert(0, "x:") << "," << QString::number(obj.value("y").toInt()).insert(0, "y:");
-            // }
-            paths = jarr;
-            executed = true;
-        }
-    });
-
-    while (!executed) QThread::msleep(10);
-
-    return paths;
 }
 #pragma endregion }
 
@@ -497,12 +488,4 @@ DeviceCenter::~DeviceCenter()
         workerThreads[dIds[i]]->wait();
         workerThreads.remove(dIds[i]);
     }
-
-    if (utcThread)
-    {
-        utcThread->quit();
-        utcThread->wait();
-    }
-
-    delete pf_web;
 }
