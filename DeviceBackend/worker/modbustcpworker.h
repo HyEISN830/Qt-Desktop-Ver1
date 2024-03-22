@@ -69,7 +69,7 @@ signals:
     void connected();
     void disconnected();
     // @brief type - customer action code
-    void received(int type, QList<ushort>);
+    void received(int type, QList<ushort>, int, ushort);
     void rxtxFailed();
     void tx();
     void rx();
@@ -101,7 +101,7 @@ public slots:
         emit _readRegisters(modbus, type, id, startAddr, length);
     }
 
-    void modbusFinished(int type, QModbusReply *reply)
+    void modbusFinished(int type, QModbusReply *reply, int addr, ushort value)
     {
         if (nullptr == reply)
         {
@@ -111,7 +111,7 @@ public slots:
         {
             QList<ushort> result =  reply->result().values();
             emit rx();
-            emit received(type, result.size() > 0 ? result : QList<ushort>());
+            emit received(type, result.size() > 0 ? result : QList<ushort>(), addr, value);
             reply->deleteLater();
         }
     }

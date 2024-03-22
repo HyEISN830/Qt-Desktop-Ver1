@@ -131,6 +131,7 @@ Item {
                     view: stackView
                     log: tlogsPage
                     deviceCenter: deviceCenter
+                    bgservice: bgservice
                 }
 //                PageLineState {
 //                    id: lineStatePage
@@ -146,6 +147,7 @@ Item {
                     id: setsPage
                     view: stackView
                     bgservice: bgservice
+                    deviceCenter: deviceCenter
                 }
                 T_PageTests {
                     id: testPage

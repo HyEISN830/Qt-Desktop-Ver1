@@ -13,7 +13,7 @@ public:
     explicit ModbusTcpWorkerSender(QObject *parent = nullptr);
 
 signals:
-    void finished(int type, QModbusReply *reply);
+    void finished(int type, QModbusReply *reply, int addr, ushort value);
 
 public slots:
     void writeRegister(QModbusTcpClient *modbus, int type, int id, int addr, ushort value)
@@ -28,12 +28,12 @@ public slots:
 
         if (nullptr == reply)
         {
-            emit finished(type, nullptr);
+            emit finished(type, nullptr, addr, value);
         }
         else
         {
             reply->connect(reply, &QModbusReply::finished, this, [=] {
-                emit finished(type, reply);
+                emit finished(type, reply, addr, value);
             });
         }
     }
@@ -50,12 +50,12 @@ public slots:
 
         if (nullptr == reply)
         {
-            emit finished(type, nullptr);
+            emit finished(type, nullptr, -1, -1);
         }
         else
         {
             reply->connect(reply, &QModbusReply::finished, this, [=] {
-                emit finished(type, reply);
+                emit finished(type, reply, -1, -1);
             });
         }
     }

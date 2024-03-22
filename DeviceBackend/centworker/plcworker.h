@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QSettings>
+#include <QJsonArray>
 
 #include "../deviceplc.h"
 #include "../devicescanner.h"
@@ -20,6 +21,15 @@ public:
 
     DeviceLineNo getLineNo() { return plc->getLine(); }
     bool allowLine(DeviceLineNo line) { return allowLines.contains(DeviceLineNo::All) || allowLines.contains(line); }
+    QJsonArray getRegisters()
+    {
+        QJsonArray jarr;
+
+        for (int var = 0; var < length; ++var)
+            jarr.append(registers[var]);
+
+        return jarr;
+    };
 
 signals:
     void writeRegister(DevicePLC::PacketType type, int id, int addr, ushort value);
@@ -31,7 +41,7 @@ signals:
     void duplicateClamped(DevicePLC*, DeviceLineNo, long);
 
 public slots:
-    void received(int type, QList<ushort> result);
+    void received(int type, QList<ushort> result, int addr, ushort value);
     // @brief scan barcode finished
     void scaned(DeviceLineNo line, bool ok);
     // @breif 在上传物料后, 发现需要换产时, 发送信号到plc, 准备换产
@@ -56,9 +66,9 @@ private:
     // @brief salve id
     const int id = 1;
     // @brief register start address
-    const int startAddr = 300;
+    const int startAddr = 0;
     // @brief register length
-    const ushort length = 85;
+    const ushort length = 30;
     // @brief 扫码成功寄存器写入值
     const ushort _scanOK = 1;
     // @brief 扫码失败寄存器写入值
@@ -90,7 +100,7 @@ private:
 
     DevicePLC *plc = nullptr;
     QTimer *pollingTimer = nullptr;
-    ushort registers[65535];
+    ushort registers[30];
     QList<DeviceLineNo> lines =
     {
         DeviceLineNo::W1,

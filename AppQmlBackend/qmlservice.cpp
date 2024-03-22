@@ -2,7 +2,7 @@
 
 QmlService::QmlService()
 {
-    settings = new QSettings;
+    settings = new QSettings("ten-iron-zhctusp");
     manager = new QNetworkAccessManager;
 }
 
@@ -27,6 +27,13 @@ QVariant QmlService::takeSetting(QString key)
     if (!settings)
         return "Invalid Object.";
     return settings->value(key);
+}
+
+int QmlService::itakeSetting(QString key)
+{
+    if (!settings)
+        return -1;
+    return settings->contains(key) ?  settings->value(key).toInt() : -1;
 }
 
 void QmlService::saveSettings(QString key, QString value)
@@ -84,4 +91,12 @@ QString QmlService::html2PlainText(QString content)
     QTextDocument textDocument;
     textDocument.setHtml(content);
     return textDocument.toPlainText();
+}
+
+QString QmlService::bytes2String(QJsonArray bytes)
+{
+    QByteArray barr;
+    foreach (const QJsonValue &v, bytes)
+        barr.append((char)v.toInt());
+    return QString::fromLatin1(barr);
 }

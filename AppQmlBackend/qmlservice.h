@@ -15,7 +15,7 @@
 #include <QNetworkReply>
 #include <QXmlStreamReader>
 #include <QTextDocument>
-#include <iostream>
+#include <QJsonArray>
 
 
 // qml 一般后台服务, 如append 到 剪贴板, 打开浏览器等..
@@ -30,11 +30,13 @@ public:
     Q_INVOKABLE bool openurlwithbrowser(QString);
     Q_INVOKABLE void copy2clipboard(QString);
     Q_INVOKABLE QVariant takeSetting(QString key);
+    Q_INVOKABLE int itakeSetting(QString key);
     Q_INVOKABLE void saveSettings(QString key, QString value);
     Q_INVOKABLE bool testTcpConn(QString host, int port);
     Q_INVOKABLE bool saveContent2Log(QString name, QString content);
     Q_INVOKABLE void addAppLog(QString content, int level);
     Q_INVOKABLE QString html2PlainText(QString);
+    Q_INVOKABLE QString bytes2String(QJsonArray bytes);
 
 private:
     QSettings *settings = nullptr;

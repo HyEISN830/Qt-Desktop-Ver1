@@ -99,6 +99,8 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/home.jpg
     resources/logo.png
     resources/device.png
+    resources/coming-soon-banner.png
+    resources/favicon.ico
 )
 
 set_source_files_properties(

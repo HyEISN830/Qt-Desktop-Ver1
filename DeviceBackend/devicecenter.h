@@ -72,6 +72,9 @@ public:
     Q_INVOKABLE void appendLog(QString url, QString content, int level);
     // TODO: implement this
     // Q_INVOKABLE QDateTime progTime();
+
+    Q_INVOKABLE QJsonArray getPlcRegisters(int dId);
+    Q_INVOKABLE void writePlcRegister(int dId, int sId, ushort addr, ushort value);
 #pragma endregion }
 
 private:
