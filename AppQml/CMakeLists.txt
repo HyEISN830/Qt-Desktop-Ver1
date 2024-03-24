@@ -27,6 +27,7 @@ list(APPEND MODULE_QML_FILES
     PageSets.qml
     PageLineState.qml
     T_PageTests.qml
+    PageTasks.qml
 )
 
 list(APPEND MODULE_QML_COMPONENT_FILES

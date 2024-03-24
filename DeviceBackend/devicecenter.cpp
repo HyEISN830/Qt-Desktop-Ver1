@@ -14,9 +14,18 @@ void DeviceCenter::start()
     connect(this, &DeviceCenter::_appendLog, logWorker, &HttpAddLogWorker::appendLog);
     logWorker->start();
 
+    // local utc datetime
     utcThread = new HDateTimeWorker;
+    workerThreads[223] = utcThread;
     connect(utcThread, &HDateTimeWorker::finished, utcThread, &HDateTimeWorker::deleteLater);
     utcThread->start();
+
+    // httpserver
+    httpServer = new HttpServerWorker;
+    workerThreads[224] = httpServer;
+    connect(httpServer, &HttpServerWorker::finished, httpServer, &HttpServerWorker::deleteLater);
+    httpServer->start();
+    addroutes(httpServer);  // registe all routes
 }
 
 void DeviceCenter::stop()
@@ -64,6 +73,16 @@ PlcWorker* DeviceCenter::findPlcWorker(DeviceLineNo line)
     }
 
     return worker;
+}
+
+void DeviceCenter::addroutes(HttpServerWorker *s)
+{
+    if (!s) return;
+
+    CTUService *ctu = new CTUService;
+    services.enqueue(ctu);  // auto delete after used
+    ctu->registeRoutes(s);
+    ctu->start();
 }
 #pragma endregion }
 
@@ -469,6 +488,16 @@ DeviceCenter::~DeviceCenter()
         workerThreads[dIds[i]]->quit();
         workerThreads[dIds[i]]->wait();
         workerThreads.remove(dIds[i]);
+    }
+
+    while (!services.size())
+    {
+        BaseService *service = services.dequeue();
+        if (service)
+        {
+            service->quit();
+            service->wait();
+        }
     }
 
     if (utcThread)

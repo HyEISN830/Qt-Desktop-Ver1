@@ -23,6 +23,9 @@
 #include "centworker/schedulingworker.h"
 #include "worker/httpaddlogworker.h"
 #include "worker/hdatetimeworker.h"
+#include "worker/httpserver/httpserverworker.h"
+#include "worker/httpserver/services/baseservice.h"
+#include "worker/httpserver/services/ctuservice.h"
 #include "struct/hdatetime.h"
 
 
@@ -86,12 +89,15 @@ private:
     QMap<int, RobotWorker*> robotWorkers;   // worker is automatically deleted after use
     QMap<int, SchedulingWorker*> schedulingWorkers;
     QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
+    QQueue<BaseService*> services;
     bool running = false;
     HttpAddLogWorker *logWorker = nullptr;
     HDateTimeWorker *utcThread = nullptr;
+    HttpServerWorker *httpServer = nullptr;
 
     void main();    // 主函数, 用于启动各类设置
     void loop();    // 任务主循环
+    void addroutes(HttpServerWorker*); // 添加http路由
 
 public slots:
     // @brief 收到来自扫码枪的条码

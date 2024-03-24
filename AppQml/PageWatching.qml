@@ -227,6 +227,17 @@ Item {
                     onClicked: deviceCenter.writePlcRegister(1, 1, bgservice.itakeSetting("plcs006ready"), 0)
                 }
             }
+
+            Row {
+                spacing: 8
+
+                ComSwitch {
+                    id: mode
+                    closeStr: "WiFi模式"
+                    openStr: "iRay模式"
+                    onOpenChanged: setChange("iRay", open)
+                }
+            }
         }
     }
 
@@ -257,6 +268,8 @@ Item {
 
         delay.delay(1000, () => {
             deviceCenter.addplc(1, GlobalVariable["device1Ip"], GlobalVariable["device1Port"], GlobalEnums.LineNo.All, [GlobalEnums.LineNo.All])
+
+            mode.open = bgservice.takeSetting("IRay") === "true"
 
             // start devicecenter
             deviceCenter.start()
