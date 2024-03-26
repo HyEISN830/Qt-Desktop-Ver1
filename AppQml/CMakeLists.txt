@@ -46,6 +46,7 @@ list(APPEND MODULE_QML_COMPONENT_FILES
     com/ComDevice.qml
     com/ComExpand.qml
     com/ComSwitch.qml
+    com/ComGuassPane.qml
 )
 
 list(APPEND MODULE_APPQML_JS_FILES

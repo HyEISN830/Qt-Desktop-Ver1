@@ -85,3 +85,67 @@ QString QmlService::html2PlainText(QString content)
     textDocument.setHtml(content);
     return textDocument.toPlainText();
 }
+
+QString QmlService::str2bytes(QString str)
+{
+    QByteArray arr = str.toLatin1();
+    QJsonArray jarr;
+    for (int var = 0; var < arr.size(); ++var)
+        jarr.append((uint8_t)arr[var]);
+    return QJsonDocument(jarr).toJson();
+}
+
+QByteArray QmlService::str2bytes1(QString str)
+{
+    return str.toLatin1();
+}
+
+short QmlService::bytes2int(uint8_t b, uint8_t b1)
+{
+    short s = b;
+    s <<= 8;
+    s |= b1;
+    return s;
+}
+
+ushort QmlService::bytes2uint(uint8_t b, uint8_t b1)
+{
+    // ushort u = 5005;
+
+    // uint8_t ub = u >> 8;
+    // uint8_t ub1 = u & 0xFF;
+    // qDebug() << ub << ub1;
+
+    // ushort u1 = ub << 8 | ub1;
+    // qDebug() << u1;
+
+    ushort s = b << 8 | b1;
+    return s;
+}
+
+int QmlService::bytes2int(uint8_t b, uint8_t b1, uint8_t b2, uint8_t b3)
+{
+    return int((unsigned char)(b) << 24 |
+               (unsigned char)(b1) << 16 |
+               (unsigned char)(b2) << 8 |
+               (unsigned char)(b3));
+}
+
+float QmlService::bytes2float(uint8_t b, uint8_t b1, uint8_t b2, uint8_t b3)
+{
+    QByteArray d;
+    d.append(b);
+    d.append(b1);
+    d.append(b2);
+    d.append(b3);
+    return d.toFloat();
+}
+
+QJsonArray QmlService::bytes2jarr(QByteArray bytes)
+{
+    QJsonArray jarr;
+    for (int var = 0; var < bytes.size(); ++var) {
+        jarr.append((uint8_t)bytes[var]);
+    }
+    return jarr;
+}

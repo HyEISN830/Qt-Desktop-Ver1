@@ -15,7 +15,8 @@
 #include <QNetworkReply>
 #include <QXmlStreamReader>
 #include <QTextDocument>
-#include <iostream>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 
 // qml 一般后台服务, 如append 到 剪贴板, 打开浏览器等..
@@ -35,6 +36,13 @@ public:
     Q_INVOKABLE bool saveContent2Log(QString name, QString content);
     Q_INVOKABLE void addAppLog(QString content, int level);
     Q_INVOKABLE QString html2PlainText(QString);
+    Q_INVOKABLE QString str2bytes(QString);
+    Q_INVOKABLE QByteArray str2bytes1(QString);
+    Q_INVOKABLE short bytes2int(uint8_t b, uint8_t b1);
+    Q_INVOKABLE ushort bytes2uint(uint8_t b, uint8_t b1);
+    Q_INVOKABLE int bytes2int(uint8_t b, uint8_t b1, uint8_t b2, uint8_t b3);
+    Q_INVOKABLE float bytes2float(uint8_t b, uint8_t b1, uint8_t b2, uint8_t b3);
+    Q_INVOKABLE QJsonArray bytes2jarr(QByteArray);
 
 private:
     QSettings *settings = nullptr;

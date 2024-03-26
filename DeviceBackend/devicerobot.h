@@ -37,6 +37,7 @@ signals:
     void connectFailed(DeviceRobot*);
     void sended(DeviceRobot*, QString content);
     void received(DeviceRobot*, QString content);
+    void received_b(DeviceRobot*, QByteArray);
     void _apply(QString ip, int port);
     void applied(int dId, QString ip, int port);
     void _write(QString content);

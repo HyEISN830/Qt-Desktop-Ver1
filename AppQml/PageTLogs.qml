@@ -86,26 +86,29 @@ Item {
     }
 
     function appendNormalLog(dId, msg) {
-        // _clearIfMax()
+        _clearIfMax()
         let str = `<b><font font-size=15 color="#3498db">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
+        textEdit.append(str)
         // bgservice.addAppLog(bgservice.html2PlainText(str), 3)
-        deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 3)
+        // deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 3)
         // console.log(bgservice.html2PlainText(str))
     }
 
     function appendSuccessLog(dId, msg) {
-        // _clearIfMax()
+        _clearIfMax()
         let str = `<b><font font-size=15 color="#2ecc71">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
+        textEdit.append(str)
         // bgservice.addAppLog(bgservice.html2PlainText(str), 1)
-        deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 1)
+        // deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 1)
         // console.log(bgservice.html2PlainText(str))
     }
 
     function appendErrorLog(dId, msg) {
-        // _clearIfMax()
+        _clearIfMax()
         let str = `<b><font font-size=15 color="#e74c3c">[${JSLib.now()}] - ${dId ? "\"" + GlobalVariable.deviceMap[dId].content + "\"" : ""}: ${msg}</font></b>`
+        textEdit.append(str)
         // bgservice.addAppLog(bgservice.html2PlainText(str), 2)
-        deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 2)
+        // deviceCenter.appendLog(bgservice.takeSetting("appLogURL"), bgservice.html2PlainText(str), 2)
         // console.log(bgservice.html2PlainText(str))
     }
 

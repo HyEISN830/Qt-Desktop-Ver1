@@ -21,18 +21,8 @@ void DeviceCenter::start()
     utcThread->start();
 
     // TODO: 改为外部传入的地图大小或外部地图配置
-    QString mapfile_path = "./Configuration/map.json";
-    int width = 10;
-    int height = 10;
-    QJsonArray grid;
-    for (int var = 0; var < height; ++var) {
-        QJsonArray row;
-        for (int var1 = 0; var1 < width; ++var1) {
-            row.append(0);
-        }
-        grid.append(row);
-    }
-    pfWorker = new PathfindingWorker(grid);
+    QString mapfile_path = "Configuration/map.json";
+    pfWorker = new PathfindingWorker(mapfile_path);
     workerThreads[gid()] = utcThread;
     connect(this, &DeviceCenter::_pf_test, pfWorker, &PathfindingWorker::calcpaths);
     connect(this, &DeviceCenter::_pf_wa, pfWorker, &PathfindingWorker::setwalkable);
@@ -143,6 +133,7 @@ void DeviceCenter::addrobot(int dId, QString ip, int port, DeviceLineNo lineNo)
     connect(robot, &DeviceRobot::disconnected, this, &DeviceCenter::robotDisconnected);
     connect(robot, &DeviceRobot::sended, this, &DeviceCenter::_robotSended);
     connect(robot, &DeviceRobot::received, this, &DeviceCenter::_robotReceived);
+    connect(robot, &DeviceRobot::received_b, this, &DeviceCenter::_robotReceived_b);
     connect(robot, &DeviceRobot::applied, this, &DeviceCenter::deviceApplied);
     connect(robot, &DeviceRobot::tx, this, &DeviceCenter::_robotTx);
     connect(robot, &DeviceRobot::rx, this, &DeviceCenter::_robotRx);
@@ -395,6 +386,11 @@ void DeviceCenter::_robotReceived(DeviceRobot *robot, QString content)
 {
     if (!content.contains(robot->keepaliveStr))
         emit robotReceived(robot->getDId(), content);
+}
+
+void DeviceCenter::_robotReceived_b(DeviceRobot *robot, QByteArray content)
+{
+    emit robotReceived_b(robot->getDId(), content);
 }
 
 void DeviceCenter::_robotHeartStopped(DeviceRobot *robot)

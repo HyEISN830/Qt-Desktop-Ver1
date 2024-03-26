@@ -14,7 +14,7 @@ void DeviceRobot::start()
         connect(worker, &TcpWorker::connected, this, [=] { emit connected(this); });
         connect(worker, &TcpWorker::disconnected, this, [=] { emit disconnected(this); });
         connect(worker, &TcpWorker::connectFailed, this, [=] { emit connectFailed(this); });
-        connect(worker, &TcpWorker::received, this, [=] (QByteArray data) { emit rx(this); emit received(this, data); });
+        connect(worker, &TcpWorker::received, this, [=] (QByteArray data) { emit rx(this); emit received(this, data); emit received_b(this, data); });
         connect(this, &DeviceRobot::_write, worker, &TcpWorker::write);
         worker->start();
     }

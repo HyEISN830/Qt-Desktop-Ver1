@@ -134,6 +134,7 @@ Item {
                     id: setsPage
                     view: stackView
                     bgservice: bgservice
+                    deviceCenter: deviceCenter
                 }
                 T_PageTests {
                     id: testPage
@@ -201,10 +202,10 @@ Item {
             tlogsPage.appendNormalLog(dId, `已换产为 => <font color="#f1c40f">${orderNo}</font> 产品.`)
         }
         onBarcodeNoAvailableStack: (dId) => {
-            tlogsPage.appendErrorLog(dId, `发起了机械臂已码垛物料完成请求, 但是未找到当前线体已扫码的物料.`)
+            tlogsPage.appendErrorLog(dId, `发起了已码垛物料完成请求, 但是未找到当前线体已扫码的物料.`)
         }
         onBarcodePullUped: (dId, barcode) => {
-            tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品已被机械臂码好且已加入到码垛中.`)
+            tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品已被码好且已加入到码垛中.`)
         }
         onBarcodeUploaded: (dId, barcode) => {
             tlogsPage.appendNormalLog(dId, `条码 <font color="#f1c40f">${barcode}</font> 产品已扫码确认.`)
@@ -231,19 +232,19 @@ Item {
             tlogsPage.appendNormalLog(dId, `PLC寄存器 <font color="#f1c40f">${addr}</font> 写入 => <font color="#f1c40f">${value}</font>`)
         }
         onPlcPullUp: (dId, line) => {
-            tlogsPage.appendNormalLog(dId, `<font color="#f1c40f">${resolveLine(line)}</font> 线机械臂已码好一个物料.`)
+            tlogsPage.appendNormalLog(dId, `<font color="#f1c40f">${resolveLine(line)}</font> 线已码好一个物料.`)
         }
         onPlcDuplicateClamped: (dId, line, diff) => {
             tlogsPage.appendErrorLog(dId, `由于PLC在${resolveLine(line)}线上, 一定秒数内重复发起夹料完成, 本次夹料完成已忽略. 相隔 +${diff}ms`)
         }
         onRobotSended: (dId, content) => {
-            tlogsPage.appendNormalLog(dId, `发送到机械臂内容 => <font color="#f1c40f">${content}</font>`)
+            tlogsPage.appendNormalLog(dId, `发送到内容 => <font color="#f1c40f">[${bgservice.bytes2jarr(content)}]</font>`)
         }
-        onRobotReceived: (dId, content) => {
-            tlogsPage.appendNormalLog(dId, `接收到机械臂内容 => <font color="#f1c40f">${content}</font>`)
+        onRobotReceived_b: (dId, content) => {
+            tlogsPage.appendNormalLog(dId, `接收到内容 => <font color="#f1c40f">[${bgservice.bytes2jarr(content)}]</font>`)
         }
         onRobotHeartStopped: (dId) => {
-            tlogsPage.appendErrorLog(dId, "由于机械臂长时间未传送心跳数据, 判定为已死亡, 即将重连.")
+            tlogsPage.appendErrorLog(dId, "由于长时间未传送心跳数据, 判定为已死亡, 即将重连.")
         }
         onRobotTx: (dId) => {
             GlobalVariable.deviceMap[dId].tx()

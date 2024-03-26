@@ -1,7 +1,7 @@
 #include "winver.h"
 
 //IDI_ICON1 ICON "favicon.ico"
-IDI_ICON1 ICON "AppQml/resources/MHIcon.ico"
+//DI_ICON1 ICON "AppQml/resources/MHIcon.ico"
 
 
 VS_VERSION_INFO VERSIONINFO
