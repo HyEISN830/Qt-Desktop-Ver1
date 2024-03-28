@@ -71,6 +71,9 @@ public:
         @param deviceType - GlobalEnums.DeviceType
     */
     Q_INVOKABLE void reconnect(int dId, QString ip, int port);
+
+    // @breif 设置点位与IP映射
+    Q_INVOKABLE void setmapping(QJsonArray config);
 #pragma endregion }
 
 private:
@@ -84,6 +87,7 @@ private:
     QMap<int, SysWorker*> sysWorkers;
     QMap<int, PointWorker*> pointWorkers;
     QMap<int, QThread*> workerThreads;  // thread is automatically deleted after use
+    QJsonArray ps;  // point vs ip mappings
     bool running = false;
 
     void main();    // 主函数, 用于启动各类设置
@@ -233,7 +237,8 @@ signals:
     // @breif when tcpsocket disconnected on socketserver
     void clientConnectOut(int did, QString ip, int port);
     // @breif 当tcpclient 发送数据到 tcpserver时
-    void clientReceived(int did, QList<quint8> data);
+    void clientReceived(QString target, int did, QList<quint8> data);
+    void agvonip(int dId, QString ip);
     // @breif 当发送数据到 tcplient 时
     void clientSended(int did, QList<quint8> data);
     // @brief 当接收到来自光通讯点位的数据时

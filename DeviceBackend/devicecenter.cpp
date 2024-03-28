@@ -209,8 +209,28 @@ void DeviceCenter::addserver(int dId, int port, int maxclients, quint8 agvCode)
     connect(sysWorker, &SysWorker::clientReceived, this, [=] (int dId, QByteArray data) {
         if (data.size() > 20)
         {
+            QString target = "ALL";
             data[19] = sysWorker->getAgvCode();
-            emit clientReceived(dId, toU8List(data));
+
+            if (data[1] == 0x01)
+            {
+                target = sysWorker->getaip();
+
+                if (data[2] == 0x00 || data[2] == 0x01) // when move task sending
+                {
+                    sysWorker->setaip("offline");
+                    emit agvonip(sysWorker->getAgvCode(), "offline");
+                }
+            }
+            emit clientReceived(target, dId, toU8List(data));
+
+            QByteArray ba(10, 0);
+            QByteArray ba1(10, 0);
+            QByteArray ba2(10, 0);
+
+            ba2[0] = (uint8_t)255;
+
+            qDebug() << (ba == ba1) << (ba1 == ba2);
         }
     });
     connect(sysWorker, &SysWorker::clientSended, this, [=] (int dId, QByteArray data) {
@@ -218,7 +238,23 @@ void DeviceCenter::addserver(int dId, int port, int maxclients, quint8 agvCode)
     });
     connect(this, &DeviceCenter::pointReceived, sysWorker, [=] (int dId, QList<quint8> data) {
         if (data.size() > 20 && data[19] == sysWorker->getAgvCode())
+        {
             sysWorker->_clientWrite(toBytes(data));
+
+            if (data[1] == 0x02)
+            {
+                ushort p = data[16] << 8 | data[17];
+                qDebug() << data;
+                foreach (const QJsonValue &v, ps) {
+                    QJsonObject j = v.toObject();
+                    if (j["positions"].toArray().contains(p))
+                    {
+                        sysWorker->setaip(j["ip"].toString());
+                        emit agvonip(sysWorker->getAgvCode(), sysWorker->getaip());
+                    }
+                }
+            }
+        }
     });
     connect(thread, &QThread::finished, sysWorker, &SysWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
@@ -243,9 +279,13 @@ void DeviceCenter::addpoint(int dId, QString ip, int port)
     connect(worker, &PointWorker::sended, this, [=] (int dId, QByteArray data) {
         emit pointSended(dId, toU8List(data));
     });
-    connect(this, &DeviceCenter::clientReceived, worker, [=] (int dId, QList<quint8> data) {
-        thread->msleep(900);
-        worker->write(toBytes(data));
+    connect(this, &DeviceCenter::clientReceived, worker, [=] (QString target, int dId, QList<quint8> data) {
+        if (target == worker->getIp() || target == "ALL")
+        {
+            // thread->msleep(900);
+            // worker->write(toBytes(data));
+            worker->pushdata(toBytes(data));
+        }
     });
     connect(thread, &QThread::finished, worker, &SysWorker::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
@@ -280,6 +320,11 @@ void DeviceCenter::reconnect(int dId, QString ip, int port)
         schedulingWorkers[dId]->apply(ip, port);
         return;
     }
+}
+
+void DeviceCenter::setmapping(QJsonArray config)
+{
+    this->ps = config;
 }
 #pragma endregion }
 

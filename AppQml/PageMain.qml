@@ -119,6 +119,7 @@ Item {
                     view: stackView
                     log: tlogsPage
                     deviceCenter: deviceCenter
+                    bgservice: bgservice
                 }
 //                PageLineState {
 //                    id: lineStatePage

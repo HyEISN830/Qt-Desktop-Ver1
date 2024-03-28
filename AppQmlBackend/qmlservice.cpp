@@ -78,3 +78,13 @@ void QmlService::addAppLog(QString content, int level)
             reply->deleteLater();
     }
 }
+
+QJsonObject QmlService::loadjson(QString path)
+{
+    QFile f(path);
+
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) return QJsonObject();
+    QJsonObject jobj = QJsonDocument::fromJson(f.readAll()).object();
+    f.close();
+    return jobj;
+}

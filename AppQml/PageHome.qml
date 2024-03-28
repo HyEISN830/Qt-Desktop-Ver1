@@ -30,7 +30,7 @@ Item {
         width: 70
         height: 70
         mipmap: true
-        visible: true
+        visible: false
         z: 1
         layer.enabled: rounded
         layer.effect: OpacityMask {
@@ -112,82 +112,82 @@ Item {
         anchors.topMargin: 150 + (lblTxt2.font.pixelSize - font.pixelSize)
     }
 
-    ComTextEdit {
-        id: lblTxt5
-        text: "by: HyEISN"
-        font.pixelSize: 18
-        anchors.top: lblTxt1.bottom
-        anchors.topMargin: 10
-        anchors.left: lblTxt1.left
-    }
+    // ComTextEdit {
+    //     id: lblTxt5
+    //     text: "by: HyEISN"
+    //     font.pixelSize: 18
+    //     anchors.top: lblTxt1.bottom
+    //     anchors.topMargin: 10
+    //     anchors.left: lblTxt1.left
+    // }
 
-    ComTextEdit {
-        id: lblTxt6
-        text: "Tel: 18929252393"
-        font.pixelSize: 18
-        anchors.top: lblTxt5.bottom
-        anchors.topMargin: 10
-        anchors.left: lblTxt1.left
-    }
+    // ComTextEdit {
+    //     id: lblTxt6
+    //     text: "Tel: 18929252393"
+    //     font.pixelSize: 18
+    //     anchors.top: lblTxt5.bottom
+    //     anchors.topMargin: 10
+    //     anchors.left: lblTxt1.left
+    // }
 
-    ComLabel {
-        id: lblTxt7
-        anchors.top: lblTxt6.bottom
-        anchors.topMargin: 10
-        anchors.left: lblTxt1.left
-        font.pixelSize: 18
-        text: `@M: <a href="hyeisn@hotmail.com">hyeisn@hotmail.com</a>`
+    // ComLabel {
+    //     id: lblTxt7
+    //     anchors.top: lblTxt6.bottom
+    //     anchors.topMargin: 10
+    //     anchors.left: lblTxt1.left
+    //     font.pixelSize: 18
+    //     text: `@M: <a href="hyeisn@hotmail.com">hyeisn@hotmail.com</a>`
 
-        ComToolTip {
-            id: emailTip
-            text: "mail to me"
-            delay: 50
-            y: (height / 2) + 8
-        }
+    //     ComToolTip {
+    //         id: emailTip
+    //         text: "mail to me"
+    //         delay: 50
+    //         y: (height / 2) + 8
+    //     }
 
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            hoverEnabled: true
-            onEntered: emailTip.visible = true
-            onExited: emailTip.visible = false
-            onClicked: Qt.openUrlExternally("mailto:?to=罗骏<hyeisn@hotmail.com>&subject=您好, 请在此处写入标题!&body=您好, 请在此处键入咨询内容.")
-        }
-    }
+    //     MouseArea {
+    //         anchors.fill: parent
+    //         cursorShape: Qt.PointingHandCursor
+    //         hoverEnabled: true
+    //         onEntered: emailTip.visible = true
+    //         onExited: emailTip.visible = false
+    //         onClicked: Qt.openUrlExternally("mailto:?to=罗骏<hyeisn@hotmail.com>&subject=您好, 请在此处写入标题!&body=您好, 请在此处键入咨询内容.")
+    //     }
+    // }
 
-    ComTextEdit {
-        id: lblTxt8
-        text: "WebSite: "
-        font.pixelSize: 18
-        anchors.top: lblTxt7.bottom
-        anchors.topMargin: 10
-        anchors.left: lblTxt1.left
-    }
+    // ComTextEdit {
+    //     id: lblTxt8
+    //     text: "WebSite: "
+    //     font.pixelSize: 18
+    //     anchors.top: lblTxt7.bottom
+    //     anchors.topMargin: 10
+    //     anchors.left: lblTxt1.left
+    // }
 
-    Label {
-        id: lblWebSite
-        // text: `<a href="www.example.com">www.example.com</a>`
-        text: "Comming soon..."
-        font.pixelSize: 18
-        anchors.top: lblTxt8.top
-        anchors.left: lblTxt8.right
+    // Label {
+    //     id: lblWebSite
+    //     // text: `<a href="www.example.com">www.example.com</a>`
+    //     text: "Comming soon..."
+    //     font.pixelSize: 18
+    //     anchors.top: lblTxt8.top
+    //     anchors.left: lblTxt8.right
 
-        // ComToolTip {
-        //     id: webSiteTip
-        //     text: "点击访问个人网站"
-        //     delay: 50
-        //     y: (height / 2) + 8
-        // }
+    //     // ComToolTip {
+    //     //     id: webSiteTip
+    //     //     text: "点击访问个人网站"
+    //     //     delay: 50
+    //     //     y: (height / 2) + 8
+    //     // }
 
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            hoverEnabled: true
-            // onEntered: webSiteTip.visible = true
-            // onExited: webSiteTip.visible = false
-            // onClicked: Qt.openUrlExternally("http://www.example.com")
-        }
-    }
+    //     MouseArea {
+    //         anchors.fill: parent
+    //         cursorShape: Qt.PointingHandCursor
+    //         hoverEnabled: true
+    //         // onEntered: webSiteTip.visible = true
+    //         // onExited: webSiteTip.visible = false
+    //         // onClicked: Qt.openUrlExternally("http://www.example.com")
+    //     }
+    // }
 
     OpacityAnimator {
         target: page;

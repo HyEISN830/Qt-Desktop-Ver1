@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <QDateTime>
 
 #include "../worker/tcpserverworker.h"
 
@@ -16,6 +17,8 @@ public:
     ~SysWorker() { server->quit(); server->wait(); }
 
     quint8 getAgvCode() { return agvCode; }
+    QString getaip() { return curaip; }
+    void setaip(QString aip) { this->curaip = aip; };
 
 signals:
     void clientConnected(int dId, QString ip, int port);
@@ -73,6 +76,7 @@ private:
     QString clientIp;
     int clientPort;
     quint16 agvCode;
+    QString curaip;
 
     TcpServerWorker *server = nullptr;
     QTcpSocket *client = nullptr;

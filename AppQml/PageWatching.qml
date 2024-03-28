@@ -3,6 +3,8 @@ import QtQuick.Controls
 import AppQml
 import AppQmlBackend
 import DeviceBackend
+import Qt5Compat.GraphicalEffects
+
 
 import "./js/Common.js" as JSLib
 
@@ -11,6 +13,7 @@ Item {
     property StackView view
     property PageTLogs log
     property DeviceCenter deviceCenter
+    property QmlService bgservice
     property bool isCurPage: view.currentItem == page
     property list<var> deviceList: [
     ]
@@ -71,10 +74,12 @@ Item {
         ],
         [
             { id: 35, name: "光通讯点位33", ip: "192.168.81.102", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
-            // { id: 98, name: "测试光通讯点位1", ip: "127.0.0.1", port: "8080", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
+            // { id: 98, name: "测试光通讯点位1", ip: "127.0.0.1", port: "5001", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
             // { id: 99, name: "测试光通讯点位2", ip: "127.0.0.1", port: "8081", icon: "resources/infrared.png", color: "#7f640000", type: "client" },
         ]
     ]
+    property list<var> ps: []
+    property list<var> mapping: ({})
 
     id: page
     opacity: 0
@@ -101,6 +106,90 @@ Item {
                     width: 1
                     height: 10
                     color: "transparent"
+                }
+
+                Rectangle {
+                    property string c: "#763498db"
+
+                    id: mappane
+                    width: 200
+                    height: 250
+                    x: 35
+                    color: "transparent"
+
+                    Rectangle {
+                        id: b
+                        width: parent.width
+                        height: parent.height
+                        radius: 10
+                        color: mappane.c
+                    }
+
+                    FastBlur {
+                        anchors.fill: b
+                        source: b
+                        radius: 64
+                        transparentBorder: true
+                    }
+
+                    Row {
+                        spacing: 8
+
+                        Column {
+                            spacing: 8
+
+                            Rectangle {
+                                width: 1
+                                height: 1
+                                color: "transparent"
+                            }
+
+                            ComTextEditBold {
+                                x: 8
+                                font.pixelSize: 18
+                                text: "已载入点位映射:"
+                            }
+
+                            Rectangle {
+                                width: 1
+                                height: 1
+                                color: "transparent"
+                            }
+
+                            ListView {
+                                x: 8
+                                width: mappane.width
+                                height: mappane.height - 68
+                                model: ps
+                                delegate: Item {
+                                    required property string modelData
+                                    height: 18
+                                    ComLabel {
+                                        text: modelData
+                                    }
+                                }
+                            }
+                        }
+
+                        ComButton {
+                            text: "Reload"
+                            onClicked: reloadps()
+                        }
+
+                        Column {
+                            spacing: 8
+                            ComLabel {
+                                property string ip
+                                id: agv950onip
+                                text: `AGV-950 on ${ip}`
+                            }
+                            ComLabel {
+                                property string ip
+                                id: agv951onip
+                                text: `AGV-951 on ${ip}`
+                            }
+                        }
+                    }
                 }
 
                 Repeater {
@@ -154,6 +243,17 @@ Item {
         }
     }
 
+    function reloadps() {
+        let path = "Configurations/mapping.json"
+        let config = bgservice.loadjson(path).ps
+
+        mapping = config
+        ps = []
+        for (let j in config)
+            ps.push(JSON.stringify(config[j].positions) + "\t" + config[j].ip)
+        deviceCenter.setmapping(config)
+    }
+
     // use only in line settings
     function setChange(key, value) {
         bgservice.saveSettings(key, value + "")
@@ -191,13 +291,13 @@ Item {
         }
 
         function onClientReceived(did, data) {
-            rxd(did)
-            log.appendNormalLog(did, `接收到 => <font color="#f1c40f">${JSON.stringify(data)}</font>`)
+            // rxd(did)
+            // log.appendNormalLog(did, `接收到 => <font color="#f1c40f">${JSON.stringify(data)}</font>`)
         }
 
         function onClientSended(did, data) {
-            txd(did)
-            log.appendNormalLog(did, `发送到 => <font color="#f1c40f">${JSON.stringify(data)}</font>`)
+            // txd(did)
+            // log.appendNormalLog(did, `发送到 => <font color="#f1c40f">${JSON.stringify(data)}</font>`)
         }
 
         function onDeviceConnected(did) {
@@ -211,13 +311,22 @@ Item {
         }
 
         function onPointReceived(did, data) {
-            rxd(did)
-            log.appendNormalLog(did, `接收到 => <font color="#f1c40f">${JSON.stringify(data)}</font>`)
+            // rxd(did)
+            // log.appendNormalLog(did, `接收到 => <font color="#f1c40f">${JSON.stringify(data)}</font>`)
         }
 
         function onPointSended(did, data) {
-            txd(did);
+            // txd(did);
             // log.appendNormalLog(did, `发送到 => <font color="#f1c40f">${JSON.stringify(data)}</font>`)
+        }
+
+        function onAgvonip(did, ip) {
+            if (did === 1) {
+                agv950onip.ip = ip
+            }
+            else if (did === 2) {
+                agv951onip.ip = ip
+            }
         }
     }
 
@@ -233,6 +342,7 @@ Item {
                     if (positions[i1][i2].type === "client") deviceCenter.addpoint(positions[i1][i2].id, positions[i1][i2].ip, positions[i1][i2].port)
                     else if (positions[i1][i2].type === "server") deviceCenter.addserver(positions[i1][i2].id, positions[i1][i2].port, 1, positions[i1][i2].agvCode)
 
+            reloadps()
             deviceCenter.start()
         })
     }

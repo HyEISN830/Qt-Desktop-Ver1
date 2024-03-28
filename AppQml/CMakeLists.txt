@@ -68,12 +68,12 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/icon-home.svg
     resources/icon-settings-sliders.svg
     resources/icon-flask.svg
-    resources/icon-shield.svg
-    resources/icon-snowflakes.svg
-    resources/icon-flame.svg
-    resources/icon-reload.svg
-    resources/icon-clean.svg
-    resources/icon-change.svg
+    # resources/icon-shield.svg
+    # resources/icon-snowflakes.svg
+    # resources/icon-flame.svg
+    # resources/icon-reload.svg
+    # resources/icon-clean.svg
+    # resources/icon-change.svg
     resources/icon-success-green.svg
     resources/icon-arrow-left.svg
     resources/icon-arrow-right.svg
@@ -88,19 +88,18 @@ list(APPEND MODULE_RESOURCES_FILES
     resources/icon-boxes.svg
     resources/icon-close.svg
 
+    # resources/logo.png
+    # resources/plc.png
+    # resources/device.png
+    # resources/barcode-scan.png
+    # resources/agv-robot.png
+    # resources/robotic-arm.png
+    # resources/task.png
     resources/home.jpg
-    resources/logo.png
-    resources/plc.png
-    resources/device.png
-    resources/barcode-scan.png
-    resources/agv-robot.png
-    resources/robotic-arm.png
-    resources/task.png
-    resources/home.jpg
-    resources/logo.png
-    resources/device.png
-    resources/57463585_p6.png
-    resources/server.png
+    # resources/logo.png
+    # resources/device.png
+    # resources/57463585_p6.png
+    # resources/server.png
     resources/infrared.png
 )
 
